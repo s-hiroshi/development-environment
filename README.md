@@ -1834,8 +1834,7 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
 
 ## 目次
 
-* [AWS Linuxコマンド(Ubuntu)](#aws_cmd_ubuntu)
-* [AWS Linuxセキュリティ](#aws_security)
+* [Linuxセキュリティ](#aws_security)
 * [EC2](#aws_ec2)
 * [RDS](#aws_rds)
 * [Route 53](#aws_route53)
@@ -1844,9 +1843,78 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
 * [Ubuntu + MySQL + PHP環境構築](#aws_ubuntu_mysql_php)  
 * [Ubuntu + Postfixでメールを運用](#aws_postfix) 
 * [課金](#aws_bills)
-* [AWS 用語](#aws_aws_terms]
+* [Linuxコマンド(Ubuntu)](#aws_cmd_ubuntu)
+* [AWS 用語](#aws_aws_terms)
 
 
+
+## Linuxセキュリティ
+
+リモートコンピューターと通信する方法
+
+SSH
+Telnet
+etc
+
+1. サーバーへのログイン  
+AWSはSSHなので秘密鍵が漏洩しなければサーバーへログインされる心配は無い?。
+2. サービスへの不正アクセス  
+各サービスはiptableを使いポート番号を開閉を制御しパケット通信をコントロールする。
+
+## OS自体のアップデート
+
+## パッケージのアップデート
+
+## サービスの設定
+
+不要なサービスの停止
+
+## ポートの制御(iptables)
+
+利用するポートInbound/Outboundを設定。最小限にする。
+
+そうかyumってhttpポート（80番）を使うのか・・・
+
+http://app.m-cocolog.jp/t/typecast/691311/578213/73514519
+
+yumやapt-getはポート番号80を使う。
+
+## ユーザー
+
+### ユーザー一覧
+
+    // ユーザー情報表示
+    $ cat /etc/passwd
+    // ユーザー一覧表示
+    $ cut -d: -f1 /etc/passwd
+
+
+### 個別のユーザー情報
+
+    // パスワードやホームディレクトリなど
+    $ cat /etc/passwd | grep <username>
+
+    // 所属グループなどの情報
+   $ id <username>
+
+
+### グループ一覧
+
+   $ cut -d: -f1 /etc/group
+
+
+### ユーザーをグループに追加/削除
+
+    $ sudo gpasswd -a <username> <groupname>
+
+__aオプションを指定しないと既存グループが削除される。__
+
+   $ sudo gpasswd -d <username> <groupname>
+
+
+## ユーザーのパスワード設定
+
+    $ passwd <username>
 
 ## <a name="aws_ec2">EC2</a>
 
@@ -1973,6 +2041,467 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 ## <a name="aws_s3">S3</a>
 
 
+
+
+## <a name="aws_utuntu_mysql_php">Ubuntu + MySQL + PHP環境構築</a>
+
+## 目的
+
+Ubuntu + MySQL + PHPの環境をAWSで構築する。
+
+## ゴール
+
+MySQLからPHPへ接続できることを確認する。
+
+## 前提
+
+UbuntuへはubuntuユーザーでSSHでログイン。
+
+### 環境
+
+* Ubuntu
+* Nginx  
+  nginx version: nginx/1.4.6 (Ubuntu)
+* MySQL
+* PHP5 
+  PHP Version 5.5.9-1ubuntu4.5
+
+
+### ドキュメントルート
+
+    /var/www/application/current/app/webroot
+
+「CakePHP 継続的インテグレーション」と同様のディレクトリ構造とする。
+
+
+### PHP実行ユーザー
+
+* ユーザー
+  www-data
+* www-dataが属するグループ
+  www-data
+
+#### PHP実行ユーザー確認
+
+<?php
+echo `whoami`;
+
+
+## PHPインストール〜動作確認
+
+### パッケージインストール
+
+    // apt-getを最新へ更新
+    $ sudo apt-get update
+    // 必要パッケージインストール
+    $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
+
+Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをインストールする。
+
+
+### ドキュメントルートの作成
+
+    sudo mkdir -p /var/www/application/current/app/webroot
+
+
+### currentディレクトリ以下の所有者とパーミション変更
+ 
+    $ cd /var/www/application
+    $ sudo chown -R www-data current
+    $ sudo chmod -R 775 current
+
+
+### Nginx設定
+
+#### Nginx関連のファイル
+
+    (1) /etc/nginx/nginx.conf  // Nginx全体の設定(今回は変更なし)
+    (2) /etc/nginx/sites-available/default  // ホストの設定(変更)
+    (3) /etc/nginx/sites-enabled/default   //  (2)のシンボリックリンク Nginxの起動時に読み込まれる
+
+今回は/etc/nginx/sites-available/defaultを編集する。
+
+#### site-available/defaultファイル
+
+##### 変更内容
+
+* ドキュメントルート設定 rootディレクティブ
+* /によるアクセス        indexディレクトリ
+* FastCGIの設定          locationディレクティブ
+
+##### default
+
+    server {
+            listen 80 default_server;
+            listen [::]:80 default_server ipv6only=on;
+ 
+            root /var/www/application/current/app/webroot;
+            index index.php index.html index.htm;
+ 
+            # Make site accessible from http://localhost/
+            server_name localhost;
+ 
+            location / {
+                    # First attempt to serve request as file, then
+                    # as directory, then fall back to displaying a 404.
+                    try_files $uri $uri/ =404;
+                    # Uncomment to enable naxsi on this location
+                    # include /etc/nginx/naxsi.rules
+            }
+ 
+            # Only for nginx-naxsi used with nginx-naxsi-ui : process denied requests
+            #location /RequestDenied {
+            #       proxy_pass http://127.0.0.1:8080; 
+            #}
+ 
+            #error_page 404 /404.html;
+ 
+            # redirect server error pages to the static page /50x.html
+            #
+            #error_page 500 502 503 504 /50x.html;
+            #location = /50x.html {
+            #       root /usr/share/nginx/html;
+            #}
+ 
+            # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+            #
+            location ~ \.php$ {
+                    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            #       # NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+            #
+            #       # With php5-cgi alone:
+                    # fastcgi_pass 127.0.0.1:9000;
+                    # With php5-fpm:
+                    fastcgi_pass unix:/var/run/php5-fpm.sock;
+                    fastcgi_index index.php;
+                    include fastcgi_params;
+            }
+ 
+            # deny access to .htaccess files, if Apache's document root
+            # concurs with nginx's one
+            #
+            #location ~ /\.ht {
+            #       deny all;
+            #}
+    }
+
+#### Nginx(再)起動
+
+    $ sudo nginx -s reload
+
+
+### PHP動作確認 index.php
+
+    <?php
+        phpinfo();
+
+viの文字コード設定 set encoding=utf8
+
+### MySQL
+
+#### AWS RDS
+
+MySQLサーバー起動
+
+### 接続確認 mysql_test.php
+
+    <?php
+    $url = “endpoint";
+    $user = "tutorial";
+    $pass = “passw0rd";
+    $db = "tutorial";
+
+    // MySQLへ接続する
+    $link = mysql_connect($url,$user,$pass) or die("接続に失敗しました。");
+
+    // データベースを選択する
+    $sdb = mysql_select_db($db,$link) or die("データベース選択に失敗しました。");
+
+    // クエリを送信する
+    $sql = "SELECT * FROM tutorial";
+    $result = mysql_query($sql, $link) or die("クエリの送信に失敗しました。<br />SQL:".$sql);
+
+    //結果セットの行数を取得する
+    $rows = mysql_num_rows($result);
+
+    //結果保持用メモリを開放する
+    mysql_free_result($result);
+
+    // MySQLへの接続を閉じる
+    mysql_close($link) or die("MySQL切断に失敗しました。");
+    ?>
+    <?php header('Content-Type: text/html; charset=utf-8');?>
+    <html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=SHIFT-JIS">
+    <title>全件表示</title>
+    </head>
+    <body>
+    接続ID:<?= $link ?><br />
+    選択の成否:<?= $sdb ?><br />
+    結果ID:<?= $result ?><br />
+    行数:<?= $rows ?><br />
+    </body>
+    </html>
+
+viの文字コード設定 set encoding=utf8
+
+
+### Xdebug
+
+#### インストール
+
+    $ sudo apt-get install php5-xdebug
+
+/usr/lib/php5/20121212/xdebug.soへインストールされた。
+
+#### 設定(/etc/php5/fpm/conf.d/20-xdebug.ini)
+
+/etc/php5/fpm/conf.d/20-xdebug.iniへ読込み処理を記載
+
+    zend_extension=/usr/lib/php5/20121212/xdebug.so
+
+#### 再起動
+
+    sudo service php5-fpm restart
+
+
+### Composer
+
+#### インストール
+
+/var/www/application/current/appへダウンロード。
+
+    $ cd /var/www/application/current/app
+    $ curl -sS https://getcomposer.org/installer | php
+
+今回はcomposer.pharをcomposerへ変更するがグローバルでは利用しないので下記のようなコマンドになる。
+
+    $ php /fullpath/composer --version
+
+
+#### composer.json
+
+    {
+        "require": {
+            "monolog/monolog": "1.0.*"
+        }
+    }
+
+#### パッケージのインストール
+
+    $ cd /var/www/application/current/app
+    $ php composer install
+
+
+#### 動作確認 monolog_test.php
+
+<?php
+
+require '../vendor/autoload.php';
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+// create a log channel
+$log = new Logger('name');
+$log->pushHandler(new StreamHandler('/var/www/application/current/app/logs/mylog.log', Logger::WARNING));
+
+// add records to the log
+$log->addWarning('Foo');
+$log->addError('Bar');
+
+
+### PHPUnit
+
+#### インストール
+
+Composerを使いインストールする。
+
+composer.jsonへ追記する。
+
+    {
+      "require": {
+      "monolog/monolog": "1.0.*"
+      },
+    "require-dev": {
+      "phpunit/phpunit": "3.7.*"
+      }
+    }
+
+PHPUnitの最新版(2015.01.16)は4.4だがCakePHPで利用することを考えめ3.7をインストール
+
+    $ sudo php composer update -dev
+
+
+    var/www/application/current/app
+        |
+        |…..
+        |— vendor
+                  |…..
+        |— test
+                  |— CalcTest.php
+        |
+        |— webroot
+                  |— Calc.php
+
+
+CalcTest.php
+
+    <?php
+    require_once(“/var/www/application/current/app/webroot/Calc.php”);
+
+    class CalcTest extends PHPUnit_Framework_TestCase {
+        private $calc;
+
+        protected function setUp() {
+            $this->calc = new Calc(10);
+        }
+
+        public function testAdd() {
+            $this->assertEquals(15, $this->calc->add(5));
+        }
+    }
+
+Calc.php
+
+    <?php
+    class Calc {
+        private $value;
+
+        public function __construct($value = 0) {
+            $this->value = $value;
+        }
+
+        public function add($value) {
+            return $this->value + $value;
+        }
+    }
+
+
+#### 実行
+
+    $ vendor/bin/phpunit test/CalcTest.php
+
+
+
+
+
+
+
+
+
+## Appendix 1. ユーザー、グループの変更
+
+    sudo chown [-f|-R] username (filename|dirname)
+    sudo chgrp  [-f|-R]] groupname (filename|dirname)
+
+
+
+## Appendix 2. PHPファイル作成テスト
+
+<?PHP
+
+$file_name = 'test.txt';
+
+// 存在確認
+if( !file_exists($file_name) ){
+// ファイル作成
+touch( $file_name );
+}else{
+header('Content-Type: text/html; charset=utf-8');
+echo $file_name . 'は存在しています。処理を終了します';
+exit();
+}
+
+// パーミッションの変更
+chmod( $file_name, 0644 );
+header('Content-Type: text/html; charset=utf-8');
+echo $file_name . 'を作成しパーミッションを644へ変更しました';
+
+
+
+## Appendix 3. Nginxのエラーログ
+
+    /var/log/nginx/error.log
+
+
+
+## Appendix 4.「CakePHP 継続的インテグレーション」ディレクトリのパーミション
+
+/var/www/application
+
+*  /var/www/application 
+ユーザー、グループともにroot パーミション755。
+* /var/www/application/current以下は
+    + ユーザーvagrant
+    + グループwww-data
+    + ディレクトリパーミション 775
+
+どこかでsudo chown -R vagrant currentを行っているか確認。
+またどのようにグループをrootからwww-dataへ変更しているかも確認
+
+## Appendix 5. 「CakePHP 継続的インテグレーション」のsite-available/defaultファイル
+
+__初期状態ではlocationがコメントアウトされておりphpファイルへアクセスするとダウンロードしてしまう。
+下記のようにコメントアウトを外す。__
+
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+
+        root /var/www/application/current/app/webroot;
+        index index.php index.html index.htm;
+
+        server_name localhost;
+
+        location / {
+            try_files $uri $uri/ /index.php?$args;
+        }
+
+        location ~ \.php$ {
+            try_files $uri =404;
+            include /etc/nginx/fastcgi_params;
+            fastcgi_pass unix:/var/run/php5-fpm.sock;
+            fastcgi_index   index.php;
+            fastcgi_intercept_errors on;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param CAKE_ENV development;
+        }
+    }
+
+
+
+## Appendix 6. SFTP
+
+FileZilla設定方法は下記サイトを参考にして設定 
+[WordPress】素人でも出来た！AWS EC2へのサーバー移行方法7 旧データをアップロード | 男子風呂（ぐ）](http://danshiblog.com/job/130128-amazon-ec2-server-setting-wordpressdata-upload.html)
+
+
+* SFTPはSSHの使用ポート番号(22)を利用するのでAWSのSecurity Groupsで
+別途ポートを開ける必要は無い。
+* AWSはrootでは接続できないのでubuntuユーザーで接続
+* PHPの実行ユーザーはwww-data
+* FTPソフトでアップロードした場合のディレクトリ/ファイルの所有者はubuntu。
+* 表示するだけならHTML/CSS/JavaScript/PHPの各ファイルの実行権限は004でよい
+  (ディレクトリは755)。
+
+
+## Appendix 7. 手順
+
+    $ sudo apt-get update
+    $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
+    $ sudo mkdir -p /var/www/application/current/app/webroot
+    $ cd /var/www/application
+    $ sudo chown -R www-data current
+    $ sudo chmod -R 775 current
+    $ sudo vi /etc/nginx/sites-available/default
+    $ sudo nginx -s reload
+
+
+
+
+
 ## <a name="aws_bills">課金</a>
 
 * Billing & Cost Management
@@ -1980,6 +2509,21 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
         - Receive Billing Alerts
            Manage Billing Alerts
 
+
+
+## <a name="aws_cmd_ubuntu">Linuxコマンド(Ubuntu)</a> 
+
+* ポートの確認
+  $ netstat -tlnp
+* インストール済みパッケージの確認
+  $ dpkg -l
+  $ aptitude search "~i"
+* プロセス
+  ps -ef|grep postfix
+* DNS確認
+  host domain
+* cat
+  標準出力へ出力
 
 ## <a name="aws_terms">用語</a>
 

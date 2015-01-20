@@ -1903,7 +1903,41 @@ __AWSではうまく行かなかった。上記の変更をしても22番でロ�
     nter new UNIX password: 
     Retype new UNIX password: 
     passwd: password updated successfully
+
+#### suの利用制限
+
+デフォルトではすべてのユーザーがsuを使いroot権限を利用できる。  
+下記設定を行いsuコマンドを実行できるユーザーをwheelグループのユーザーに制限する。
+
+/etc/pad.d/suファイルを編集
+
+
+    // コメントアウトを解除
+    # auth       required   pam_wheel.so
+    auth       required   pam_wheel.so
+
+su rootができなくなる。
+
+    ubuntu@xxx:~$ su root
+    Password: 
+    su: Permission denied
+
+Ubuntuはwheelユーザーがないので作成しubuntuをwheelグループへ追加する。
+
+    ubuntu@xxx:~$ sudo addgroup --gid 11 wheel
+    Adding group `wheel' (GID 11) ...
+    Done.
+
+    // wheelグループへubuntuを追加
+    ubuntu@xxx:~$ sudo usermod -G wheel ubuntu
     
+
+su rootができる。
+
+    ubuntu@xxx:~$ su root
+    Password: 
+    root@xxx: #
+
 #### ユーザー一覧
 
     // ユーザー情報表示
@@ -1917,7 +1951,7 @@ __AWSではうまく行かなかった。上記の変更をしても22番でロ�
     $ cat /etc/passwd | grep <username>
 
     // 所属グループなどの情報
-   $ id <username>
+    $ id <username>
 
 #### グループ一覧
 

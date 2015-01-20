@@ -1852,61 +1852,64 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
 
 ## Linuxセキュリティ
 
-Ubuntuを前提に記載。
+### 目的
 
-## サーバーOSへのログイン
+AWSでUbuntuを安全に運用する。
 
 1. サーバーOSへのログイン    
   AWSはSSHを使いログインする。初期設定はrootのログインを禁止している。
 2. サービスへの不正アクセス  
   各サービスはiptableを使いポート番号を開閉を制御しパケット通信をコントロールする。
 
-## ユーザー
 
-ubuntuユーザー
+### Ubuntuへログイン
 
-## OS自体のアップデート
-
-
-## サービス
+rootログインを禁止する。  
+AWSではrootではログインできずubuntuユーザーでログインする。
 
 
-不要なサービスは停止する。
+### コンソールからrootのログイン禁止
 
-### サービス一覧
-
-    // RPM系のchkconfigと同様の機能を持つsysv-rc-confインストール
-    $ sudo apt-get sysv-rc-conf
-    // 起動サービス一覧表示
-    $ sudo sysv-rc-conf --list
-
-### サービス停止
-
-    $ sudo sysv-rc-conf <service> Off
+    $ su root
+    $ echo > /etc/securetty
 
 
-## パッケージのアップデート
-## ポートの制御(iptables)
+### SSHでrootでログイン禁止 およびSSHポートの変更
 
-利用するポートInbound/Outboundを設定。最小限にする。
+#### 設定ファイル変更
 
-そうかyumってhttpポート（80番）を使うのか・・・
+    /etc/ssh/sshd_config
 
-http://app.m-cocolog.jp/t/typecast/691311/578213/73514519
+    PermitRootLogin no
+　　Port 22222
 
-yumやapt-getはポート番号80を使う。
+#### SSHサーバー再起動
 
-## ユーザー
+SSHサーバー再起動
 
-### ユーザー一覧
+　　/etc/init.d/ssh restart
+
+__AWSではうまく行かなかった。上記の変更をしても22番でログインできた。__
+
+### ユーザー
+
+適切にユーザーを管理する。
+
+#### rootユーザーにパスワード設定
+
+    $ sudo passwd root
+    nter new UNIX password: 
+    Retype new UNIX password: 
+    passwd: password updated successfully
+    
+#### ユーザー一覧
 
     // ユーザー情報表示
     $ cat /etc/passwd
     // ユーザー一覧表示
     $ cut -d: -f1 /etc/passwd
 
-
-### 個別のユーザー情報
+#### 個別のユーザー情報
 
     // パスワードやホームディレクトリなど
     $ cat /etc/passwd | grep <username>
@@ -1914,13 +1917,11 @@ yumやapt-getはポート番号80を使う。
     // 所属グループなどの情報
    $ id <username>
 
-
-### グループ一覧
+#### グループ一覧
 
    $ cut -d: -f1 /etc/group
 
-
-### ユーザーをグループに追加/削除
+#### ユーザーをグループに追加/削除
 
     $ sudo gpasswd -a <username> <groupname>
 
@@ -1929,9 +1930,51 @@ __aオプションを指定しないと既存グループが削除される。__
    $ sudo gpasswd -d <username> <groupname>
 
 
-## ユーザーのパスワード設定
+### サービス
 
-    $ passwd <username>
+不要なサービスは停止する。
+
+#### サービス一覧
+
+    // RPM系のchkconfigと同様の機能を持つsysv-rc-confインストール
+    $ sudo apt-get sysv-rc-conf
+    // 起動サービス一覧表示
+    $ sudo sysv-rc-conf --list
+
+#### サービス停止
+
+    $ sudo sysv-rc-conf <service> Off
+
+### ネットワークセキュリティ
+
+#### ポートの確認
+
+    $ netstat -atun
+
+
+### OSの更新
+
+
+### パッケージの更新
+
+    // 最新のパッケージリスト取得
+    $ sudo apt-get update
+    // インストール済みパッケージをすべて更新
+    $ sudo apt-get upgrade
+
+特定のパッケージのみ更新する場合は下記の記事が参考になった。
+
+[apt / aptitude で特定のパッケージのみアップグレードする方法 - Devslog](http://devslog.com/article/20120216085533.html)
+
+
+### ポートの制御(iptables)
+
+利用するポートInbound/Outboundを設定。最小限にする。
+yumやapt-getはポート番号80を使う。
+
+[そうかyumってhttpポート（80番）を使うのか・・・](http://app.m-cocolog.jp/t/typecast/691311/578213/73514519)
+
+
 
 ## <a name="aws_ec2">EC2</a>
 
@@ -1960,7 +2003,7 @@ Amazon Linux AMI 2014.09.1 (HVM) - ami-4985b048
         - Security Groups
 
 
-どのポートを空けるか(どのサービスをりようするか)を各インスタンスごとにセキュリティーグループとして設定する。  
+どのポートを空けるか(どのサービスをりようするか)を各インスタンスごとにセキュリティグループとして設定する。  
 どのポートをどこから許可するか？  
 
 
@@ -2011,7 +2054,7 @@ Evernoteの「2015.01.16 AWS UbuntuでPHPを動作させる」を参照。
 
 ### MySQL
 
-1. セキュリティイーグループでMySQLのポート(3306)を開ける
+1. セキュリティグループでMySQLのポート(3306)を開ける
 2. RDSのインスタンスへDB Security Groupsを設定する
 
 [Amazon RDS ～EC2インスタンスからDBインスタンスへの接続～　|ec2 db インスタンス　接続　方法 | ナレコムAWSレシピ](http://recipe.kc-cloud.jp/archives/397)

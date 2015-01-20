@@ -4,17 +4,19 @@ AWSでサービスを運用するために勉強している内容を書き留�
 
 # 目標
 
-1. 継続的的インテグレーションが可能な開発環境構築
+1. 継続的的インテグレーションが可能な開発環境の構築
 2. AWSでサービス運用
 
 # 参考書
 
-[「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
+* [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
+* [「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)
 
 # 目次
 
-* [継続的インテグレーションのための開発環境](#ci)
-* [AWSでサービス運用](#aws)
+* [継続的インテグレーション](#ci)
+* [AWS(Amazon Web Services)でサービス運用](#aws)
+
 
 # <a name="ci">継続的インテグレーションのための開発環境</a>
 
@@ -23,7 +25,7 @@ AWSでサービスを運用するために勉強している内容を書き留�
 * [HTML/CSS/JavaScriptの開発環境](#html_css_javascript_ci)
 * [PHPの開発環境](#php_ci)
 * [CakePHPの開発環境](#cakephp_ci)
-* [VirtualBox + Vagrant + Chef Soloを使ったCI環境構](#virtualbox_vagrant_chef)
+* [VirtualBox + Vagrant + Chef Soloを使ったCI環境](#virtualbox_vagrant_chef)
 * [CI(継続的インテグレーション)](#ci_ci)
 * [アジャイル](#agile)
 * [BDD:振舞駆動開発 (開発手法)](#bdd)
@@ -1830,7 +1832,7 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
 
 
 
-# <a name="aws">AWS Amazon - Web Services</a>
+# <a name="aws">AWS Amazon - Web Servicesでサービス運用</a>
 
 ## 目次
 
@@ -1850,25 +1852,40 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
 
 ## Linuxセキュリティ
 
-リモートコンピューターと通信する方法
+Ubuntuを前提に記載。
 
-SSH
-Telnet
-etc
+## サーバーOSへのログイン
 
-1. サーバーへのログイン  
-AWSはSSHなので秘密鍵が漏洩しなければサーバーへログインされる心配は無い?。
+1. サーバーOSへのログイン    
+  AWSはSSHを使いログインする。初期設定はrootのログインを禁止している。
 2. サービスへの不正アクセス  
-各サービスはiptableを使いポート番号を開閉を制御しパケット通信をコントロールする。
+  各サービスはiptableを使いポート番号を開閉を制御しパケット通信をコントロールする。
+
+## ユーザー
+
+ubuntuユーザー
 
 ## OS自体のアップデート
 
+
+## サービス
+
+
+不要なサービスは停止する。
+
+### サービス一覧
+
+    // RPM系のchkconfigと同様の機能を持つsysv-rc-confインストール
+    $ sudo apt-get sysv-rc-conf
+    // 起動サービス一覧表示
+    $ sudo sysv-rc-conf --list
+
+### サービス停止
+
+    $ sudo sysv-rc-conf <service> Off
+
+
 ## パッケージのアップデート
-
-## サービスの設定
-
-不要なサービスの停止
-
 ## ポートの制御(iptables)
 
 利用するポートInbound/Outboundを設定。最小限にする。
@@ -1973,12 +1990,10 @@ __T2 instances are VPC-only. Your T2 instance will launch into your VPC. Learn m
 
 ### <a name="aws_ec2_debian_app">Debian系Nginx, MySQL,PHP]<a>
 
-
     // apt-getを利用する前に最新の状態へ
     $ sudo apt-get update
 
 #### パッケージインストール
-
 
     apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx git
 
@@ -2040,30 +2055,25 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 
 ## <a name="aws_s3">S3</a>
 
-
-
-
 ## <a name="aws_utuntu_mysql_php">Ubuntu + MySQL + PHP環境構築</a>
 
-## 目的
+### 目的
 
 Ubuntu + MySQL + PHPの環境をAWSで構築する。
 
 ## ゴール
 
-MySQLからPHPへ接続できることを確認する。
+PHPからMySQLへ接続できることを確認する。
 
 ## 前提
 
-UbuntuへはubuntuユーザーでSSHでログイン。
-
 ### 環境
 
-* Ubuntu
+* Ubuntu  
 * Nginx  
   nginx version: nginx/1.4.6 (Ubuntu)
-* MySQL
-* PHP5 
+* MySQL  
+* PHP5   
   PHP Version 5.5.9-1ubuntu4.5
 
 
@@ -2071,32 +2081,38 @@ UbuntuへはubuntuユーザーでSSHでログイン。
 
     /var/www/application/current/app/webroot
 
-「CakePHP 継続的インテグレーション」と同様のディレクトリ構造とする。
+
+### ログインユーザー
+
+ユーザーubuntuでログイン。
 
 
 ### PHP実行ユーザー
 
-* ユーザー
+* ユーザー  
   www-data
-* www-dataが属するグループ
+* www-dataが属するグループ  
   www-data
 
-#### PHP実行ユーザー確認
+### PHP実行ユーザー確認
 
-<?php
-echo `whoami`;
+    <?php
+    echo `whoami`;
+
+ www-dataと表示
 
 
-## PHPインストール〜動作確認
+## PHPのインストールから動作確認まで
 
 ### パッケージインストール
+
+
+Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをインストールする。
 
     // apt-getを最新へ更新
     $ sudo apt-get update
     // 必要パッケージインストール
     $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
-
-Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをインストールする。
 
 
 ### ドキュメントルートの作成
@@ -2108,7 +2124,7 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
  
     $ cd /var/www/application
     $ sudo chown -R www-data current
-    $ sudo chmod -R 775 current
+    $ sudo chmod -R 755 current
 
 
 ### Nginx設定
@@ -2123,13 +2139,10 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 
 #### site-available/defaultファイル
 
-##### 変更内容
-
 * ドキュメントルート設定 rootディレクティブ
 * /によるアクセス        indexディレクトリ
 * FastCGIの設定          locationディレクティブ
 
-##### default
 
     server {
             listen 80 default_server;
@@ -2197,50 +2210,49 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 
 viの文字コード設定 set encoding=utf8
 
+
 ### MySQL
 
 #### AWS RDS
 
-MySQLサーバー起動
+AWSのサービスRDSからMySQLサーバー起動する。
 
 ### 接続確認 mysql_test.php
 
     <?php
-    $url = “endpoint";
-    $user = "tutorial";
-    $pass = “passw0rd";
-    $db = "tutorial";
+        $url = "<endpoint>";    // RDSでMySQLのインスタンスを作成した際にインスタンスのパネルに表示
+        $user = "<username>";   // RDSでMySQLのインスタンスを作成する際に設定
+        $pass = "<passw0rd>";   // RDSでMySQLのインスタンスを作成する際に設定
+        $db = "<dbname>";       // RDSでMySQLのインスタンスを作成する際に設定
 
-    // MySQLへ接続する
-    $link = mysql_connect($url,$user,$pass) or die("接続に失敗しました。");
+        // 接続
+        $link = mysql_connect($url,$user,$pass) or die("接続失敗。");
 
-    // データベースを選択する
-    $sdb = mysql_select_db($db,$link) or die("データベース選択に失敗しました。");
+        // DB選択
+        $sdb = mysql_select_db($db,$link) or die("DB選択失敗。");
 
-    // クエリを送信する
-    $sql = "SELECT * FROM tutorial";
-    $result = mysql_query($sql, $link) or die("クエリの送信に失敗しました。<br />SQL:".$sql);
+        // クエリ送信する
+        $sql = "SELECT * FROM <tablename>";  // <tablename>は作成済みでデータを何件か挿入済みとする
+        $result = mysql_query($sql, $link) or die("クエリ送信失敗。");
 
-    //結果セットの行数を取得する
-    $rows = mysql_num_rows($result);
+        //行数取得
+        $rows = mysql_num_rows($result);
 
-    //結果保持用メモリを開放する
-    mysql_free_result($result);
+        //結果保持用メモリ開放
+        mysql_free_result($result);
 
-    // MySQLへの接続を閉じる
-    mysql_close($link) or die("MySQL切断に失敗しました。");
+        // 切断
+        mysql_close($link) or die("切断失敗。");
     ?>
+    
     <?php header('Content-Type: text/html; charset=utf-8');?>
     <html>
     <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=SHIFT-JIS">
-    <title>全件表示</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf8">
+        <title>接続テスト</title>
     </head>
     <body>
-    接続ID:<?= $link ?><br />
-    選択の成否:<?= $sdb ?><br />
-    結果ID:<?= $result ?><br />
-    行数:<?= $rows ?><br />
+        <?php echo $rows; ?>
     </body>
     </html>
 
@@ -2248,6 +2260,8 @@ viの文字コード設定 set encoding=utf8
 
 
 ### Xdebug
+
+デバックに便利なXdebugをインストールしておく。
 
 #### インストール
 
@@ -2267,6 +2281,8 @@ viの文字コード設定 set encoding=utf8
 
 
 ### Composer
+
+パッケージ管理システムComposerをインストールする。
 
 #### インストール
 
@@ -2385,63 +2401,45 @@ Calc.php
 
 
 
-
-
-
-
-
-
-## Appendix 1. ユーザー、グループの変更
+### Appendix 1. ユーザー、グループの変更
 
     sudo chown [-f|-R] username (filename|dirname)
     sudo chgrp  [-f|-R]] groupname (filename|dirname)
 
 
 
-## Appendix 2. PHPファイル作成テスト
+### Appendix 2. PHPファイル作成テスト
 
-<?PHP
+    <?PHP
 
-$file_name = 'test.txt';
+    $file_name = 'test.txt';
 
-// 存在確認
-if( !file_exists($file_name) ){
-// ファイル作成
-touch( $file_name );
-}else{
-header('Content-Type: text/html; charset=utf-8');
-echo $file_name . 'は存在しています。処理を終了します';
-exit();
-}
-
-// パーミッションの変更
-chmod( $file_name, 0644 );
-header('Content-Type: text/html; charset=utf-8');
-echo $file_name . 'を作成しパーミッションを644へ変更しました';
+    // 存在確認
+    if( !file_exists($file_name) ){
+        // ファイル作成
+        touch( $file_name );
+    }else{
+        header('Content-Type: text/html; charset=utf-8');
+        echo $file_name . 'は存在しています。処理を終了します';
+        exit();
+    }
 
 
-
-## Appendix 3. Nginxのエラーログ
+### Appendix 3. Nginxのエラーログ
 
     /var/log/nginx/error.log
 
 
+### Appendix 4.「CakePHP 継続的インテグレーション」ディレクトリのパーミション
 
-## Appendix 4.「CakePHP 継続的インテグレーション」ディレクトリのパーミション
-
-/var/www/application
-
-*  /var/www/application 
-ユーザー、グループともにroot パーミション755。
-* /var/www/application/current以下は
+* /var/www/application 
+  ユーザー、グループともにroot。 パーミション755。
+* /var/www/application/current以下  
     + ユーザーvagrant
     + グループwww-data
-    + ディレクトリパーミション 775
+    + パーミション 775
 
-どこかでsudo chown -R vagrant currentを行っているか確認。
-またどのようにグループをrootからwww-dataへ変更しているかも確認
-
-## Appendix 5. 「CakePHP 継続的インテグレーション」のsite-available/defaultファイル
+### Appendix 5. 「CakePHP 継続的インテグレーション」のsite-available/defaultファイル
 
 __初期状態ではlocationがコメントアウトされておりphpファイルへアクセスするとダウンロードしてしまう。
 下記のようにコメントアウトを外す。__
@@ -2472,7 +2470,7 @@ __初期状態ではlocationがコメントアウトされておりphpファイ�
 
 
 
-## Appendix 6. SFTP
+### Appendix 6. SFTP
 
 FileZilla設定方法は下記サイトを参考にして設定 
 [WordPress】素人でも出来た！AWS EC2へのサーバー移行方法7 旧データをアップロード | 男子風呂（ぐ）](http://danshiblog.com/job/130128-amazon-ec2-server-setting-wordpressdata-upload.html)
@@ -2487,7 +2485,7 @@ FileZilla設定方法は下記サイトを参考にして設定
   (ディレクトリは755)。
 
 
-## Appendix 7. 手順
+### Appendix 7. 手順
 
     $ sudo apt-get update
     $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
@@ -2500,9 +2498,7 @@ FileZilla設定方法は下記サイトを参考にして設定
 
 
 
-
-
-<a name="aws_postfix2">Ubuntu + Postfixでメールを運用</a>
+## <a name="aws_postfix2">Ubuntu + Postfixでメールを運用</a>
 
 
 * [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)

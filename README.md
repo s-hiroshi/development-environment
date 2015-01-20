@@ -2117,7 +2117,10 @@ Evernoteの「2015.01.16 AWS UbuntuでPHPを動作させる」を参照。
 * Route 53
      独自ドメインと固定IPを結びつける
 
-EC2 <—Elastic IP <— Route 53
+DNSサーバー正しく設定されているかを確認する。
+
+    $ nslookup <dns> <domain>
+
 
 
 ### 確認

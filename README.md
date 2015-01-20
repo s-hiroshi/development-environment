@@ -741,11 +741,11 @@ Wiki
 
 ### Vagrantの役割
 
-1. 仮想サーバの起動・終了
-2. ホストOSとゲストOSでディレクトリ共有
-   例) develop.vm.synced_folder “application”, "/var/www/application/current", (Vagrantfile)
-3. 仮想サーバのプロビジョニング
-   Knife-solo, berkshelf
+1.仮想サーバの起動・終了
+2.ホストOSとゲストOSでディレクトリ共有
+  例) develop.vm.synced_folder “application”, "/var/www/application/current", (Vagrantfile)
+3.仮想サーバのプロビジョニング  
+  Knife-solo, berkshelf
 
 
 [Command-Line Interface - Vagrant Documentation](http://docs.vagrantup.com/v2/cli/)

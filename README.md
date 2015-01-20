@@ -2137,7 +2137,7 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 
 ## <a name="aws_s3">S3</a>
 
-## <a name="aws_utuntu_mysql_php">Ubuntu + MySQL + PHP環境構築</a>
+## <a name="aws_ubuntu_mysql_php">Ubuntu + MySQL + PHP環境構築</a>
 
 ### 目的
 

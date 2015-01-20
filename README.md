@@ -2498,7 +2498,7 @@ FileZilla設定方法は下記サイトを参考にして設定
 
 
 
-## <a name="aws_postfix2">Ubuntu + Postfixでメールを運用</a>
+## <a name="aws_postfix">Ubuntu + Postfixでメールを運用</a>
 
 
 * [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)

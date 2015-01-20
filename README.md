@@ -688,16 +688,16 @@ XDebug
 
 # <a name="cakephp_ci">CakePHP開発環境</a>
 
-* PHPUnit ユニットテスト
+* PHPUnit ユニットテスト  
   CakePHPはユニットテストをPHPUnitで行う。
-* CakeDC Migration Plugin
+* CakeDC Migration Plugin  
   データベースマイグレーション
-* Behat
+* Behat  
   > Behat is an open source behavior-driven development framework for PHP
   [Behat Documentation &mdash; Behat 2.5.3 documentation](http://docs.behat.org/en/v2.5/)
-* sizuhiko/Bdd
+* sizuhiko/Bdd  
   CakePHP2用のプラグイン
-* behat/mink-goutte-driver
+* behat/mink-goutte-driver  
   JavaScriptを使わずBehatを利用するプラグイン。
 
 
@@ -706,7 +706,7 @@ XDebug
 
 [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 
-### 仮想化ソフトウェア
+## 仮想化ソフトウェア
 
 * VirtualBox
 * VMware
@@ -714,15 +714,15 @@ XDebug
 仮想化ソフトのゲストOSを開発環境として利用する。
 
 
-### 仮想開発環境構築ソフトウェア
+## 仮想開発環境構築ソフトウェア
 
 仮想化ソフトウェアの制御やゲストOSのプロビジョニングを行う。
 
-### Vagrant 仮想開発環境構築ソフトウェア
+## Vagrant(仮想開発環境構築ソフトウェア)
 
 > Vagrant（ベイグラント）は、FLOSSの仮想開発環境構築ソフトウェア[1]。VirtualBoxをはじめとする仮想化ソフトウェアやChef（英語版）やSalt（英語版）、Puppetといった構成管理ソフトウェアのラッパーとみなすこともできる。
 
-Wiki
+Wikipedia
 
 
 ### Chef
@@ -732,7 +732,7 @@ Wiki
 
 > プロビジョニング（英: Provisioning）は、本来は「準備、提供、設備」などの意味であり、現在では通常、音声通信やコンピュータなどの分野における、ユーザーや顧客へのサービス提供の仕組みを指す。
 
-Wiki
+Wikipedia
 
 
 ### VirtualBox + Vagrant + Chef
@@ -741,50 +741,46 @@ Wiki
 
 ### Vagrantの役割
 
-
 1. 仮想サーバの起動・終了
 2. ホストOSとゲストOSでディレクトリ共有  
-  例) develop.vm.synced_folder “application”, "/var/www/application/current", (Vagrantfile)
+  (例) develop.vm.synced_folder “application”, "/var/www/application/current", (Vagrantfile)
 3. 仮想サーバのプロビジョニング  
   Knife-solo, berkshelf
 
-
 [Command-Line Interface - Vagrant Documentation](http://docs.vagrantup.com/v2/cli/)
 
-#### Vagrantのボックス追加
+### Vagrantのボックス追加
 
     $ vagrant box add [options] <name, url, or path>
-    # vagrant box add —helpでオプション等を確認する。
  
-例) Bentoのopscode-ubuntu-14.04の場合
+(例) Bentoのopscode-ubuntu-14.04の場合
 
     $ vagrant box add opscode-ubuntu-14.0.4 http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-14.04_chef-provisionerless.box
 
-#### 初期化
+### 初期化
 
     $ vagrant init
 
-#### 起動・休止・シャットダウン・削除
+### 起動・休止・シャットダウン・削除
 
     $ vagrant up                 // 起動
     $ vagrant halt               // シャットダウン
     $ vagrant destroy            // 削除
 
-vagrant shutdownはない。
 
-#### SSHで接続
+### SSHで接続
 
     $ vagrant ssh
 
-#### vagrant プラグインの導入
+### vagrant プラグインの導入
 
     $ vagrant plugin install sahara
     $ vagrant plugin install vagrant-omnibus
     $ vagrant plugin install vagrant-cachier
 
-##### vagrant plugin installで発生したエラーへの対応
+### vagrant plugin installで発生したエラーへの対応
 
-###### エラーメッセージ
+#### エラーメッセージ
 
 > Bundler, the underlying system Vagrant uses to install plugins,
 > reported an error. The error is shown below. These errors are usually
@@ -794,30 +790,30 @@ vagrant shutdownはない。
 > An error occurred while installing nokogiri (1.6.5), and Bundler cannot continue.
 > Make sure that `gem install nokogiri -v 1.6.5 succeeds before bundling.
 
-###### 解決策
+#### 解決策
 
     $ gem install --install-dir ~/.vagrant.d/gems nokogiri -v '1.6.5'
 
 [vagrant pluginをインストールしようとするとnokogiriエラーがでてインストールできない時の対策 | hypermkt blog](http://blog.hypermkt.jp/can-not-install-vagant-plugin-by-nokogiri/)
 
 
-#### プロビジョニング
+## プロビジョニング
 
 Vagrantは仮想サーバーを起動したときや指定したタイミングでプロビジョニングを行うことができる。
 
 
-#### プロビジョニングツール
+### プロビジョニングツール
 
 Chef(Chef Solo, Chef Server)
 [Chef | IT automation for speed and awesomeness | Chef](https://www.chef.io/chef/)
 
-#### knife-solo
+### knife-solo
 
 Chef Soloのリポジトリを作成する。
 
 [knife-solo](http://matschaffer.github.io/knife-solo/)
 
-#### Berkshelf
+### Berkshelf
 
 Chefのクックブックとその依存関係を管理する。
 
@@ -826,7 +822,7 @@ Bundlerを使わずChefDKを利用することで解決した。
 
     $ bundle exec berks vendor ./cookbooks
 
-#### ChefDk
+### ChefDk
 
 Chef関連のツール集(Berkshelf, Knife-soloなど)
 
@@ -837,11 +833,11 @@ Bundlerでエラーが発生した下記処理もChefDKで解決した。
 
     $ bundle exec knife cookbook create <name> -o site-cookbooks
 
-###### ChefDk導入後
+#### ChefDk導入後
 
     $ knife cookbook create <name> -o site-cookbooks
 
-#### Vagrant, Chefを使ったプロビジョニング手順
+## Vagrant, Chefを使ったプロビジョニング手順
 
 1. site-cookbooks/recipeでプロビジョニングの内容を記述したrubyファイル(rb)作成する。
 2. berks vendor cookbooksでrecipeのパッケージをcookbooksへ配置する。
@@ -865,7 +861,7 @@ Bundlerでエラーが発生した下記処理もChefDKで解決した。
 3. $ vagrant provision
 
 
-#### Capistrano3
+### Capistrano3
 
 開発環境からデプロイ環境にデプロイするツール。
 
@@ -888,10 +884,13 @@ stderr: Host key verification failed.が出たら、git ls-remoteを叩く！
 
 [Google グループjenkinsからgithubへのssh接続](https://groups.google.com/forum/#!topic/jenkinsci-ja/JkjRAyQyOKE)
 
-## <a name="ci_ci">CI(継続的インテグレーション)</a>
 
 
-下記書籍の読書メモ
+
+# <a name="ci_ci">CI(継続的インテグレーション)</a>
+
+
+主に下記書籍の読書メモ
 
 [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 
@@ -1541,7 +1540,8 @@ nginx.confで設定する。
 #### PECLライブラリのインストール
 
 > PECLのインストール用には、PEAR同様に「pecl」コマンドが提供されている。インストール方法もほぼPEARと同じだが、インストール後に設定ファイル（php.ini）の「extension」でインストールしたモジュールを指定する必要がある点が異なる。
-Wiki
+
+Wikipedia
 
 1. peclコマンド[^pecl][^phpize][^phpbuilddir]
   $ pecl install \<package name\>

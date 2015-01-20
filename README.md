@@ -1,11 +1,11 @@
 # 内容
 
-AWSでサービスを運用するために勉強している内容を書き留めた個人的なメモ書き。
+AWSでWEBサービスを運用するために勉強している内容を書き留めた個人的なメモ書き。
 
 # 目標
 
-1. 継続的的インテグレーションが可能な開発環境の構築
-2. AWSでサービス運用
+1. 継続的インテグレーションが可能な開発環境の構築
+2. AWSでWEBサービス運用
 
 # 参考書
 
@@ -15,10 +15,10 @@ AWSでサービスを運用するために勉強している内容を書き留�
 # 目次
 
 * [継続的インテグレーション](#ci)
-* [AWS(Amazon Web Services)でサービス運用](#aws)
+* [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 
 
-# <a name="ci">継続的インテグレーションのための開発環境</a>
+# <a name="ci">継続的インテグレーション</a>
 
 ## 目次
 
@@ -54,19 +54,17 @@ AWSでサービスを運用するために勉強している内容を書き留�
 
 ## 開発ツール
 
-* デバックツール
-  ブラウザ
 * CSS プリプロセッサー
     + Sass/Compass
 * JavaScriptテストツール
     + QUnit + PhantomJS
 * ドキュメンテーションツール
-    + CSS
+    + CSS  
       StyleDocco / SassDoc
-    + JavaScript
+    + JavaScript  
       YUI Doc
 * コードインスペクション
-    + JavaScript
+    + JavaScript  
       JSLint, JSHint
 * 自動化ツール Grunt
 
@@ -78,18 +76,19 @@ AWSでサービスを運用するために勉強している内容を書き留�
 
     example
     |
-    |— index.html
+    |— index.html                // 公開サイトへデプロイ
     |
     |— css
          |— style.min.css        // 公開サイトへデプロイ
+    |
     |—  js
          |— scripts.min.js       // 公開サイトへデプロイ
     |
     |— dev
          |— css
-              |— doc            // CSS スタイルガイドフォルダ StyleDocco
+              |— doc            // CSS スタイルガイドフォルダ StyleDocco/SassDoc
               |— src
-                   |— style.css
+                   |— style.css // 圧縮してexample/css/style.mini.cssへ
          |— sass
               |— style.scss     // dev/css/src/style.cssへコンパイル
          |—  js
@@ -142,7 +141,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
     $ cd <path>
     $ npm install grunt --save-dev
 
-<path>は上記フォルダのばあいはdev。  
+\<path\>は上記フォルダ構成の例でははdevのパス。  
 –save-devをつければpackage.jsonのdevDependenciesプラグイン情報が追記される。
 
     {
@@ -261,12 +260,15 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
     };
 
 
-### 6. gruntの確認
+### 6. grunt実行
 
-    $ grunt  # watchを実行(watchにタスクとして他の処理を指定しているのでそれらも順番に実行)
-    $ grunt <package name>   # pakege nameのみ実行
+    // 上記例ではgrunt.registerTask( 'default', [ 'watch'] );なのでwatchを実行
+    // watchにタスクとして他の処理を指定しているのでそれらも順番に実行
+    $ grunt
+    // 特定のタスクのみ実行
+    $ grunt <taskname>
 
-### package.jsonをもとにしたインストール
+### package.jsonをもとにしたプラグインのインストール
 
     $ npm install
 
@@ -276,7 +278,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
 
     $ npm update —save-dev
 
-すべてのパッケージがアップデートされる。
+すべてのプラグインがアップデートされる。
 
 
 ## Sass
@@ -289,7 +291,7 @@ CSSプリプロセッサー。
 
     $ sudo gem install sass
 
-### Sassのコンパイル
+### コンパイル
 
 style.scssをコンパイルして同じフォルダにstyle.cssを作成する例。
 
@@ -299,7 +301,7 @@ style.scssをコンパイルして同じフォルダにstyle.cssを作成する�
 
     $ sass –watch style.scss:style.css
 
-watchはターミナルではctrl + Cで停止する。
+ターミナルではctrl + Cでwatchを停止する。
 
 ### バージョン確認
 
@@ -362,7 +364,7 @@ contrib.rbの設定例
 
 上記例ではcompassコマンドでコンパイルするとdev/sassフォルダのモジュールファイルを除いたscssファイルをコンパイルしcssディレクトリへ出力する。
 
-### コンパイル
+### 変更を監視して自動コンパイル
 
     $ compass watch css/sass/main.scss
 
@@ -379,7 +381,7 @@ CSS スタイルガイド。
 
 #### インストール先
 
-/usr/local/lib/node_modules/styledocco/bin/styledocco
+    /usr/local/lib/node_modules/styledocco/bin/styledocco
 
 ### パスの確認
 
@@ -1832,7 +1834,7 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
 
 
 
-# <a name="aws">AWS Amazon - Web Servicesでサービス運用</a>
+# <a name="aws">AWS(Amazon Web Services)でWEBサービス運用</a>
 
 ## 目次
 

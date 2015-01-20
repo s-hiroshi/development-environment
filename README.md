@@ -2502,6 +2502,84 @@ FileZilla設定方法は下記サイトを参考にして設定
 
 
 
+<a name="aws_postfix2">Ubuntu + Postfixでメールを運用</a>
+
+
+* [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
+* [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
+
+## 送信環境構築
+
+1. AWS EC2 > Security Groupで送信用ポート設定。
+2. AWS Route 53でMXレコード設定
+3. Postfixをインストール
+4. Postfix設定(/etc/postfix/main.cf)
+5. 送信テスト mailコマンド
+
+## Route 53でMXレコード追加
+
+### 前提
+
+Aレコードにexample.comを設定している。
+
+
+### MX Main exchangeレコード追加
+
+* Name
+  mail.example.com
+* Type  
+  Mail Exchange
+* Value  
+  10 mail.example.com
+
+
+
+## Postfix
+
+### インストール
+
+    $ sudo apt-get install postfix
+        // バージョン確認
+    $ /usr/sbin/postconf | grep mail_version
+    mail_version = 2.11.0
+
+[Postfixのバージョンを確認する | CoDE4U](http://blog.code4u.org/archives/1135)
+
+
+### 設定ファイル
+
+    /etc/postfix/main.cf
+
+下記ページを参考に設定。
+
+
+* [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
+* [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
+*[Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
+
+## postfix 再起動
+
+    $ sudo /etc/init.d/postfix restart
+
+
+
+## mailコマンドで送信確認
+
+### インストール
+
+    $ sudo apt-get install mailutils
+
+
+試した環境ではmailコマンドの終了は.ではなくエンター + Ctrl + D。
+
+
+### メールのログ
+
+    /var/log/mail.log
+    /var/log/mail.err
+
+
+
 ## <a name="aws_bills">課金</a>
 
 * Billing & Cost Management

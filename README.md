@@ -1,38 +1,31 @@
-# 開発環境構築メモ
+# 内容
 
-AWSでサービスを運用するために勉強していることのメモ。  
-勉強中の内容を書き留めた個人的なメモ書き。
+AWSでサービスを運用するために勉強している内容を書き留めた個人的なメモ書き。
 
-## 目標
+# 目標
 
 1. 継続的的インテグレーションが可能な開発環境構築
 2. AWSでサービス運用
 
-## 参考書
+# 参考書
 
-[「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏  (著), 吉羽 龍太郎 (著), 岸田 健一郎  (著), 穴澤 康裕 (著), 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
+[「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 
+# 目次
 
-## 内容
-
-* [継続的インテグレーション](#ci)
+* [継続的インテグレーションのための開発環境](#ci)
 * [AWSでサービス運用](#aws)
 
+# <a name="ci">継続的インテグレーションのための開発環境</a>
 
-# 継続的インテグレーション
+## 目次
 
-## 本記事の内容
-
-「CakePHPで学ぶ継続的インテグレーション」Impressの読書メモ
-
-## メモ目次
-
-* [CI(継続的インテグレーション)](#ci)
+* [HTML/CSS/JavaScriptの開発環境](#html_css_javascript_ci)
+* [PHPの開発環境](#php_ci)
+* [CakePHPの開発環境](#cakephp_ci)
+* [CI(継続的インテグレーション)](#ci_ci)
 * [アジャイル](#agile)
 * [BDD:振舞駆動開発 (開発手法)](#bdd)
-* [HTML/CSS/JavaScriptのCI](#html_css_javascript_ci)
-* [PHPのCI](#php_ci)
-* [CakePHPのCI](#cakephp_ci)
 * [VirtualBox + Vagrant + Chef Soloを使ったCI環境構
   築](#virtualbox_vagrant_chef)
     + 開発サーバー(develop)
@@ -56,249 +49,12 @@ AWSでサービスを運用するために勉強していることのメモ。
     + [14. CIサーバーJenkinsのパス](#appendix14)
 
 
+# <a name="html_css_javascript_ci">HTML/CSS/JavaScriptの開発環境</a>
 
-## <a name="ci">CI(継続的インテグレーション)</a>
+## 開発ツール
 
-継続的な開発を効率的に行うための開発手法。
-
-### 本記事サーバー構成
-
-サーバー 3台
-
-* 開発サーバー
-  192.168.33.10
-* CIサーバー
-  192.168.33.100
-* 公開サーバー
-  192.168.33.200
-
-### ディレクトリ構造
-
-develop.vm.synced_folder "application", "/var/www/application/current"
-
-    current
-      |--app  // Cakeアプリケーション
-          |-- Config    // CakePHP コンフィグレーション
-          |-- Console
-          |-- Controller
-          |-- Test   // CakePHPテスト用ディレクトリ
-          |.....
-          |-- Vendor // Composerパッケージ用ディレクトリ
-          |-- composer.json
-          |-- phpunit.xml
-      |--deploy // デプロイ Capistorano
-      |--features // BDD
-      |-- build.xml
-
-
-
-### CIの流れ
-
-1. 開発サーバーのソースをGitHubへPushする。
-2. CIサーバーはGitHubからソースをPullしテストを行う(自動処理)。
-  本記事ではCIサーバーの自動処理をJenkinsで管理する。
-3. 開発サーバーでデプロイ処理を行う。デプロイは自動処理される。
-  本記事ではCapistranoでデプロイサーバーへ自動でプロイする。
-
-[Welcome to Jenkins CI! | Jenkins CI](http://jenkins-ci.org/)
-[capistrano/capistrano](https://github.com/capistrano/capistrano)
-
-
-### CIツール
-
-* 継続的インテグレーションツール
-    + Jenkins
-* (JavaScript/HTML/CSS)自動化ツール
-    + Grunt
-* テストツール
-    + Behat(BDD駆動開発用テストツール)
-    + PHPUnit(単体テストツール)
-* コードインスペクション(コード検査ツール)
-    + PHP_CodeSniffer
-* ドキュメンテーションツール
-    + phpDocumentor
-
-### 開発手法
-
-* アジャイル
-* BDD:振舞駆動開発 (開発手法)
-
-
-
-## <a name="agile">アジャイル</a>
-
-> 短い期間でリリース可能なソフトウェアを繰り返し提供することに重きを置きます
-(p.007)
-
-* アジャイル
-    + Scrum(スクラム)
-      アジャイル開発手法の１つ。
-        - スプリント
-          設計-開発-テスト-レビューの単位。
- 
- 
-#### Scrum(スクラム)
-
-> 2週間から1か月程度の短時間で、設計から開発、テストなどの一連の作業を繰り返し、ソフトウェアを仕上げます。
-(p.007)
- 
-#### スプリント
-
-> 各スプリントでは最終的に実際に動作するソフトウェアの提供が求められます。
-(p.007)
-
-
-
-## <a name="bdd">BDD:振舞駆動開発 (開発手法)</a>
-
-振舞駆動開発(BDD: Behavior Driven Develop)。
-
-> BDDはユーザーストーリーと、そこから導きだされるビジネスロジックをテストすることに注目しています。
-(p.178)
-
-> ユーザーストーリーから具体的な利用シーンを抽出します。これを「シナリオ」と呼びます。
-> BDDのフレームワークを使う場合は、ドメイン特化型言語(DSL domain-specific language)と呼ばれる記法で記述します。
-> 代表的なDSLは「Gherkin」と呼ばれ、記述したシナリオは、受け入れテストとして「Cucumber 」や「Behat」などのテスティングフレー> > ムワークによって自動実行できます。
-(p.181)
-
-
-### BDDの流れ
-
-->失敗する受け入れテスト -> __| 失敗する単体テスト-> 実装してテスト成功させる->
-リファクタリング |__ -> ステップの定義 -> 「ステップを実行してシナリオを成功させ
-る」(p.180) -> リファクタリング ->
-
-#### ユーザーストーリー
-
-> ユーザーストーリーとは、時間軸に沿ってユーザーが得られる体験や価値、出来事を、筋書きとして記述します。ユーザーストーリーはそれ単独でリリース可能であり、ビジネス要件やスケジュール、見積などが含まれています。
-
-##### ユーザーストーリーの例
-
-> 会員として、新しい記事を投稿できる、なぜなら会員は自分の言葉で発信したいからだ
-(p.178)
-
-#### シナリオ
-
-シナリオはユーザーストーリーから定義される。
-
-> シナリオは連続する出来事を表現するもので、よりアプリケーションが実現することに注目していると言えます。
-(p.181)
-
-
-#### フィーチャ
-
-
->フィーチャとは、顧客の視点から「アプリケーションに必要となる機能や特徴」のことで、
-> 最初の2行目に書かれている通り、ユーザーストーリー記法で記述する事を推奨しています。
-(p.182)
-
-* フィーチャの記法
-Gerkin記法
-* フィーチャの拡張子
-.feature
-
-
-#### フィーチャの例
-
-##### ディレクトリ構造
-
-
-    current
-       |— app
-            |— Config
-                |— bootstrap
-                    |— environments
-                         |— ci.php
-                         |— development.php
-                         |— test.php
-                    |— environments.php
-                |— …
-            |
-            |— Console
-            |— Controller
-            |— …
-            |— composer.json
-            |— index.php
-            |— phpunit.xml
-        |
-        |— feature
-                |— boostrap
-                |— …
-                |— blog_new_post.feature
-
-
-##### フィーチャファイル(.feature)
-
-    # language: ja
-    フィーチャ: 会員として新しい記事を投稿できる、なぜなら会員は自分の言葉で発信したいからだ
-    背景:
-    前提 "会員" としてログインしている
-    シナリオ: 新しい記事を投稿できる
-    もし 以下の内容で記事を投稿する
-    | タイトル | はじめてのブログ |
-    | 本文 | はじめまして |
-    ならば 新しい記事が登録されていること
-    シナリオ: タイトルなしでは新しい記事は投稿できない
-    もし 以下の内容で記事を投稿する
-    | タイトル | |
-    | 本文 | はじめまして |
-    ならば 新しい記事が登録できないこと
-
-
-#### フィーチャの実行
-
- __フィーチャファイル(.feature)はBehatを使って実行する。__
-
-
-### Behat/Mink (BDD用テスティングフレームワーク)
-
-BDDのためのPHPで作成した(ユーザー)ストーリーベースのテスティングフレームワーク。
-
-### Bddプラグイン BehatのCakePHP2用プラグイン (プラグイン)
-
-> BDD(Behavior Driven Development) integration plugin for CakePHP2
-
-[sizuhiko/Bdd](https://github.com/sizuhiko/Bdd)
-
- Bddプラグインはフィーチャファイルを実行する。
- BddプラグインはCake標準テストケースとPHPUnitを使い実行される。
-
-#### インストール
-
-* Composerを使いインストール
-* composer.jsonにプラグインのリポジトリを登録[^composer_repo]
-
-[^composer_repo]:>Packagistから所得できないパッケージがある場合は、
-composer.jsonの[repositories]に記述する事で利用できます。(p.187)
-
-composer.json
-
-    "repositories": [
-      {
-        "type": "vcs",
-        "urrl: "git://github.com/sizuhiko/Bdd.git
-      }
-    ],
-
-#### フィーチャーファイルのテスト
-
-    $ Console/cake Bdd.story
-
-### BDDと単体テスト
-
-__フィーチャは最終的に単体テストの集まりを実行する。__
-
-
-## Jenkins
-
-継続的インテグレーション用
-
-
-## <a name="html_css_javascript_ci">HTML・CSS・JavaScriptの継続的インテグレーション</a>
-
-### 開発ツール
-
-* デバックツール ブラウザ
+* デバックツール
+  ブラウザ
 * CSS プリプロセッサー
     + Sass/Compass
 * JavaScriptテストツール
@@ -313,11 +69,11 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
       JSLint, JSHint
 * 自動化ツール Grunt
 
-### 継続的開発
+## 継続的開発
 
 各ツールをGruntで自動化する。
 
-### フォルダー構成
+## フォルダ構成の例
 
     example
     |
@@ -350,53 +106,53 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
          |— contrib.rb           // Compass設定フィアル
 
 
-### Grunt
+## Grunt
 
 [Grunt: The JavaScript Task Runner](http://gruntjs.com/)
 
-gruntは一般的にgrunt-cliのみグローバルへインストールし
-grunt本体も含め各プラグインはプロジェクトごとのフォルダへインストールする。
+gruntは一般的にgrunt-cliのみグローバルへインストールし、grunt本体も含めて各プラグインはプロジェクトごとのフォルダへインストールする。
 
-#### 1. node/npmのインストール
+### 1. node/npmのインストール
 
 [node.js](http://nodejs.org/)
 
 Gruntはnode.js/npmを使う。
 
-node.jsはpkgファイルをダウンロードしインストールする。
-npmはpkgファイルでnode.jsをインストールした場合は同時にインストールされる。
+node.jsはpkgファイルをダウンロードしインストールした。  
+npmはnode.jsと一緒にインストールされた。
 
-#### 2. grunt command line interface(grunt-cli)のグローバルへのインストール
+### 2. grunt command line interface(grunt-cli)のグローバルへのインストール
 
     $ sudo npm install -g grunt-cli
 
-#### 3. プロジェクトフォルダにpackage.jsonを作成
+### 3. プロジェクトフォルダにpackage.jsonを作成
 
     {
-      "name": "example-project",
+      "name": "example",
       "version": "0.0.1"
     }
 
-#### 4. プロジェクトフォルダにGrunt本体とプラグインをインストール
+### 4. プロジェクトフォルダにGrunt本体とプラグインをインストール
 
 grunt本体とプラグインはプロジェクトごとにプロジェクトフォルダへインストールする。
 
-##### 4-1. grunt本体をインストールする。
+#### 4-1. grunt本体のインストール
 
-    $ cd <example-project path>
+    $ cd <path>
     $ npm install grunt --save-dev
 
+<path>は上記フォルダのばあいはdev。  
 –save-devをつければpackage.jsonのdevDependenciesプラグイン情報が追記される。
 
     {
-      "name": "example-project",
+      "name": "example",
       "version": "0.0.1",
       "devDependencies": {
       "grunt": "~0.4.1"
       }
     }
 
-##### 4-2. プラグインをインストール
+#### 4-2. プラグインインストール例
 
     $ npm install grunt-contrib-compass --save-dev
     $ npm install grunt-contrib-cssmin --save-dev
@@ -422,9 +178,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
       }
     }
 
-#### 5. Gruntfile.jsの記載
-
-
+### 5. Gruntfile.jsの例
 
     module.exports = function(grunt) {
       grunt.initConfig({
@@ -505,18 +259,19 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
       grunt.registerTask( 'default', [ 'watch'] );
     };
 
-#### 6. gruntの確認
+
+### 6. gruntの確認
 
     $ grunt  # watchを実行(watchにタスクとして他の処理を指定しているのでそれらも順番に実行)
     $ grunt <package name>   # pakege nameのみ実行
 
-#### package.jsonをもとにインストール
+### package.jsonをもとにしたインストール
 
     $ npm install
 
 既存のnode_modulesフォルダがあれば削除しておく。
 
-#### プラグインのバージョンアップ
+### プラグインのバージョンアップ
 
     $ nom update —save-dev
 
@@ -535,7 +290,7 @@ CSSプリプロセッサー。
 
 #### Sassのコンパイル
 
-sassコマンドを使いstyle.scssをコンパイルして同じフォルダーにstyle.cssを作成する例。
+sassコマンドを使いstyle.scssをコンパイルして同じフォルダにstyle.cssを作成する例。
 
     $ sass style.scss style.css
 
@@ -604,7 +359,7 @@ contrib.rbの設定例
     // compass専用コメントの出力を停止するとき(config.rb)
     line_comments = false
 
-上記例ではcompassコマンドでコンパイルするとdev/sassフォルダーのモジュールファイルを除いたscssファイルをコンパイルしcssディレクトリへ出力する。
+上記例ではcompassコマンドでコンパイルするとdev/sassフォルダのモジュールファイルを除いたscssファイルをコンパイルしcssディレクトリへ出力する。
 
 #### コンパイル
 
@@ -957,6 +712,9 @@ XDebug
 * behat/mink-goutte-driver
   JavaScriptを使わずBehatを利用するプラグイン。
 
+以下下記書籍の読書メモ
+
+[「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 
 ## <a name="virtualbox_vagrant_chef">VirtualBox + Vagrant + Chef Soloをで継続的CI環境構築(開発環境構築/プロビジョニング/デプロイ)</a>
 
@@ -1141,6 +899,241 @@ stderr: Host key verification failed.が出たら、git ls-remoteを叩く！
 
 [Google グループjenkinsからgithubへのssh接続](https://groups.google.com/forum/#!topic/jenkinsci-ja/JkjRAyQyOKE)
 
+## <a name="ci">CI(継続的インテグレーション)</a>
+
+継続的な開発を効率的に行うための開発手法。
+
+### 本記事サーバー構成
+
+サーバー 3台
+
+* 開発サーバー
+  192.168.33.10
+* CIサーバー
+  192.168.33.100
+* 公開サーバー
+  192.168.33.200
+
+### ディレクトリ構造
+
+develop.vm.synced_folder "application", "/var/www/application/current"
+
+    current
+      |--app  // Cakeアプリケーション
+          |-- Config    // CakePHP コンフィグレーション
+          |-- Console
+          |-- Controller
+          |-- Test   // CakePHPテスト用ディレクトリ
+          |.....
+          |-- Vendor // Composerパッケージ用ディレクトリ
+          |-- composer.json
+          |-- phpunit.xml
+      |--deploy // デプロイ Capistorano
+      |--features // BDD
+      |-- build.xml
+
+
+
+### CIの流れ
+
+1. 開発サーバーのソースをGitHubへPushする。
+2. CIサーバーはGitHubからソースをPullしテストを行う(自動処理)。
+  本記事ではCIサーバーの自動処理をJenkinsで管理する。
+3. 開発サーバーでデプロイ処理を行う。デプロイは自動処理される。
+  本記事ではCapistranoでデプロイサーバーへ自動でプロイする。
+
+[Welcome to Jenkins CI! | Jenkins CI](http://jenkins-ci.org/)
+[capistrano/capistrano](https://github.com/capistrano/capistrano)
+
+
+### CIツール
+
+* 継続的インテグレーションツール
+    + Jenkins
+* (JavaScript/HTML/CSS)自動化ツール
+    + Grunt
+* テストツール
+    + Behat(BDD駆動開発用テストツール)
+    + PHPUnit(単体テストツール)
+* コードインスペクション(コード検査ツール)
+    + PHP_CodeSniffer
+* ドキュメンテーションツール
+    + phpDocumentor
+
+### 開発手法
+
+* アジャイル
+* BDD:振舞駆動開発 (開発手法)
+
+
+
+## <a name="agile">アジャイル</a>
+
+> 短い期間でリリース可能なソフトウェアを繰り返し提供することに重きを置きます
+(p.007)
+
+* アジャイル
+    + Scrum(スクラム)
+      アジャイル開発手法の１つ。
+        - スプリント
+          設計-開発-テスト-レビューの単位。
+ 
+ 
+#### Scrum(スクラム)
+
+> 2週間から1か月程度の短時間で、設計から開発、テストなどの一連の作業を繰り返し、ソフトウェアを仕上げます。
+(p.007)
+ 
+#### スプリント
+
+> 各スプリントでは最終的に実際に動作するソフトウェアの提供が求められます。
+(p.007)
+
+
+
+## <a name="bdd">BDD:振舞駆動開発 (開発手法)</a>
+
+振舞駆動開発(BDD: Behavior Driven Develop)。
+
+> BDDはユーザーストーリーと、そこから導きだされるビジネスロジックをテストすることに注目しています。
+(p.178)
+
+> ユーザーストーリーから具体的な利用シーンを抽出します。これを「シナリオ」と呼びます。
+> BDDのフレームワークを使う場合は、ドメイン特化型言語(DSL domain-specific language)と呼ばれる記法で記述します。
+> 代表的なDSLは「Gherkin」と呼ばれ、記述したシナリオは、受け入れテストとして「Cucumber 」や「Behat」などのテスティングフレー> > ムワークによって自動実行できます。
+(p.181)
+
+
+### BDDの流れ
+
+->失敗する受け入れテスト -> __| 失敗する単体テスト-> 実装してテスト成功させる->
+リファクタリング |__ -> ステップの定義 -> 「ステップを実行してシナリオを成功させ
+る」(p.180) -> リファクタリング ->
+
+#### ユーザーストーリー
+
+> ユーザーストーリーとは、時間軸に沿ってユーザーが得られる体験や価値、出来事を、筋書きとして記述します。ユーザーストーリーはそれ単独でリリース可能であり、ビジネス要件やスケジュール、見積などが含まれています。
+
+##### ユーザーストーリーの例
+
+> 会員として、新しい記事を投稿できる、なぜなら会員は自分の言葉で発信したいからだ
+(p.178)
+
+#### シナリオ
+
+シナリオはユーザーストーリーから定義される。
+
+> シナリオは連続する出来事を表現するもので、よりアプリケーションが実現することに注目していると言えます。
+(p.181)
+
+
+#### フィーチャ
+
+
+>フィーチャとは、顧客の視点から「アプリケーションに必要となる機能や特徴」のことで、
+> 最初の2行目に書かれている通り、ユーザーストーリー記法で記述する事を推奨しています。
+(p.182)
+
+* フィーチャの記法
+Gerkin記法
+* フィーチャの拡張子
+.feature
+
+
+#### フィーチャの例
+
+##### ディレクトリ構造
+
+
+    current
+       |— app
+            |— Config
+                |— bootstrap
+                    |— environments
+                         |— ci.php
+                         |— development.php
+                         |— test.php
+                    |— environments.php
+                |— …
+            |
+            |— Console
+            |— Controller
+            |— …
+            |— composer.json
+            |— index.php
+            |— phpunit.xml
+        |
+        |— feature
+                |— boostrap
+                |— …
+                |— blog_new_post.feature
+
+
+##### フィーチャファイル(.feature)
+
+    # language: ja
+    フィーチャ: 会員として新しい記事を投稿できる、なぜなら会員は自分の言葉で発信したいからだ
+    背景:
+    前提 "会員" としてログインしている
+    シナリオ: 新しい記事を投稿できる
+    もし 以下の内容で記事を投稿する
+    | タイトル | はじめてのブログ |
+    | 本文 | はじめまして |
+    ならば 新しい記事が登録されていること
+    シナリオ: タイトルなしでは新しい記事は投稿できない
+    もし 以下の内容で記事を投稿する
+    | タイトル | |
+    | 本文 | はじめまして |
+    ならば 新しい記事が登録できないこと
+
+
+#### フィーチャの実行
+
+ __フィーチャファイル(.feature)はBehatを使って実行する。__
+
+
+### Behat/Mink (BDD用テスティングフレームワーク)
+
+BDDのためのPHPで作成した(ユーザー)ストーリーベースのテスティングフレームワーク。
+
+### Bddプラグイン BehatのCakePHP2用プラグイン (プラグイン)
+
+> BDD(Behavior Driven Development) integration plugin for CakePHP2
+
+[sizuhiko/Bdd](https://github.com/sizuhiko/Bdd)
+
+ Bddプラグインはフィーチャファイルを実行する。
+ BddプラグインはCake標準テストケースとPHPUnitを使い実行される。
+
+#### インストール
+
+* Composerを使いインストール
+* composer.jsonにプラグインのリポジトリを登録[^composer_repo]
+
+[^composer_repo]:>Packagistから所得できないパッケージがある場合は、
+composer.jsonの[repositories]に記述する事で利用できます。(p.187)
+
+composer.json
+
+    "repositories": [
+      {
+        "type": "vcs",
+        "urrl: "git://github.com/sizuhiko/Bdd.git
+      }
+    ],
+
+#### フィーチャーファイルのテスト
+
+    $ Console/cake Bdd.story
+
+### BDDと単体テスト
+
+__フィーチャは最終的に単体テストの集まりを実行する。__
+
+
+## Jenkins
+
+継続的インテグレーション用
 
 
 
@@ -1240,7 +1233,7 @@ $ nom -l         # display full usage info
 
 #### パッケージのインストール
 
-    $npm install パッケージ名        // カレントフォルダーにインストール
+    $npm install パッケージ名        // カレントフォルダにインストール
     $npm install -g パッケージ名   // グローバルにインストール
 
 -gをつけてインストールするときはroot権限が必要。

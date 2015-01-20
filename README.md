@@ -23,11 +23,10 @@ AWSでサービスを運用するために勉強している内容を書き留�
 * [HTML/CSS/JavaScriptの開発環境](#html_css_javascript_ci)
 * [PHPの開発環境](#php_ci)
 * [CakePHPの開発環境](#cakephp_ci)
+* [VirtualBox + Vagrant + Chef Soloを使ったCI環境構](#virtualbox_vagrant_chef)
 * [CI(継続的インテグレーション)](#ci_ci)
 * [アジャイル](#agile)
 * [BDD:振舞駆動開発 (開発手法)](#bdd)
-* [VirtualBox + Vagrant + Chef Soloを使ったCI環境構
-  築](#virtualbox_vagrant_chef)
     + 開発サーバー(develop)
     + CIサーバー(ci)
     + デプロイサーバー(deploy)
@@ -273,72 +272,72 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
 
 ### プラグインのバージョンアップ
 
-    $ nom update —save-dev
+    $ npm update —save-dev
 
 すべてのパッケージがアップデートされる。
 
 
-### Sass
+## Sass
 
 CSSプリプロセッサー。
 
 [Sass: Syntactically Awesome Style Sheets](http://sass-lang.com/)
 
-#### Sassインストール
+### Sassインストール
 
     $ sudo gem install sass
 
-#### Sassのコンパイル
+### Sassのコンパイル
 
-sassコマンドを使いstyle.scssをコンパイルして同じフォルダにstyle.cssを作成する例。
+style.scssをコンパイルして同じフォルダにstyle.cssを作成する例。
 
     $ sass style.scss style.css
 
-#### 変更を監視して自動コンパイル
+## 変更を監視して自動コンパイル
 
     $ sass –watch style.scss:style.css
 
 watchはターミナルではctrl + Cで停止する。
 
-#### バージョン確認
+### バージョン確認
 
     $ sass —version
     3.4.9
 
-#### パス確認
+### パス確認
 
     $ which sass
     /usr/bin/sass
 
 
-### Compass
+## Compass
 
-Sassを使うCSS作成フレームワーク。
+Sassを使ったCSS作成フレームワーク。
 
 [Compass Home | Compass Documentation](http://compass-style.org/)
 [Sass/Compass のインストールと基本的な環境設定 | Web Design Leaves](http://www.webdesignleaves.com/wp/htmlcss/652/)
 
-#### インストール
+### インストール
 
-    $ gem install compass
+    $ sudo gem install compass
  
-#### バージョン確認
+### バージョン確認
 
-    $ conpass —version
+    $ compass —version
     1.0.1
 
-#### パス確認
+### パス確認
 
     $ which compass
     /usr/bin/compass
 
-#### コンパス初期化
+### コンパス初期化
 
     $ create compass --bare
 
     contrib.rbとsassフォルダが作成される。
 
-#### config.rb(Compass設定ファイル)
+### config.rb(Compass設定ファイル)
 
     |—css
     |   |— a.css
@@ -361,48 +360,36 @@ contrib.rbの設定例
 
 上記例ではcompassコマンドでコンパイルするとdev/sassフォルダのモジュールファイルを除いたscssファイルをコンパイルしcssディレクトリへ出力する。
 
-#### コンパイル
+### コンパイル
 
     $ compass watch css/sass/main.scss
 
-#### バージョン確認
 
-    $ compass —version
-    Compass 0.12.2 (Alnilam)
-
-#### パス確認
-
-    $ which compass
-    /usr/bin/compass
-
-
-### StyoeDocco
+## StyoeDocco
 
 CSS スタイルガイド。
 
-#### インストール
-
-    $npm install -fg styledocco
-
-オプションfは必須。
-パーミションの関係でsudoでインストール。
+### インストール
 
     $ sudo npm install -fg styledocco
 
-##### インストール先
+オプションfは必須。
+
+#### インストール先
+
 /usr/local/lib/node_modules/styledocco/bin/styledocco
 
-#### パスの確認
+### パスの確認
 
     $ which styledocco
     /usr/local/bin/styledocco
 
-#### スタイルガイド作成
+### スタイルガイド作成
 
     $ cd mytheme
     $ styledocco -n "My Theme" -o docs/css style.css
 
-#### Grunt + StyleDocco
+### Grunt + StyleDocco
 
 [grunt-styledocco](https://www.npmjs.com/package/grunt-styledocco)
 
@@ -422,24 +409,24 @@ CSS スタイルガイド。
     grunt.loadNpmTasks( 'grunt-styledocco' );
 
 
-### Code Inspections(検査)
+## Code Inspections(検査)
 
  * jsLint  PhpStormはデフォルトでサポート。
  * jsHint  PhpStormはデフォルトでサポート
     jsLintより緩い
 
 
-### QUnit テストツール
+## QUnit テストツール
 
 [QUnit](qunitjs.com)
 
-#### Grunt + Qunit(+PhantomJS)
+### Grunt + Qunit(+PhantomJS)
 
 [gruntjs/grunt-contrib-qunit](https://github.com/gruntjs/grunt-contrib-qunit)
 
 grunt-contrib-qunitはPhantomJSを含む。
 
-#### インストール
+### インストール
 
     $ npm install grunt-contrib-qunit —save-dev
 
@@ -447,20 +434,20 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 ダウンロードして配置した。
 
 
-### YUI Docド JavaScript キュメンテーションツール
+## YUI Doc - JavaScript キュメンテーションツール
 
 [YUIDoc – Javascript Documentation Tool](http://yui.github.io/yuidoc/)
 [YUIDoc Syntax Reference](http://yui.github.io/yuidoc/syntax/index.html)
 
-#### インストール
+### インストール
 
     npm -g install yuidocjs.
 
-#### コマンド
+### コマンド
 
     yuidoc
 
-#### Grunt + YUI DOC
+### Grunt + YUI DOC
 
     yuidoc: {
       compile: {
@@ -477,19 +464,22 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
     }
 
 
-## <a name="php_ci">PHPのCI</a>
 
-### Composer
+
+# <a name="php_ci">PHPの開発環境</a>
+
+## Composer
 
 PHPパッケージ管理ツール。
 
-#### Composerのインストール
+### Composerのインストール
 
     $ curl -sS https://getcomposer.org/installer | php
 
 composer.pharがカレントディレクトリにダウンロードされる。
-ダウンロードしたcomposer.pharは通常composerへ名前を変更しパスの通っているディレクトリへ移動する。(例 /usr/local/bin)
-パスを通した時コマンドは下記で実行できる。
+ダウンロードしたcomposer.pharは通常composerへ名前を変更しパスの通っているディレクトリへ移動する(例 /usr/local/bin)。
+
+パスが通っていればコマンドは下記のように実行できる。
 
     $ composer --version
 
@@ -498,13 +488,13 @@ composer.pharがカレントディレクトリにダウンロードされる。
     $ php /fullpath/composer --version
 
 
-#### Composerの初期化
+### Composerの初期化
 
     $ composer init
 
 composer.jsonファイルが作成される。
 
-#### composer.json
+### composer.jsonの例
 
     {
         "require": {
@@ -514,14 +504,12 @@ composer.jsonファイルが作成される。
 
 [Composer ドキュメント日本語訳](http://kohkimakimoto.github.io/getcompo:ser.org_doc_jp/doc/01-basic-usage.html)
 
-Composerでインストールしたパッケージをコマンドを実行した
 ディレクトリにvendor[^conposer-cake]ディレクトリを作成しそこへ配置して管理する。
 
-[^conposer-cake]: デフォルトはConposerはインストールしたパッケージをvendorディ
-レクトリに配置する。しかしCakePHPはVendorディレクトリを利用するためvendorから
+[^conposer-cake]: デフォルトはConposerはインストールしたパッケージをvendorディレクトリに配置する。しかしCakePHPではVendorディレクトリを利用するためvendorから
 Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパティで設定する。
 
-#### composer.jsonに記載したすべてのパッケージインストール
+### composer.jsonに記載されたパッケージのインストール
 
     $ composer install
 
@@ -529,22 +517,21 @@ Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパテ�
 1. パッケージをインストール
 2. composer.lockファイルを作成しバージョンを固定する。
 
-#### パッケージの追加
+### パッケージの追加
   
-    // 通常のインストール
+    // 通常の追加
     $ composer require
-    // 開発で必要なパッケージ
+    // 開発でのみ必要なパッケージの追加
     $ composer require --dev
  
 composer requireはパッケージを追加しcomposer.jsonへ追記する。
 
-composer require-devは開発環境でのみ必要なパッケージを追加するときに使う。
+composer require-devは開発環境でのみ必要なパッケージを追加するときに使う。  
 composer installではインストールされず--devオプションを付けてcomposer install --devでインストールされる。
 
-#### パッケージがインストールされる場所
+### パッケージのインストール場所
 
-
-通常composer.jsonと同階層にvendorディレクトリへインストールされる。
+通常、composer.jsonと同階層にvendorディレクトリが作成され配置される。
 
 上記composer.jsonの例では
 
@@ -563,7 +550,7 @@ composer.jsonで変更できる。
         "vendor-dir": "some",
       },
 
-#### Composerの利点
+### Composerの利点
 
 1. 利点
   ComposerでインストールしたパッケージはVendorディレクトリへ配置し依存関係をを管理してくれる。
@@ -573,14 +560,15 @@ composer.jsonで変更できる。
 を追加すればよい。require_once dirname(dirname(__FILE__)) . DS . 'Vendor' . DS . 'autoload.php';
 
 
-### テストツール
+## テストツール
 
 * [PHPUnit #x2013; The PHP Testing Framework](https://phpunit.de/)
   単体テスト。
 * [Xdebug - Debugger and Profiler Tool for PHP](http://xdebug.org/)
   テストコードカバレッジ取得。
 
-### PHPUnit
+
+## PHPUnit
 
 PHPUnitのインストールの方法は幾つかある。
 
@@ -698,7 +686,7 @@ XDebug
 
 
 
-## <a name="cakephp_ci">CakePHPのCI</a>
+# <a name="cakephp_ci">CakePHP開発環境</a>
 
 * PHPUnit ユニットテスト
   CakePHPはユニットテストをPHPUnitで行う。
@@ -712,11 +700,11 @@ XDebug
 * behat/mink-goutte-driver
   JavaScriptを使わずBehatを利用するプラグイン。
 
-以下下記書籍の読書メモ
+
+
+# <a name="virtualbox_vagrant_chef">VirtualBox + Vagrant + Chef Soloをで継続的CI環境構築(開発環境構築/プロビジョニング/デプロイ)</a>
 
 [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
-
-## <a name="virtualbox_vagrant_chef">VirtualBox + Vagrant + Chef Soloをで継続的CI環境構築(開発環境構築/プロビジョニング/デプロイ)</a>
 
 ### 仮想化ソフトウェア
 
@@ -753,10 +741,10 @@ Wiki
 
 ### Vagrantの役割
 
-1.仮想サーバの起動・終了
+1. 仮想サーバの起動・終了
 2. ホストOSとゲストOSでディレクトリ共有
    例) develop.vm.synced_folder “application”, "/var/www/application/current", (Vagrantfile)
-3.仮想サーバのプロビジョニング
+3. 仮想サーバのプロビジョニング
    Knife-solo, berkshelf
 
 
@@ -899,9 +887,13 @@ stderr: Host key verification failed.が出たら、git ls-remoteを叩く！
 
 [Google グループjenkinsからgithubへのssh接続](https://groups.google.com/forum/#!topic/jenkinsci-ja/JkjRAyQyOKE)
 
-## <a name="ci">CI(継続的インテグレーション)</a>
+## <a name="ci_ci">CI(継続的インテグレーション)</a>
 
-継続的な開発を効率的に行うための開発手法。
+
+下記書籍の読書メモ
+
+[「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
+
 
 ### 本記事サーバー構成
 
@@ -1229,7 +1221,7 @@ node.jsのインストール時に同時にインストールされる。
 #### ヘルプ
 
 $ npm -h        # クイックヘルプ --helpはない
-$ nom -l         # display full usage info
+$ npm -l         # display full usage info
 
 #### パッケージのインストール
 

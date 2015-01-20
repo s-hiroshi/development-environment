@@ -1035,6 +1035,8 @@ Gerkin記法
 
 #### フィーチャの例
 
+「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)
+
 ##### ディレクトリ構造
 
 
@@ -1063,6 +1065,9 @@ Gerkin記法
 
 
 ##### フィーチャファイル(.feature)
+
+「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)
+
 
     # language: ja
     フィーチャ: 会員として新しい記事を投稿できる、なぜなら会員は自分の言葉で発信したいからだ
@@ -1822,3 +1827,184 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
 /var/lib/jenkins/jobs/blogapp/workspace/
 
 
+
+
+
+# <a name="aws">AWS Amazon - Web Services</a>
+
+## 目次
+
+* [AWS Linuxコマンド(Ubuntu)](#aws_cmd_ubuntu)
+* [AWS Linuxセキュリティ](#aws_security)
+* [EC2](#aws_ec2)
+* [RDS](#aws_rds)
+* [Route 53](#aws_route53)
+    + 独自ドメイン運用
+* [S3](#aws_s3)
+* [Ubuntu + MySQL + PHP環境構築](#aws_ubuntu_mysql_php)  
+* [Ubuntu + Postfixでメールを運用](#aws_postfix) 
+* [課金](#aws_bills)
+* [AWS 用語](#aws_aws_terms]
+
+
+
+## <a name="aws_ec2">EC2</a>
+
+Amazon Linux AMI 2014.09.1 (HVM) - ami-4985b048
+
+* [SSH](#aws_ec2_ssh)
+* [Security Groups](#aws_ec2_secuity)
+* [Elastic IPs](#aws_ec2_ip)
+* [RPM系 Apache、MySQL, PHPインストール](#aws_ec2_rpm_app)
+* [Debian系Nginx, MySQL,PHP](#aws_ec2_debian_app)
+    + /var/www/application/current/app/webrootでPHPを動作
+
+### <a name="aws_ec2_ssh">SSH</a>
+
+* EC2
+    + NETWORK & SECURITY
+        - Key Pairs
+
+    $ ssh -i <private_key_file> <destination>
+
+
+### <a name="aws_ec2_security">Security Groups</a>
+
+* EC2
+    + NETWORK & SECURITY
+        - Security Groups
+
+
+どのポートを空けるか(どのサービスをりようするか)を各インスタンスごとにセキュリティーグループとして設定する。  
+どのポートをどこから許可するか？  
+
+
+### <a name="aws_ec2_ip">Elastic IPs</a>
+
+* EC2
+    + NETWORK & SECURITY
+        - Elastic IPs
+
+__T2 instances are VPC-only. Your T2 instance will launch into your VPC. Learn more about T2 and VPC.__
+
+インスタンスの起動・再起動で固定IPは再度割り当てられ値が変わる。
+再起動ごも固定にするにはElastic IPが必要?。
+
+
+### <a name="aws_ec2_rpm_app">RPM系 Apache、MySQL, PHPインストー</a>
+
+    // 初回接続時にはyumを更新
+    $ sudo yum update
+    // Apache, MySQL, PHPをインストール
+    $ yum install httpd mysql php
+    // ApacheをOS起動時に立ち上げる
+    $ sudo chkconfig httpd on
+    // Apache起動
+    $ sudo service httpd start
+
+
+### <a name="aws_ec2_debian_app">Debian系Nginx, MySQL,PHP]<a>
+
+
+    // apt-getを利用する前に最新の状態へ
+    $ sudo apt-get update
+
+#### パッケージインストール
+
+
+    apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx git
+
+[PHP: Debian GNU/Linux へのインストール - Manual](http://php.net/manual/ja/install.unix.debian.php)
+
+#### PHP動作確認
+
+Evernoteの「2015.01.16 AWS UbuntuでPHPを動作させる」を参照。
+
+
+## <a name="aws_rds">RDS</a>
+
+* MySQL
+* 課金
+
+### MySQL
+
+1. セキュリティイーグループでMySQLのポート(3306)を開ける
+2. RDSのインスタンスへDB Security Groupsを設定する
+
+[Amazon RDS ～EC2インスタンスからDBインスタンスへの接続～　|ec2 db インスタンス　接続　方法 | ナレコムAWSレシピ](http://recipe.kc-cloud.jp/archives/397)
+
+    $ mysql -h <endpoint> -u <username> -p
+
+### 課金
+
+[よくある質問 - Amazon RDS（リレーショナルデータベースサービス Amazon Relational Database Service） | アマゾン ウェブ サービス（AWS 日本語）](http://aws.amazon.com/jp/rds/faqs/)
+
+上記ページの請求に記載。
+
+
+## <a name="aws_route53">Route 53</a>
+
+> DNS サービスです。このサービスを利用して独自ドメインとEC2 インスタンスを紐付けます。
+[初心者のボクが「AWS + WordPress」でブログを作る！ Vol.2 〜独自ドメインで運用しよう〜 | ひげメガネのブログ](http://blog.higemegane.com/2014/01/wp_with_aws2/)
+
+### 利用サービス
+
+* EC2
+    + EIastic IPs 
+      固定IP取得しEC2インスタンスと結びつける。
+* Route 53
+     独自ドメインと固定IPを結びつける
+
+EC2 <—Elastic IP <— Route 53
+
+
+### 確認
+
+    $ host example.com
+    example.com has address xxx.xxx.xxx.xxx
+
+xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が正常に行われている。
+
+
+[AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
+
+
+
+## <a name="aws_s3">S3</a>
+
+
+## <a name="aws_bills">課金</a>
+
+* Billing & Cost Management
+    + Preferences
+        - Receive Billing Alerts
+           Manage Billing Alerts
+
+
+## <a name="aws_terms">用語</a>
+
+### Amazon Virtual Private Cloud VPC
+
+
+### オンプレミス
+
+> オンプレミス (英語 on-premises)[注 1] とは、情報システムを使用者（通常は企業）自身が管理する設備内に導入、設置して運用することをいう。元来は普通に見られる運用形態であったが、2005年ころからインターネットに接続されたサーバファームやSaaS、クラウドコンピューティングなど、外部のリソースをオンデマンドで活用する新たな運用形態が浸透するにつれて、従来の形態と区別するためにレトロニムとして「オンプレミス」の語が使われるようになった。自社運用（型）とも訳される[1]。
+
+Wikipedia
+
+### MTA 【 Message Transfer Agent 】
+
+> ネットワーク上でメールを転送・配送するソフトウェア。いわゆるメールサーバの中心的な役割の一つで、利用者がメールソフト(MUA：Mail User Agent)などで送信したメールを受け取り、宛先に基づいて振り分け、相手方のMTAなどに転送する。
+>
+> MTAはメールを受け取って次の適切な配信先を決定するのが主な役割で、配信先への送信・転送はMDA(Mail Delivery Agent)が行うが、実際のメールサーバの実装としてはMTAとMDAが一体となっていることが多く、MDAの役割まで含めてMTAということが多い。利用者とのメールの送受信や、MTA間のメールの送受信にはSMTP(Simple Mail Transfer Protocol)という通信プロトコルが標準的に用いられる。
+>
+>これに対し、メールサーバの役割のうち、受信側で送られてきたメールを受け取って保管し、利用者のメールソフトなどに引き渡すソフトウェアはMRA(Mail Retreival Agent)と呼ばれ、MTAとは独立して実装・提供されることが多い。一般的にはメールサーバを構成する際はMTA(MDAを含む)ソフトとMRAソフトを組み合わせて導入する。
+
+[MTAとは 【 Message Transfer Agent 】 - 意味/解説/説明/定義 ： IT用語辞典](http://e-words.jp/w/MTA.html)
+
+
+### iptables
+
+> iptablesは、Linuxに実装されたIPv4用のパケットフィルタリングおよびネットワークアドレス変換 (NAT) 機能（複数のNetfilterモジュールとして実装されている）の設定を操作するコマンドのこと。Netfilterは、いわゆるファイヤウォールやルータとしての役割を果たす。IPv6 用の実装は ip6tables である。
+
+Wikipedia

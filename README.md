@@ -2656,6 +2656,38 @@ Nginx再起動
     $ sudo nginx -s reload
 
 
+ ### プロジェクト作成
+
+    ubuntu@xxx:/var/www/application/current/app$ Vendor/bin/cake bake project
+    
+    Welcome to CakePHP v2.6.1 Console
+    ---------------------------------------------------------------
+    App : app
+    Path: /var/www/application/current/app/
+    ---------------------------------------------------------------
+    What is the path to the project you want to bake?  
+    [/var/www/application/current/app/myapp] > /var/www/application/current/app
+    Skel Directory: /var/www/application/current/app/Vendor/cakephp/cakephp/lib/Cake/Console/Templates/skel
+    Will be copied to: /var/www/application/current/app
+    ---------------------------------------------------------------
+    Look okay? (y/n/q) 
+    y
+    ---------------------------------------------------------------
+    Created: app in /var/www/application/current/app
+    ---------------------------------------------------------------
+     * Random hash key created for 'Security.salt'
+     * Random seed created for 'Security.cipherSeed'
+     * Cache prefix set
+     * app/Console/cake.php path set.
+    CakePHP is not on your `include_path`, CAKE_CORE_INCLUDE_PATH will be hard coded.
+    You can fix this by adding CakePHP to your `include_path`.
+     * CAKE_CORE_INCLUDE_PATH set to /var/www/application/current/app/Vendor/cakephp/cakephp/lib in webroot/index.php
+     * CAKE_CORE_INCLUDE_PATH set to /var/www/application/current/app/Vendor/cakephp/cakephp/lib in webroot/test.php
+       * Remember to check these values after moving to production server
+    Project baked successfully!
+
+
+
 
 ## <a name="aws_postfix">Ubuntu + Postfixでメールを運用</a>
 

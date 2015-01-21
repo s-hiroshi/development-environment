@@ -1845,7 +1845,7 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
     + 独自ドメイン運用
 * [S3](#aws_s3)
 * [Ubuntu + MySQL + PHP環境構築](#aws_ubuntu_mysql_php)  
-* [Ubuntu + MySQL + CakePHP環境構築](#aws_ubuntu_mysql_php_cakephp)
+* [Ubuntu + MySQL + CakePHP環境構築](#aws_ubuntu_cakephp)
 * [Ubuntu + Postfixでメールを運用](#aws_postfix) 
 * [課金](#aws_bills)
 * [Linuxコマンド(Ubuntu)](#aws_cmd_ubuntu)

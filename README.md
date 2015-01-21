@@ -2096,7 +2096,9 @@ Evernoteの「2015.01.16 AWS UbuntuでPHPを動作させる」を参照。
 
 [Amazon RDS ～EC2インスタンスからDBインスタンスへの接続～　|ec2 db インスタンス　接続　方法 | ナレコムAWSレシピ](http://recipe.kc-cloud.jp/archives/397)
 
-    $ mysql -h <endpoint> -u <username> -p
+    $ mysql -h <Endpoint> -u <username> -p
+
+AWSではパスワードなしでrootでログインすることはできない。
 
 ### 課金
 
@@ -2580,7 +2582,7 @@ FileZilla設定方法は下記サイトを参考にして設定
     $ sudo nginx -s reload
 
 
-## <aname="aws_ubuntu_cakephp">CakePHP環境構築</a>
+## <a name="aws_ubuntu_cakephp">CakePHP環境構築</a>
 
 ### 前提 Ubuntu 14.04
 

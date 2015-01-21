@@ -2837,3 +2837,32 @@ Wikipedia
 > iptablesは、Linuxに実装されたIPv4用のパケットフィルタリングおよびネットワークアドレス変換 (NAT) 機能（複数のNetfilterモジュールとして実装されている）の設定を操作するコマンドのこと。Netfilterは、いわゆるファイヤウォールやルータとしての役割を果たす。IPv6 用の実装は ip6tables である。
 
 Wikipedia
+
+
+Appendix 
+
+とりあえずUbuntu + Nginxで動作した設定
+
+    server {
+            listen 80 default_server;
+            listen [::]:80 default_server ipv6only=on;
+
+            root /var/www/application/current/app/webroot;
+            index index.php index.html index.htm;
+
+            # Make site accessible from http://localhost/
+            server_name localhost;
+
+            location / {
+                    try_files $uri $uri?$args $uri/ /index.php?$uri&$args /index.php?$args;
+            }
+            
+            location ~ \.php$ {
+                    try_files       $uri =404;
+                    fastcgi_pass unix:/var/run/php5-fpm.sock;
+                    #fastcgi_pass    127.0.0.1:9000;
+                    fastcgi_index   index.php;
+                    fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                    include         fastcgi_params;
+            }
+     }

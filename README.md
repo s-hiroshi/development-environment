@@ -472,7 +472,19 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 # <a name="php_ci">PHPの開発環境</a>
 
-## Composer
+
+
+## 目次
+
+* [Composer](#php_ci_composer)
+* [単体テスト - PHPUnit](#php_ci_phpunit)
+* [デバッグ - Xdebug](#php_ci_xdebug)
+* [ドキュメンテーション - phpDocumentor](#php_ci_phpdocumentor)
+* [コードインスペクション - PHP_CodeSniffer](#php_ci_inspection)
+
+
+
+## <a name="php_ci_composer">Composer</a>
 
 PHPパッケージ管理ツール。
 
@@ -498,6 +510,7 @@ composer.pharがカレントディレクトリにダウンロードされる。
 
 composer.jsonファイルが作成される。
 
+
 ### composer.jsonの例
 
     {
@@ -513,6 +526,7 @@ composer.jsonファイルが作成される。
 [^conposer-cake]: デフォルトはConposerはインストールしたパッケージをvendorディレクトリに配置する。しかしCakePHPではVendorディレクトリを利用するためvendorから
 Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパティで設定する。
 
+
 ### composer.jsonに記載されたパッケージのインストール
 
     $ composer install
@@ -521,17 +535,18 @@ Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパテ�
 1. パッケージをインストール
 2. composer.lockファイルを作成しバージョンを固定する。
 
+
 ### パッケージの追加
   
     // 通常の追加
-    $ composer require
+    $ composer require <package>
     // 開発でのみ必要なパッケージの追加
-    $ composer require --dev
+    $ composer require --dev <package>
  
 composer requireはパッケージを追加しcomposer.jsonへ追記する。
-
-composer require-devは開発環境でのみ必要なパッケージを追加するときに使う。  
+composer require --devは開発環境でのみ必要なパッケージを追加するときに使う。  
 composer installではインストールされず--devオプションを付けてcomposer install --devでインストールされる。
+
 
 ### パッケージのインストール場所
 
@@ -542,9 +557,13 @@ composer installではインストールされず--devオプションを付け�
     vendor/monolog/monolog
 
     |-- composer.json
+    |
     |-- composer.lock
+    |
     |-- vendor
+          |
           |--monolog
+              |
               |--monolog
 
 
@@ -553,6 +572,7 @@ composer.jsonで変更できる。
     "config": {
         "vendor-dir": "some",
       },
+
 
 ### Composerの利点
 
@@ -564,19 +584,14 @@ composer.jsonで変更できる。
 を追加すればよい。require_once dirname(dirname(__FILE__)) . DS . 'Vendor' . DS . 'autoload.php';
 
 
-## テストツール
 
-* [PHPUnit #x2013; The PHP Testing Framework](https://phpunit.de/)
-  単体テスト。
-* [Xdebug - Debugger and Profiler Tool for PHP](http://xdebug.org/)
-  テストコードカバレッジ取得。
+## <a name="php_ci_phpunit">単体テストツール - PHPUnit</a>
 
-
-## PHPUnit
+[PHPUnit #x2013; The PHP Testing Framework](https://phpunit.de/)
 
 PHPUnitのインストールの方法は幾つかある。
 
-#### phpunit.pharをダウンロード
+### phpunit.pharをダウンロード
 
 > ➜ wget https://phar.phpunit.de/phpunit.phar
 >
@@ -586,28 +601,17 @@ PHPUnitのインストールの方法は幾つかある。
 >
 >➜ phpunit --version
 
-#### ComposerでPHPUnitをインストール
+### Composerを使いインストール
 
-##### composer.json
-
-    {
-        "require-dev": {
-            "phpunit/phpunit": "3.7.*"
-        }
-    }
+    // PHPUnitをインストール
+    $ composer require "phpunit/phpunit":"3.7.*"
 
 
-##### インストール
-
-    $ composer install --dev
-
-require-devへ設定したパッケージはcomposer installを--devオプションをつけて実行しないとインストールされない。よって開発環境だけで必要なパッケージをインストールするときに使われる。
-
-##### phpunitコマンド
+#### phpunitコマンド
 
     vendor/bin/phpunit
 
-##### 基本テスト
+#### 基本テスト
 
 CalcTest.php
 
@@ -642,13 +646,13 @@ Calc.php
     }
 
 
-##### テスト実行
+#### テスト実行
 
     $ vendor/bin/phpunit CalcTest
 
 コマンドが実行されたディレクトリ(ワーキングディレクトリ)からの相対パスでファイルを検索するので上記例では同階層にCalcTest.php/Calc.phpが必要
 
-##### --bootstrapオプション
+#### --bootstrapオプション
 
     working_dir
       |
@@ -663,30 +667,44 @@ Calc.php
             |-- bin
                   |-- phpunit
 
-###### bootstrap.php
+#### bootstrap.php
 
     <?php
     require_once('Calc.php');  // workingディレクトリからの相対パス
 
-###### 実行
+#### 実行
 
     $ vendor/bin/phpunit --bootstrap Test/bootstrap.php CalcTest
 
-##### 設定ファイル phpunit.xml
+
+### 設定ファイル phpunit.xml
 
 
-### Code Inspections(検査)
+
+## <a name="php_ci_xdebug">デバッグ- Xdebug</a>
+
+* [Xdebug - Debugger and Profiler Tool for PHP](http://xdebug.org/)
+  テストコードカバレッジ取得。
+
+
+    $ sudo apt-get install php5-xdebug
+
+
+### <a name="php_ci_phpdocumentor">ドキュメンテーションツール - phpDocumentor</a>
+
+[phpDocumentor](http://www.phpdoc.org/)
+
+#### Composerを使いインストール
+
+    $ composer require "phpdocumentor/phpdocumentor:2.*"
+
+[Installing Using Composer](http://www.phpdoc.org/docs/latest/getting-started/installing.html#using-composer)
+
+
+
+## <a name="php_ci_inspection">Code Inspections(検査) - PHP_CodeSniffer</a>
 
 PHP_CodeSniffer
-
-
-### ドキュメンテーションツール
-
-phpDocumentor
-
-### デバック
-
-XDebug
 
 
 
@@ -1621,7 +1639,7 @@ php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラ�
 
 ## <a name="appendix6">Appendix 6. CakePHP</a>
 
-### デバックレベル
+### デバッグレベル
 
 app/Config/core.php
 
@@ -2346,7 +2364,7 @@ viの文字コード設定 set encoding=utf8
 
 ### Xdebug
 
-デバックに便利なXdebugをインストールしておく。
+デバッグに便利なXdebugをインストールしておく。
 
 #### インストール
 

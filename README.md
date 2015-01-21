@@ -1845,6 +1845,7 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
     + 独自ドメイン運用
 * [S3](#aws_s3)
 * [Ubuntu + MySQL + PHP環境構築](#aws_ubuntu_mysql_php)  
+* [Ubuntu + MySQL + CakePHP環境構築](#aws_ubuntu_mysql_php_cakephp)
 * [Ubuntu + Postfixでメールを運用](#aws_postfix) 
 * [課金](#aws_bills)
 * [Linuxコマンド(Ubuntu)](#aws_cmd_ubuntu)
@@ -2576,6 +2577,82 @@ FileZilla設定方法は下記サイトを参考にして設定
     $ sudo chown -R www-data current
     $ sudo chmod -R 775 current
     $ sudo vi /etc/nginx/sites-available/default
+    $ sudo nginx -s reload
+
+
+## <aname="aws_ubuntu_cakephp">CakePHP環境構築</a>
+
+### 前提 Ubuntu 14.04
+
+
+### ComposerでCakePHPインストール
+
+#### composer.json
+
+    {
+        "name": "min-ker.com",
+        "authors": [
+          {
+            "name": "Name",
+            "email": "Email Adress"
+          }
+        ],
+        "require": {
+          "cakephp/cakephp": "2.6.*",
+          "ext-mcrypt": "*"
+
+        },
+        "config": {
+            "vendor-dir": "Vendor/"
+        },
+        
+    }
+
+
+#### 拡張モジュールmcryptエラー
+
+[Mcrypt extension is missing in 14.04 server for mysql - Ask Ubuntu](http://askubuntu.com/questions/460837/mcrypt-extension-is-missing-in-14-04-server-for-mysql)
+
+mcrsyptはapt-getでインストール済み。
+
+    // mcryptをインストール
+    $ sudo apt-get php5-mcrypt
+
+しかしインストールで下記のエラーが発生した。
+
+    Your requirements could not be resolved to an installable set of packages.
+
+      Problem 1
+        - The requested PHP extension ext-mcrypt * is missing from your system.
+      Problem 2
+        - cakephp/cakephp 2.6.1 requires ext-mcrypt * -> the requested PHP extension mcrypt is missing from your system.
+        - cakephp/cakephp 2.6.0 requires ext-mcrypt * -> the requested PHP extension mcrypt is missing from your system.
+        - Installation request for cakephp/cakephp 2.6.* -> satisfiable by cakephp/cakephp[2.6.0, 2.6.1].
+
+
+/etc/php5/fpm/conf.dおよび/etc/php5/cli/conf.dにはcrypt用のiniファイルは存在しなかった。  
+/etc/php5/fpm/conf.dの中身を確認(/etc/php/cli/conf.dも同様)。
+
+    $ ls /etc/php5/fpm/conf.d
+    05-opcache.ini  20-apcu.ini  20-json.ini    20-mysql.ini      20-readline.ini
+    10-pdo.ini      20-curl.ini  20-mysqli.ini  20-pdo_mysql.ini  20-xsl.ini
+
+/etc/php5/fpm/conf.dおよび/etc/php5/cli/conf.dのファイルは/etc/php5/mods-availableの各ファイルへのシンボリックファイルだった
+
+
+    $ ls /etc/php5/mods-available
+    apcu.ini  json.ini    mysqli.ini  opcache.ini  pdo_mysql.ini  xsl.ini
+    curl.ini  mcrypt.ini  mysql.ini   pdo.ini      readline.ini
+
+  
+
+mcryptのシンボリックファイルを作成した。
+
+    $ ln -s /etc/php5/mods-available/mcrypt.ini /etc/php5/cli/conf.d/20-mcrypt.ini
+    $ ln -s /etc/php5/mods-available/mcrypt.ini /etc/php5/fpm/conf.d/20-mcrypt.ini
+
+Nginx再起動
+
     $ sudo nginx -s reload
 
 

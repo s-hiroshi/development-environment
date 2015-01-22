@@ -289,6 +289,11 @@ Ubuntuで構築することを前提にする。
 
 ### 文字コード
 
+    $ sudo apt-get install language-pack-ja
+    $ sudo update-locale LANG=ja_JP.UTF-8
+
+一時てきに切り替える。
+
     // 現在の設定を確認
     $ export $LANG
     en_US.UTF-8

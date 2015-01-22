@@ -277,12 +277,33 @@ rubyの依存関係解決の標準パッケージ管理ツール。
 
 Ubuntuで構築することを前提にする。
 
+* [シェル](#env_shell)
 * [HTML/CSS/JavaScriptの開発環境](#env_html_css_javascript)
 * [Nginx](#env_nginx)
 * [PHP](#env_php)
 * [MySQL](#env_php)
 * [CakePHPの](#env_cakephp)
 
+
+## <a name="env_shell">シェル</a>
+
+### 文字コード
+
+    // 現在の設定を確認
+    $ export $LANG
+    en_US.UTF-8
+    // 日本語環境に設定
+    $ export LANG=ja_JP.UTF-8
+
+
+## <a name="env_vi">Vi</a>
+
+### 文字コード
+
+    // 開いているファイルの文字コード確認
+    :set enc?
+    // UTF-8へ変更
+    :set encoding=utf8
 
 ## <a name="env_html_css_javascript">HTML/CSS/JavaScriptの開発環境</a>
 

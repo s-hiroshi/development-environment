@@ -10,6 +10,7 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 # 参考書
 
 * [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
+* [「CakePHP2 実践入門」(WEB+DB PRESS plus) 安藤 祐介, 岸田 健一郎, 新原 雅司, 市川 快, 渡辺 一, 鈴木 則夫](http://www.amazon.co.jp/gp/product/4774153249/ref=pd_lpo_sbs_dp_ss_2?pf_rd_p=187205609&pf_rd_s=lpo-top-stripe&pf_rd_t=201&pf_rd_i=4839924317&pf_rd_m=AN1VRQENFRJN5&pf_rd_r=0Y02W25AP82Z83YPCYQR)
 * [「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)
 
 # 目次
@@ -20,7 +21,7 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 
 # <a name="ci">継続的インテグレーション</a>
 
-## 目次
+## 目次 - 継続的インテグレーション
 
 * [HTML/CSS/JavaScriptの開発環境](#html_css_javascript_ci)
 * [PHPの開発環境](#php_ci)
@@ -29,9 +30,6 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 * [CI(継続的インテグレーション)](#ci_ci)
 * [アジャイル](#agile)
 * [BDD:振舞駆動開発 (開発手法)](#bdd)
-    + 開発サーバー(develop)
-    + CIサーバー(ci)
-    + デプロイサーバー(deploy)
 * Appendix
     + [1. Terminalでパスを確認](#appendix1)
     + [2. Linux](#appendix2)
@@ -474,13 +472,148 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 
 
-## 目次
+## 目次 - PHPの開発環境
 
-* [Composer](#php_ci_composer)
-* [単体テスト - PHPUnit](#php_ci_phpunit)
-* [デバッグ - Xdebug](#php_ci_xdebug)
-* [ドキュメンテーション - phpDocumentor](#php_ci_phpdocumentor)
-* [コードインスペクション - PHP_CodeSniffer](#php_ci_inspection)
+* [PHP実行環境](#php_exe)
+* [php.iniの配置場所](#php_ini)
+* [実行環境の例\(phpinfo関数をブラウザで実行\)](#php_exe_sample)
+* [Composer](#php_composer)
+* [単体テスト - PHPUnit](#php_test)
+* [デバッグ - Xdebug](#php_ci_debug)
+* [ドキュメンテーション - phpDocumentor](#php_documentation)
+* [コードインスペクション - PHP_CodeSniffer](#php_inspection)
+
+
+
+## <a name="php_exe">PHP実行環境</a>
+
+* Apache + モジュール/CGI
+    - モジュール  
+      Apache + php_mod: Apacheのモジュールとして動かす。
+    - CGI  
+      Apach + php-cgi: ApacheからCGIとして呼び出す。
+* Nginx + php-fpm  
+  [PHP: FastCGI Process Manager (FPM) - Manual](http://php.net/manual/ja/install.fpm.php)
+  NginxのCGIからCGIとして呼び出す。
+* CLI(Command Line Interface)  
+  コマンドで実行する
+
+
+
+## <a name="php_ini">php.iniの確認</a>
+
+* ブラウザ  
+  phpinfo関数を実行する。  
+  項目「Configuration File (php.ini) ,Path/Loaded Configuration File」を確認する。
+* CLI  
+  $ php -r 'phpinfo();' | grep php.ini
+
+
+
+## <a name="php_exe_sample">実行環境の例(phpinfo関数をブラウザで実行)</a>
+
+| PHP | PHP Version 5.5.9-1ubuntu4.5 |
+|-----|-----|
+|Configuration File (php.ini) Path|/etc/php5/fpm|
+|Loaded Configuration File|/etc/php5/fpm/php.ini|
+|Scan this dir for additional .ini files|/etc/php5/fpm/conf.d|
+|Additional .ini files parsed|/etc/php5/fpm/conf.d/05-opcache.ini, /etc/php5/fpm/conf.d/10-pdo.ini, /etc/php5/fpm/conf.d/20-curl.ini, /etc/php5/fpm/conf.d/20-json.ini, /etc/php5/fpm/conf.d/20-mcrypt.ini, /etc/php5/fpm/conf.d/20-mysql.ini, /etc/php5/fpm/conf.d/20-mysqli.ini, /etc/php5/fpm/conf.d/20-pdo_mysql.ini, /etc/php5/fpm/conf.d/20-readline.ini, /etc/php5/fpm/conf.d/20-xdebug.ini, /etc/php5/fpm/conf.d/20-xsl.ini|
+|PHP API|20121113|
+|PHP Extension|20121212|
+|Zend Extension|220121212|
+
+
+
+## PHPの実行ユーザーの確認
+
+下記スクリプトへブラウザでアクセスし実行する。
+
+    <?php
+    echo `whoami`;
+
+
+
+## PECL :: The PHP Extension Community Library
+
+[PECL :: The PHP Extension Community Library](http://pecl.php.net/)
+
+### PECLの例
+
+* [PECL :: Package :: imagick](http://pecl.php.net/package/imagick)
+* [PECL :: Package :: oauth](http://pecl.php.net/package/oauth)
+
+### PECLライブラリのインストール
+
+> PECLのインストール用には、PEAR同様に「pecl」コマンドが提供されている。インストール方法もほぼPEARと同じだが、インストール後に設定ファイル（php.ini）の「extension」でインストールしたモジュールを指定する必要がある点が異なる。
+
+Wikipedia
+
+1. peclコマンド[^pecl][^phpize][^phpbuilddir]
+  $ pecl install \<package name\>
+2. php.iniでextensionでモジュールを設定(後述のAdditional .iniを参照)
+
+[^pecl]:peclコマンドは一般的にPHPをインストールすればpear コマンドなどと一緒にインストールされる。
+
+[^phpize]:pecl installはソースのコンパイルでphpizeを利用する。phpizeがインストールされていない場合は次節を参考にインストールする。
+
+[^phpbuilddir]:ビルドのワーキングディレクトリ /build/buildd/php5-5.5.9+dfsg/pear-build-download
+
+#### phpize
+
+> 拡張モジュールをビルドする低レベルなビルドツール。autoconfやautomake m4等のビルドツールが別途必要になる。これを使用することにより、PHPをソースから再コンパイルすることなく拡張モジュールをビルドすることができる
+
+[phpizeとは - PHP用語 Weblio辞書](http://www.weblio.jp/content/phpize)
+
+pecl installはソースのコンパイルでphpizeを利用する。
+phpizeはDebian系のUbuntuではphp5-dev[^php-devel]に含まれている。
+php5-devをインストールする。
+
+    $ apt-get install php5-dev
+
+[^php-devel]:RPM系はphp-develをyumでインストールする。
+
+
+#### Additional .ini
+
+通常、PECLでインストールしたライブラリはphp.iniのextension_dirで指定したフォルダへ配置しphp.iniへextension=*.soと記載して読み込む。
+しかし今回構築した環境では下記のような仕組みにになっていた。
+
+[プログラミング日誌 :: LinuxのPHPに拡張モジュールを入れる方法](http://nb-tech.doorblog.jp/archives/51670170.html)
+
+##### ライブラリ配置ディレクトリ
+
+    /usr/lib/php5/20121212   <- どのファイルでこのディレクトリがPECLライブラリ保存先として指定しているかは不明
+
+    curl.so  mcrypt.so  mysql.so    pdo_mysql.so  readline.so  xsl.so
+    json.so  mysqli.so  opcache.so  pdo.so
+
+
+##### extension=\<library name\>
+
+php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラリごとのiniファイルがありextension=\<library name\>の記載がされている。
+
+    vagrant@develop:/etc/php5/fpm/conf.d$ ls
+    05-opcache.ini  20-curl.ini  20-mcrypt.ini  20-mysql.ini      20-readline.ini  20-xsl.ini
+    10-pdo.ini      20-json.ini  20-mysqli.ini  20-pdo_mysql.ini  20-xdebug.ini
+
+
+#### extensionとzend_extension
+
+[PHP extensionとZend extensionの違い - hnwの日記](http://d.hatena.ne.jp/hnw/20130715)
+
+
+### ログの設定
+
+ログをファイルへ保存する設定をphp.iniへ記載。
+
+
+    display_errors = Off
+
+    log_errors = On
+    error_log = <path>
+
+
+
 
 
 
@@ -1513,131 +1646,7 @@ nginx.confで設定する。
 
 
 
-## <a name="appendix5">Appendix 5. PHP</a>
-
-### PHP実行環境
-
-* Apache + モジュール/CGI
-    - モジュール
-    Apache + php_mod: Apacheのモジュールとして動かす
-    - CGI
-    Apach + php-cgi: ApacheからCGIとして呼び出す
-* Nginx + php-fpm
-  [PHP: FastCGI Process Manager (FPM) - Manual](http://php.net/manual/ja/install.fpm.php)
-  NginxのCGIからCGIとして呼び出す
-* CLI(Command Line Interface)
-  コマンドで実行する
-
-
-### php.iniの確認
-
-* ブラウザ
-  phpinfo関数をブラウザでアクセスして実行する
-  Configuration File (php.ini) ,Path/Loaded Configuration Fileを確認する。
-* CLI
-  $ php -r 'phpinfo();' | grep php.ini
-
-
-### 実行環境の例(phpinfo関数をブラウザで実行)
-
-| PHP | PHP Version 5.5.9-1ubuntu4.5 |
-|-----|-----|
-|Configuration File (php.ini) Path|/etc/php5/fpm|
-|Loaded Configuration File|/etc/php5/fpm/php.ini|
-|Scan this dir for additional .ini files|/etc/php5/fpm/conf.d|
-|Additional .ini files parsed|/etc/php5/fpm/conf.d/05-opcache.ini, /etc/php5/fpm/conf.d/10-pdo.ini, /etc/php5/fpm/conf.d/20-curl.ini, /etc/php5/fpm/conf.d/20-json.ini, /etc/php5/fpm/conf.d/20-mcrypt.ini, /etc/php5/fpm/conf.d/20-mysql.ini, /etc/php5/fpm/conf.d/20-mysqli.ini, /etc/php5/fpm/conf.d/20-pdo_mysql.ini, /etc/php5/fpm/conf.d/20-readline.ini, /etc/php5/fpm/conf.d/20-xdebug.ini, /etc/php5/fpm/conf.d/20-xsl.ini|
-|PHP API|20121113|
-|PHP Extension|20121212|
-|Zend Extension|220121212|
-
-
-### PHPの実行ユーザーの確認
-
-<?php echo `whoami`; ?>
-
-
-### PECL :: The PHP Extension Community Library
-
-[PECL :: The PHP Extension Community Library](http://pecl.php.net/)
-
-#### PECLの代表的ライブラリ
-
-* [PECL :: Package :: imagick](http://pecl.php.net/package/imagick)
-* [PECL :: Package :: oauth](http://pecl.php.net/package/oauth)
-
-#### PECLライブラリのインストール
-
-> PECLのインストール用には、PEAR同様に「pecl」コマンドが提供されている。インストール方法もほぼPEARと同じだが、インストール後に設定ファイル（php.ini）の「extension」でインストールしたモジュールを指定する必要がある点が異なる。
-
-Wikipedia
-
-1. peclコマンド[^pecl][^phpize][^phpbuilddir]
-  $ pecl install \<package name\>
-2. php.iniでextensionでモジュールを設定(後述のAdditional .iniを参照)
-
-[^pecl]:peclコマンドは一般的にPHPをインストールすればpear コマンドなどと一緒にインストールされる。
-
-[^phpize]:pecl installはソースのコンパイルでphpizeを利用する。phpizeがインストールされていない場合は次節を参考にインストールする。
-
-[^phpbuilddir]:ビルドのワーキングディレクトリ /build/buildd/php5-5.5.9+dfsg/pear-build-download
-
-#### phpize
-
-> 拡張モジュールをビルドする低レベルなビルドツール。autoconfやautomake m4等のビルドツールが別途必要になる。これを使用することにより、PHPをソースから再コンパイルすることなく拡張モジュールをビルドすることができる
-
-[phpizeとは - PHP用語 Weblio辞書](http://www.weblio.jp/content/phpize)
-
-pecl installはソースのコンパイルでphpizeを利用する。
-phpizeはDebian系のUbuntuではphp5-dev[^php-devel]に含まれている。
-php5-devをインストールする。
-
-    $ apt-get install php5-dev
-
-[^php-devel]:RPM系はphp-develをyumでインストールする。
-
-
-#### Additional .ini
-
-通常、PECLでインストールしたライブラリはphp.iniのextension_dirで指定したフォルダへ配置しphp.iniへextension=*.soと記載して読み込む。
-しかし今回構築した環境では下記のような仕組みにになっていた。
-
-[プログラミング日誌 :: LinuxのPHPに拡張モジュールを入れる方法](http://nb-tech.doorblog.jp/archives/51670170.html)
-
-##### ライブラリ配置ディレクトリ
-
-    /usr/lib/php5/20121212   <- どのファイルでこのディレクトリがPECLライブラリ保存先として指定しているかは不明
-
-    curl.so  mcrypt.so  mysql.so    pdo_mysql.so  readline.so  xsl.so
-    json.so  mysqli.so  opcache.so  pdo.so
-
-
-##### extension=\<library name\>
-
-php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラリごとのiniファイルがありextension=\<library name\>の記載がされている。
-
-    vagrant@develop:/etc/php5/fpm/conf.d$ ls
-    05-opcache.ini  20-curl.ini  20-mcrypt.ini  20-mysql.ini      20-readline.ini  20-xsl.ini
-    10-pdo.ini      20-json.ini  20-mysqli.ini  20-pdo_mysql.ini  20-xdebug.ini
-
-
-#### extensionとzend_extension
-
-[PHP extensionとZend extensionの違い - hnwの日記](http://d.hatena.ne.jp/hnw/20130715)
-
-
-### ログの設定
-
-ログをファイルへ保存する設定をphp.iniへ記載。
-
-
-    display_errors = Off
-
-    log_errors = On
-    error_log = <path>
-
-
-
-## <a name="appendix6">Appendix 6. CakePHP</a>
+## <a name="appendix5">## <a name="appendix6">Appendix 6. CakePHP</a>
 
 ### デバッグレベル
 

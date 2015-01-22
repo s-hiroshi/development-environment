@@ -789,8 +789,9 @@ nginx.confで設定する。
 ## <a name="env_php">PHPの開発環境</a>
 
 * [PHP実行環境](#php_exe)
-* [php.iniの配置場所](#php_ini)
-* [実行環境の例\(phpinfo関数をブラウザで実行\)](#php_exe_sample)
+* [php.ini保存場所](#php_ini)
+* [文字コード](#php_character)
+* [実行環境の例](#php_exe_sample)
 * [実行ユーザーの確認](#php_user)
 * [PECL](#php_pecl)
 * [Composer](#php_composer)
@@ -816,7 +817,7 @@ nginx.confで設定する。
 
 
 
-### <a name="php_ini">php.iniの確認</a>
+### <a name="php_ini">php.ini保存場所</a>
 
 * ブラウザ  
   phpinfo関数を実行する。  
@@ -824,6 +825,58 @@ nginx.confで設定する。
 * CLI  
   $ php -r 'phpinfo();' | grep php.ini
 
+
+### <a name="php_character">文字コード</a>
+
+UTF8で運用するためphp.iniファイルの文字関連を編集する。
+
+    default_charset = "UTF-8"                            // コメントアウトをはずす
+
+    [mbstring]
+    ; language for internal character representation.
+    ; http://php.net/mbstring.language
+    mbstring.language = Japanese
+
+    ; internal/script encoding.
+    ; Some encoding cannot work as internal encoding.
+    ; (e.g. SJIS, BIG5, ISO-2022-*)
+    ; http://php.net/mbstring.internal-encoding
+    mbstring.internal_encoding = UTF-8
+
+    ; http input encoding.
+    ; http://php.net/mbstring.http-input
+    mbstring.http_input = psss
+
+    ; http output encoding. mb_output_handler must be
+    ; registered as output buffer to function
+    ; http://php.net/mbstring.http-output
+    mbstring.http_output = pass
+
+    ; enable automatic encoding translation according to
+    ; mbstring.internal_encoding setting. Input chars are
+    ; converted to internal encoding by setting this to On.
+    ; Note: Do _not_ use automatic encoding translation for
+    ;       portable libs/applications.
+    ; http://php.net/mbstring.encoding-translation
+    mbstring.encoding_translation = Off
+
+    ; automatic encoding detection order.
+    ; auto means
+    ; http://php.net/mbstring.detect-order
+    mbstring.detect_order = SJIS,EUC-JP,JIS,UTF-8,ASCII
+    ; substitute_character used when character cannot be converted
+    ; one from another
+    ; http://php.net/mbstring.substitute-character
+    mbstring.substitute_character = none
+
+
+default_charsetにUTF-8を設定すればPHPから出力するとき下記コードが自動で出力される。
+
+    header('Content-Type: text/html; charset:UTF-8');
+
+上記をしていしているときも出力されるHTMLコードにはmetaタグで文字コードを指定するべき。
+
+    <meta charset="utf-8">
 
 
 ### <a name="php_exe_sample">実行環境の例(phpinfo関数をブラウザで実行)</a>

@@ -1162,7 +1162,7 @@ app/Config/core.php
 
 
 
-# [継続的インテグレーション](#ci)
+# <a name="ci">継続的インテグレーション</a>
 
 * [VirtualBox + Vagrant + Chef Soloを使ったCI環境](#virtualbox_vagrant_chef)
 * [CI(継続的インテグレーション)](#ci_ci)

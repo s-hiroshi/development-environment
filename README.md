@@ -477,6 +477,8 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 * [PHP実行環境](#php_exe)
 * [php.iniの配置場所](#php_ini)
 * [実行環境の例\(phpinfo関数をブラウザで実行\)](#php_exe_sample)
+* [実行ユーザーの確認](#php_user)
+* [PECL](#php_pecl)
 * [Composer](#php_composer)
 * [単体テスト - PHPUnit](#php_test)
 * [デバッグ - Xdebug](#php_ci_debug)
@@ -524,7 +526,7 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 
 
-## PHPの実行ユーザーの確認
+## <a name="php_user">PHPの実行ユーザーの確認</a>
 
 下記スクリプトへブラウザでアクセスし実行する。
 
@@ -533,24 +535,26 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 
 
-## PECL :: The PHP Extension Community Library
+## <a name="php_pecl">PECL :: The PHP Extension Community Library</a>
 
 [PECL :: The PHP Extension Community Library](http://pecl.php.net/)
+
 
 ### PECLの例
 
 * [PECL :: Package :: imagick](http://pecl.php.net/package/imagick)
 * [PECL :: Package :: oauth](http://pecl.php.net/package/oauth)
 
+
 ### PECLライブラリのインストール
 
 > PECLのインストール用には、PEAR同様に「pecl」コマンドが提供されている。インストール方法もほぼPEARと同じだが、インストール後に設定ファイル（php.ini）の「extension」でインストールしたモジュールを指定する必要がある点が異なる。
-
 Wikipedia
 
-1. peclコマンド[^pecl][^phpize][^phpbuilddir]
+
+1. peclコマンド[^pecl][^phpize][^phpbuilddir]  
   $ pecl install \<package name\>
-2. php.iniでextensionでモジュールを設定(後述のAdditional .iniを参照)
+2. php.iniでextensionでモジュールを設定(後述のAdditional .iniを参照)  
 
 [^pecl]:peclコマンドは一般的にPHPをインストールすればpear コマンドなどと一緒にインストールされる。
 
@@ -558,7 +562,8 @@ Wikipedia
 
 [^phpbuilddir]:ビルドのワーキングディレクトリ /build/buildd/php5-5.5.9+dfsg/pear-build-download
 
-#### phpize
+
+### phpize
 
 > 拡張モジュールをビルドする低レベルなビルドツール。autoconfやautomake m4等のビルドツールが別途必要になる。これを使用することにより、PHPをソースから再コンパイルすることなく拡張モジュールをビルドすることができる
 
@@ -573,14 +578,13 @@ php5-devをインストールする。
 [^php-devel]:RPM系はphp-develをyumでインストールする。
 
 
-#### Additional .ini
+### Additional .ini
 
 通常、PECLでインストールしたライブラリはphp.iniのextension_dirで指定したフォルダへ配置しphp.iniへextension=*.soと記載して読み込む。
 しかし今回構築した環境では下記のような仕組みにになっていた。
 
-[プログラミング日誌 :: LinuxのPHPに拡張モジュールを入れる方法](http://nb-tech.doorblog.jp/archives/51670170.html)
 
-##### ライブラリ配置ディレクトリ
+#### ライブラリ配置ディレクトリ
 
     /usr/lib/php5/20121212   <- どのファイルでこのディレクトリがPECLライブラリ保存先として指定しているかは不明
 
@@ -588,7 +592,7 @@ php5-devをインストールする。
     json.so  mysqli.so  opcache.so  pdo.so
 
 
-##### extension=\<library name\>
+#### extension=\<library name\>
 
 php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラリごとのiniファイルがありextension=\<library name\>の記載がされている。
 
@@ -596,24 +600,22 @@ php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラ�
     05-opcache.ini  20-curl.ini  20-mcrypt.ini  20-mysql.ini      20-readline.ini  20-xsl.ini
     10-pdo.ini      20-json.ini  20-mysqli.ini  20-pdo_mysql.ini  20-xdebug.ini
 
+[プログラミング日誌 :: LinuxのPHPに拡張モジュールを入れる方法](http://nb-tech.doorblog.jp/archives/51670170.html)
 
-#### extensionとzend_extension
+### extensionとzend_extension
 
 [PHP extensionとZend extensionの違い - hnwの日記](http://d.hatena.ne.jp/hnw/20130715)
 
 
-### ログの設定
+
+## ログの設定
 
 ログをファイルへ保存する設定をphp.iniへ記載。
-
 
     display_errors = Off
 
     log_errors = On
     error_log = <path>
-
-
-
 
 
 

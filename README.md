@@ -4,8 +4,14 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 
 # 目標
 
-1. 継続的インテグレーションが可能な開発環境の構築
-2. AWSでWEBサービス運用
+継続的インテグレーション可能な開発環境を構築しAWSで高品質なWEBサービスを提供する。
+
+# 前提とする環境
+
+* Ubuntu
+* Nginx
+* MySQL
+* PHP
 
 # 参考書
 
@@ -15,259 +21,196 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 
 # 目次
 
-* [ログ](#log)
 * [パッケージ管理システム](#package)
 * [開発環境](#env)
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 
-
-# <a name="log">ログ</a>
-
-Ubuntuを前提としている。
-
-    /var/log
-
 # <a name="package">パッケージ管理システム</a>
 
-
-### 系統
+## 系統
 
 * Debian系
-* レッドハット(RPM)系
+* Red Hat(RPM)系
 
-### Homebrew — OS X用パッケージマネージャー
+## Homebrew — OS X用パッケージマネージャー
 
-Homebrewはパッケージを/usr/local/binへインストール
+Homebrewはパッケージを/usr/local/binへインストールする。
 
-#### Homebrewのインストール
+### Homebrewのインストール
 
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-#### バージョン確認
+### バージョン確認
 
     $ brew --version
     0.9.5
 
-#### パス確認
+### パス確認
 
     $ which brew
     /usr/local/bin/brew
 
-#### パッケージのインストール
+### パッケージのインストール
 
     $ brew install パッケージ名  // パッケージのインストール
 
-####  パッケージ一覧確認
+###  パッケージ一覧確認
 
      $ brew list        // インストールしたパッケージ
  
     ant libyaml readline sqlite wget
     ios-sim openssl ruby subversion
 
-#### パッケージの更新
+### パッケージの更新
 
     $ brew upgrade     // インストールしたパッケージを更新
 
-#### HomeBrew自体の更新
+### Homebrew自体の更新
 
     $ brew update      // Homebrew自体を更新
  
 
-### npm
 
-node.jsパッケージ管理ツール。
-node.jsのインストール時に同時にインストールされる。
+## npm
 
- [npm Documentation](https://docs.npmjs.com/)
+node.jsパッケージ管理ツール。  
+通常node.jsをインストールしたときに同時にインストールされる。
 
-#### node.js(およびnpm)インストール
+[npm Documentation](https://docs.npmjs.com/)
 
-下記サイトからpkgファイルをダウンロードしてでインストールする。
+### node.js/npmインストール
+
+下記サイトからpkgファイルをダウンロードしインストールした。
 
 [node.js](http://nodejs.org/)
 
 
-#### バージョン確認
+### バージョン確認
  
-   $ npm —version
-   1.3.25
+    $ npm —version
+    1.3.25
 
-#### パス確認
+### パス確認
 
     $ which npm
-   /usr/local/bin/npm
+    /usr/local/bin/npm
 
-#### ヘルプ
+### ヘルプ
 
-$ npm -h        # クイックヘルプ --helpはない
-$ npm -l         # display full usage info
+    $ npm -h   // クイックヘルプ --helpはない
+    $ npm -l   // display full usage info
 
-#### パッケージのインストール
+### パッケージのインストール
 
-    $npm install パッケージ名        // カレントフォルダにインストール
-    $npm install -g パッケージ名   // グローバルにインストール
+    $ npm install パッケージ名       // カレントフォルダにインストール
+    $ sudo npm install -g パッケージ名    // グローバルにインストール
 
--gをつけてインストールするときはroot権限が必要。
-必要に応じてsudoで実行する。
 
-#### パッケージ一覧確認
+### パッケージ一覧確認
 
-   $ npm list    // カレントディレクトリにインストールしたパッケージ
-   $ npm list -g // グローバルにインストールしたパッケージ
+    $ npm list       // カレントディレクトリにインストールしたパッケージ
+    $ npm list -g    // グローバルにインストールしたパッケージ
 
-#### パッケージの更新
+### パッケージの更新
 
-   $ npm update パッケージ名          // カレントにインストールしたパッケージのアップデート
-    $ npm update -g パッケージ名    // グローバルにインストールしたパッケージの更新
+    $ npm update パッケージ名       // カレントフォルダにインストールしたパッケージの更新
+    $ sudo npm update -g パッケージ名    // グローバルにインストールしたパッケージの更新
 
-をグローバルにインストールしたパッケージを更新するときはroot権限が必要になる。必要に応じてsudoで実行する。
-
-#### npm自体の更新
+### npm自体の更新
 
     $ npm update  npm
-    $ npm update  npm -g
-
-npmをグローバルにインストールしているときはroot権限が必要になる。
-必要に応じてsudoで実行する。
+    $ sudo npm update  npm -g
 
 
-### gem
+
+## gem
 
 rubyパッケージ管理ツール。
 
-#### バージョン確認
+### バージョン確認
  
     $ gem —version
 
-#### パス確認
+### パス確認
 
     $ which gem
-   /usr/bin/gem
+    /usr/bin/gem
 
-#### パッケージ一覧確認
+### パッケージ一覧確認
  
     $ gem list --local # ローカルのパッケージ表示
     $ gem list --both # ローカル、リモートの両方とも表示。
 
 デフォルトは —localが指定。
 
-#### gemヘルプ
+### gemヘルプ
  
-    $ gem --help または　$ gem -h
-    $ gem bar -h # gem barのヘルプ
-    $ gem list -h # 例 gem listのヘルプ
+    $ gem --help     // $ gem -hでもよい
+    $ gem bar -h     // gem barのヘルプ
+    $ gem list -h    // 例 gem listのヘルプ
 
 
-#### パッケージ更新
+### パッケージ更新
 
-    $ sudo gem update パッケージ名     // gemでインストールしたパッケージfooの更新
+    $ sudo gem update <packagename>    // gemでインストールしたパッケージの更新
 
-#### gem自体の更新
+### gem自体の更新
  
-    $ sudo gem update --system # gem自体の更新
+    $ sudo gem update --system    // gem自体の更新
  
 
-例) sass, compassの更新
+(例) sass, compassの更新
 
     $ sudo gem update sass
     $ sudo gem update compass
 
 
-__gemはデフォルトは必ず/usr/binへインストールされる？__
+__gemはデフォルトでは/usr/binへインストールする？__
 
 
 [そろそろ整理しておきたい、Gemコマンドの使い方 - ばくのエンジニア日誌](http://bakunyo.hatenablog.com/entry/2013/05/23/%E3%81%9D%E3%82%8D%E3%81%9D%E3%82%8D%E6%95%B4%E7%90%86%E3%81%97%E3%81%A6%E3%81%8A%E3%81%8D%E3%81%9F%E3%81%84%E3%80%81Gem%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9)
 
 
-### wget
+## wget
 
 > wget とは、UNIXコマンドラインで HTTP や FTP 経由のファイル取得を行えるツールです。
 Webサイトであれば、リンク先を階層で指定して一気に取得することができ、オフラインでじっくり読んだり、ミラーサイトを簡単に作ることが可能です。
 また、ダウンロードが途中で止まってしまった場合は、途中からやり直すレジューム機能があり便利です。
-
-wget はGNUプロジェクトで作られているフリーソフトです。改良も配布も自由なので、是非活用しましょう。
+>
+> wget はGNUプロジェクトで作られているフリーソフトです。改良も配布も自由なので、是非活用しましょう。
 出典http://tech.bayashi.net/svr/doc/wget.html
 
 
-### cIRL
+## cIRL
 
 > cURL（カール[2]）は、さまざまなプロトコルを用いてデータを転送するライブラリとコマンドラインツールを提供するプロジェクトである。cURLプロジェクトは libcurl と cURL の2つの成果を生んでいる。
 
 
-### apt
+## apt
 
-Debian系のパッケージ管理システム
+Debian系のパッケージ管理システム。
 
-### apt-get
+
+## apt-get
 
 aptを利用したパッケージ管理コマンド
 追加したリポジトリの一覧表示方法は?
 
 
-### rpm
+## rpm
 
 > 米Red Hat社が開発したパッケージ管理システム。パッケージのインストールやアンインストールを行う。インストールの際は依存関係のあるパッケージ(動作に必要な他のパッケージ）を調べ，もしシステムにそれらパッケージが存在しない場合は，その旨をユーザーに通知する。また，アンインストールする際に，そのパッケージが他パッケージと依存関係がある(他のパッケージの動作に必要とされる)場合には，アンインストールできない旨を通告する。さらに，既にシステムにインストール済みのパッケージをチェックすることも可能。パッケージのインストール，アンインストール，アップデートには管理者権限が必要。
  
 
-### yum
+## yum
 
 > Yellowdog Updater Modified (Yum ヤム)はLinuxのRPM Package Managerのパッケージを管理するメタパッケージ管理システムである。Yumは デューク大学のLinux@DUKEプロジェクトでセス・ヴィダル（英語版）を始めとするボランティアによって開発された。
 
 yumはパッケージの置き場であるレポジトリを登録する必要がある。
 
-#### yumインストール
 
-    $apt-get install yum
-
-#### レポジトリインストール
-
-(例) epelレポジトリ
-
-レポジトリのインストールにはrpmが必要。
-
-    apt-get install rpm
-
-
-1. レポジトリファイルを取得
-
-    $ wget https://dl.fedoraproject.org/pub/epel/6/x86_64/2048-cli-0.9-4.git20141214.723738c.el6.x86_64.rpm
- 
-2. レポジトリファイルのインストール
-
-    $ rpm --upgrade --verbose --hash 2048-cli-0.9-4.git20141214.723738c.el6.x86_64.rpm
-
-
-Ubuntuはrpmコマンドを使うとrpm: RPM should not be used directly install RPM packages, use Alien instead!のメッセージ。
-alienでレポジトリをインストール
-
-    // alienインストール
-    $ apt-get install alien
-    // レポジトリインストール
-    alien 2048-cli-0.9-4.git20141214.723738c.el6.x86_64.rpm
-
-[CentOS6でRPMforge、Remi、EPELをyumレポジトリに追加する方法](http://dqn.sakusakutto.jp/2013/02/centos6_yum_remi_epel_rpmforge.html)
-
-
-    Setting up Local Package Process
-    Examining /var/tmp/yum-root-3fSaTt/ius-release-1.0-11.ius.centos6.noarch.rpm: ius-release-1.0-13.ius.centos6.noarch
-    Marking /var/tmp/yum-root-3fSaTt/ius-release-1.0-11.ius.centos6.noarch.rpm to be installed
-    Resolving Dependencies
-    --> Running transaction check
-    ---> Package ius-release.noarch 0:1.0-13.ius.centos6 will be installed
-    --> Processing Dependency: epel-release = 6 for package: ius-release-1.0-13.ius.centos6.noarch
-    --> Finished Dependency Resolution
-    Error: Package: ius-release-1.0-13.ius.centos6.noarch (/ius-release-1.0-11.ius.centos6.noarch)
-               Requires: epel-release = 6
-     You could try using --skip-broken to work around the problem
-     You could try running: rpm -Va --nofiles --nodigest
-
-#### パッケージインストール
-
-    $ sudo apt-get install yum-utils
-    $ sudo yum-config-manager --enable
-
-### Bundler
+## Bundler
 
 rubyの依存関係解決の標準パッケージ管理ツール。
 
@@ -277,6 +220,8 @@ rubyの依存関係解決の標準パッケージ管理ツール。
 
 Ubuntuで構築することを前提にする。
 
+
+* [Ubuntu](#env_ubuntu)
 * [シェル](#env_shell)
 * [HTML/CSS/JavaScriptの開発環境](#env_html_css_javascript)
 * [Nginx](#env_nginx)
@@ -284,6 +229,11 @@ Ubuntuで構築することを前提にする。
 * [MySQL](#env_php)
 * [CakePHPの](#env_cakephp)
 
+## <a name="env_ubuntu">Ubuntu</a>
+
+### ログ
+
+    /var/log
 
 ## <a name="env_shell">シェル</a>
 

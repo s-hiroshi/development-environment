@@ -14,7 +14,10 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 * [「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)
 
 # 目次
-* [パッケージ管理システム](#pakage)
+
+
+* [パッケージ管理システム](#package)
+* [開発環境](#env)
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 
@@ -265,36 +268,17 @@ rubyの依存関係解決の標準パッケージ管理ツール。
 
 
 
-# <a name="ci">継続的インテグレーション</a>
+# <a name="env">開発環境</a>
 
-## 目次 - 継続的インテグレーション
-
-* [HTML/CSS/JavaScriptの開発環境](#html_css_javascript_ci)
-* [PHPの開発環境](#php_ci)
-* [CakePHPの開発環境](#cakephp_ci)
-* [VirtualBox + Vagrant + Chef Soloを使ったCI環境](#virtualbox_vagrant_chef)
-* [CI(継続的インテグレーション)](#ci_ci)
-* [アジャイル](#agile)
-* [BDD:振舞駆動開発 (開発手法)](#bdd)
-* Appendix
-    + [1. Terminalでパスを確認](#appendix1)
-    + [2. Linux](#appendix2)
-    + [3. パッケージ管理システム](#appendix3)
-    + [4. Ubuntu]
-    + [5. Nginx](#appendix4)
-    + [7. Ruby](#appendix7)
-    + [8. Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix8)
-    + [9. behatインストールで発生したエラーへの対応](#appendix9)
-    + [10.  JenkinsのビルドでAPCの書き込みエラーが発生する問題](#appendix10)
-    + [11. gitのエディタを変更](#appendix11)
-    + [12. 用語](#appendix12:)
-    + [13. 英語](#appendix13)
-    + [14. CIサーバーJenkinsのパス](#appendix14)
+* [HTML/CSS/JavaScriptの開発環境](#env_html_css_javascript)
+* [Nginx](#env_nginx)
+* [PHP](#env_php)
+* [CakePHPの](#env_cakephp)
 
 
-# <a name="html_css_javascript_ci">HTML/CSS/JavaScriptの開発環境</a>
+## <a name="env_html_css_javascript">HTML/CSS/JavaScriptの開発環境</a>
 
-## 開発ツール
+### 開発ツール
 
 * CSS プリプロセッサー
     + Sass/Compass
@@ -310,11 +294,11 @@ rubyの依存関係解決の標準パッケージ管理ツール。
       JSLint, JSHint
 * 自動化ツール Grunt
 
-## 継続的開発
+### 継続的開発
 
 各ツールをGruntで自動化する。
 
-## フォルダ構成の例
+### フォルダ構成の例
 
     example
     |
@@ -348,13 +332,13 @@ rubyの依存関係解決の標準パッケージ管理ツール。
          |— contrib.rb           // Compass設定フィアル
 
 
-## Grunt
+### Grunt
 
 [Grunt: The JavaScript Task Runner](http://gruntjs.com/)
 
 gruntは一般的にgrunt-cliのみグローバルへインストールし、grunt本体も含めて各プラグインはプロジェクトごとのフォルダへインストールする。
 
-### 1. node/npmのインストール
+#### 1. node/npmのインストール
 
 [node.js](http://nodejs.org/)
 
@@ -363,22 +347,22 @@ Gruntはnode.js/npmを使う。
 node.jsはpkgファイルをダウンロードしインストールした。  
 npmはnode.jsと一緒にインストールされた。
 
-### 2. grunt command line interface(grunt-cli)のグローバルへのインストール
+#### 2. grunt command line interface(grunt-cli)のグローバルへのインストール
 
     $ sudo npm install -g grunt-cli
 
-### 3. プロジェクトフォルダにpackage.jsonを作成
+#### 3. プロジェクトフォルダにpackage.jsonを作成
 
     {
       "name": "example",
       "version": "0.0.1"
     }
 
-### 4. プロジェクトフォルダにGrunt本体とプラグインをインストール
+#### 4. プロジェクトフォルダにGrunt本体とプラグインをインストール
 
 grunt本体とプラグインはプロジェクトごとにプロジェクトフォルダへインストールする。
 
-#### 4-1. grunt本体のインストール
+##### 4-1. grunt本体のインストール
 
     $ cd <path>
     $ npm install grunt --save-dev
@@ -394,7 +378,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
       }
     }
 
-#### 4-2. プラグインインストール例
+##### 4-2. プラグインインストール例
 
     $ npm install grunt-contrib-compass --save-dev
     $ npm install grunt-contrib-cssmin --save-dev
@@ -420,7 +404,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
       }
     }
 
-### 5. Gruntfile.jsの例
+#### 5. Gruntfile.jsの例
 
     module.exports = function(grunt) {
       grunt.initConfig({
@@ -502,7 +486,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
     };
 
 
-### 6. grunt実行
+#### 6. grunt実行
 
     // 上記例ではgrunt.registerTask( 'default', [ 'watch'] );なのでwatchを実行
     // watchにタスクとして他の処理を指定しているのでそれらも順番に実行
@@ -510,30 +494,30 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
     // 特定のタスクのみ実行
     $ grunt <taskname>
 
-### package.jsonをもとにしたプラグインのインストール
+#### package.jsonをもとにしたプラグインのインストール
 
     $ npm install
 
 既存のnode_modulesフォルダがあれば削除しておく。
 
-### プラグインのバージョンアップ
+#### プラグインのバージョンアップ
 
     $ npm update —save-dev
 
 すべてのプラグインがアップデートされる。
 
 
-## Sass
+### Sass
 
 CSSプリプロセッサー。
 
 [Sass: Syntactically Awesome Style Sheets](http://sass-lang.com/)
 
-### Sassインストール
+#### Sassインストール
 
     $ sudo gem install sass
 
-### コンパイル
+#### コンパイル
 
 style.scssをコンパイルして同じフォルダにstyle.cssを作成する例。
 
@@ -545,45 +529,45 @@ style.scssをコンパイルして同じフォルダにstyle.cssを作成する�
 
 ターミナルではctrl + Cでwatchを停止する。
 
-### バージョン確認
+#### バージョン確認
 
     $ sass —version
     3.4.9
 
-### パス確認
+#### パス確認
 
     $ which sass
     /usr/bin/sass
 
 
-## Compass
+### Compass
 
 Sassを使ったCSS作成フレームワーク。
 
 [Compass Home | Compass Documentation](http://compass-style.org/)
 [Sass/Compass のインストールと基本的な環境設定 | Web Design Leaves](http://www.webdesignleaves.com/wp/htmlcss/652/)
 
-### インストール
+#### インストール
 
     $ sudo gem install compass
  
-### バージョン確認
+#### バージョン確認
 
     $ compass —version
     1.0.1
 
-### パス確認
+#### パス確認
 
     $ which compass
     /usr/bin/compass
 
-### コンパス初期化
+#### コンパス初期化
 
     $ create compass --bare
 
     contrib.rbとsassフォルダが作成される。
 
-### config.rb(Compass設定ファイル)
+#### config.rb(Compass設定ファイル)
 
     |—css
     |   |— a.css
@@ -606,16 +590,16 @@ contrib.rbの設定例
 
 上記例ではcompassコマンドでコンパイルするとdev/sassフォルダのモジュールファイルを除いたscssファイルをコンパイルしcssディレクトリへ出力する。
 
-### 変更を監視して自動コンパイル
+#### 変更を監視して自動コンパイル
 
     $ compass watch css/sass/main.scss
 
 
-## StyoeDocco
+### StyoeDocco
 
 CSS スタイルガイド。
 
-### インストール
+#### インストール
 
     $ sudo npm install -fg styledocco
 
@@ -625,17 +609,17 @@ CSS スタイルガイド。
 
     /usr/local/lib/node_modules/styledocco/bin/styledocco
 
-### パスの確認
+#### パスの確認
 
     $ which styledocco
     /usr/local/bin/styledocco
 
-### スタイルガイド作成
+#### スタイルガイド作成
 
     $ cd mytheme
     $ styledocco -n "My Theme" -o docs/css style.css
 
-### Grunt + StyleDocco
+#### Grunt + StyleDocco
 
 [grunt-styledocco](https://www.npmjs.com/package/grunt-styledocco)
 
@@ -655,24 +639,24 @@ CSS スタイルガイド。
     grunt.loadNpmTasks( 'grunt-styledocco' );
 
 
-## Code Inspections(検査)
+### Code Inspections(検査)
 
  * jsLint  PhpStormはデフォルトでサポート。
  * jsHint  PhpStormはデフォルトでサポート
     jsLintより緩い
 
 
-## QUnit テストツール
+### QUnit テストツール
 
 [QUnit](qunitjs.com)
 
-### Grunt + Qunit(+PhantomJS)
+#### Grunt + Qunit(+PhantomJS)
 
 [gruntjs/grunt-contrib-qunit](https://github.com/gruntjs/grunt-contrib-qunit)
 
 grunt-contrib-qunitはPhantomJSを含む。
 
-### インストール
+#### インストール
 
     $ npm install grunt-contrib-qunit —save-dev
 
@@ -680,20 +664,20 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 ダウンロードして配置した。
 
 
-## YUI Doc - JavaScript キュメンテーションツール
+### YUI Doc - JavaScript キュメンテーションツール
 
 [YUIDoc – Javascript Documentation Tool](http://yui.github.io/yuidoc/)
 [YUIDoc Syntax Reference](http://yui.github.io/yuidoc/syntax/index.html)
 
-### インストール
+#### インストール
 
     npm -g install yuidocjs.
 
-### コマンド
+#### コマンド
 
     yuidoc
 
-### Grunt + YUI DOC
+#### Grunt + YUI DOC
 
     yuidoc: {
       compile: {
@@ -711,12 +695,83 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 
 
+## <a name="env_nginx">Nginx</a>
 
-# <a name="php_ci">PHPの開発環境</a>
+### プログラム
+
+    $ which nginx
+    /usr/sbin/nginx
+
+
+### 起動・停止・再起動
+
+[ubuntuでnginxの起動と最低限のコマンド](http://joppot.info/2014/03/10/970)
+
+
+### 設定ファイル
+
+    /etc/nginx/nginx.conf
+
+nginx.confに下記記載がある。
+
+    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/sites-enabled/*;
+
+### sites-available, sites-enabled
+
+    /etc/nginx/sites-available
+    /etc/nginx/sites-enabled
+
+### site-available/default
+
+__初期状態ではlocationがコメントアウトされておりphpファイルへアクセスするとダウンロードしてしまう。下記のようにコメントアウトを外す。__
+
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+
+        root /var/www/application/current/app/webroot;
+        index index.php index.html index.htm;
+
+        server_name localhost;
+
+        location / {
+            try_files $uri $uri/ /index.php?$args;
+        }
+
+        location ~ \.php$ {
+            try_files $uri =404;
+            include /etc/nginx/fastcgi_params;
+            fastcgi_pass unix:/var/run/php5-fpm.sock;
+            fastcgi_index   index.php;
+            fastcgi_intercept_errors on;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param CAKE_ENV development;
+        }
+    }
+
+
+sites-availableディレクトリに記載したファイルへのシンボリックリンクをsite-enabledに置く。
+
+[軽量で高速なウェブサーバNginxを、Ubuntu 12.04に導入する(設定編その１) | 近藤嘉雪のプログラミング工房日誌](http://blog.kondoyoshiyuki.com/2012/12/09/setting-1-nginx-on-ubuntu-12-04/)
+
+
+#### ログ
+
+nginx.confで設定する。
+
+    ##
+    # Logging Settings
+    ##
+
+    access_log /var/log/sginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+[nginxのログ出力変更 - Qiita](http://qiitj.com/hito3/items/0e539e82ee3c410cccf1u)
 
 
 
-## 目次 - PHPの開発環境
+## <a name="env_php">PHPの開発環境</a>
 
 * [PHP実行環境](#php_exe)
 * [php.iniの配置場所](#php_ini)
@@ -731,7 +786,7 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 
 
-## <a name="php_exe">PHP実行環境</a>
+### <a name="php_exe">PHP実行環境</a>
 
 * Apache + モジュール/CGI
     - モジュール  
@@ -746,7 +801,7 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 
 
-## <a name="php_ini">php.iniの確認</a>
+### <a name="php_ini">php.iniの確認</a>
 
 * ブラウザ  
   phpinfo関数を実行する。  
@@ -756,7 +811,7 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 
 
-## <a name="php_exe_sample">実行環境の例(phpinfo関数をブラウザで実行)</a>
+### <a name="php_exe_sample">実行環境の例(phpinfo関数をブラウザで実行)</a>
 
 | PHP | PHP Version 5.5.9-1ubuntu4.5 |
 |-----|-----|
@@ -770,7 +825,7 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 
 
-## <a name="php_user">PHPの実行ユーザーの確認</a>
+### <a name="php_user">PHPの実行ユーザーの確認</a>
 
 下記スクリプトへブラウザでアクセスし実行する。
 
@@ -779,18 +834,18 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 
 
-## <a name="php_pecl">PECL :: The PHP Extension Community Library</a>
+### <a name="php_pecl">PECL :: The PHP Extension Community Library</a>
 
 [PECL :: The PHP Extension Community Library](http://pecl.php.net/)
 
 
-### PECLの例
+#### PECLの例
 
 * [PECL :: Package :: imagick](http://pecl.php.net/package/imagick)
 * [PECL :: Package :: oauth](http://pecl.php.net/package/oauth)
 
 
-### PECLライブラリのインストール
+#### PECLライブラリのインストール
 
 > PECLのインストール用には、PEAR同様に「pecl」コマンドが提供されている。インストール方法もほぼPEARと同じだが、インストール後に設定ファイル（php.ini）の「extension」でインストールしたモジュールを指定する必要がある点が異なる。
 Wikipedia
@@ -807,7 +862,7 @@ Wikipedia
 [^phpbuilddir]:ビルドのワーキングディレクトリ /build/buildd/php5-5.5.9+dfsg/pear-build-download
 
 
-### phpize
+#### phpize
 
 > 拡張モジュールをビルドする低レベルなビルドツール。autoconfやautomake m4等のビルドツールが別途必要になる。これを使用することにより、PHPをソースから再コンパイルすることなく拡張モジュールをビルドすることができる
 
@@ -822,13 +877,13 @@ php5-devをインストールする。
 [^php-devel]:RPM系はphp-develをyumでインストールする。
 
 
-### Additional .ini
+#### Additional .ini
 
 通常、PECLでインストールしたライブラリはphp.iniのextension_dirで指定したフォルダへ配置しphp.iniへextension=*.soと記載して読み込む。
 しかし今回構築した環境では下記のような仕組みにになっていた。
 
 
-#### ライブラリ配置ディレクトリ
+##### ライブラリ配置ディレクトリ
 
     /usr/lib/php5/20121212   <- どのファイルでこのディレクトリがPECLライブラリ保存先として指定しているかは不明
 
@@ -836,7 +891,7 @@ php5-devをインストールする。
     json.so  mysqli.so  opcache.so  pdo.so
 
 
-#### extension=\<library name\>
+##### extension=\<library name\>
 
 php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラリごとのiniファイルがありextension=\<library name\>の記載がされている。
 
@@ -846,13 +901,12 @@ php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラ�
 
 [プログラミング日誌 :: LinuxのPHPに拡張モジュールを入れる方法](http://nb-tech.doorblog.jp/archives/51670170.html)
 
-### extensionとzend_extension
+#### extensionとzend_extension
 
 [PHP extensionとZend extensionの違い - hnwの日記](http://d.hatena.ne.jp/hnw/20130715)
 
 
-
-## ログの設定
+### ログの設定
 
 ログをファイルへ保存する設定をphp.iniへ記載。
 
@@ -862,12 +916,11 @@ php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラ�
     error_log = <path>
 
 
-
-## <a name="php_ci_composer">Composer</a>
+### <a name="php_composer">Composer</a>
 
 PHPパッケージ管理ツール。
 
-### Composerのインストール
+#### Composerのインストール
 
     $ curl -sS https://getcomposer.org/installer | php
 
@@ -883,14 +936,14 @@ composer.pharがカレントディレクトリにダウンロードされる。
     $ php /fullpath/composer --version
 
 
-### Composerの初期化
+#### Composerの初期化
 
     $ composer init
 
 composer.jsonファイルが作成される。
 
 
-### composer.jsonの例
+#### composer.jsonの例
 
     {
         "require": {
@@ -906,7 +959,7 @@ composer.jsonファイルが作成される。
 Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパティで設定する。
 
 
-### composer.jsonに記載されたパッケージのインストール
+#### composer.jsonに記載されたパッケージのインストール
 
     $ composer install
 
@@ -915,7 +968,7 @@ Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパテ�
 2. composer.lockファイルを作成しバージョンを固定する。
 
 
-### パッケージの追加
+#### パッケージの追加
   
     // 通常の追加
     $ composer require <package>
@@ -927,7 +980,7 @@ composer require --devは開発環境でのみ必要なパッケージを追加�
 composer installではインストールされず--devオプションを付けてcomposer install --devでインストールされる。
 
 
-### パッケージのインストール場所
+#### パッケージのインストール場所
 
 通常、composer.jsonと同階層にvendorディレクトリが作成され配置される。
 
@@ -953,9 +1006,9 @@ composer.jsonで変更できる。
       },
 
 
-### Composerの利点
+#### Composerの利点
 
-1. 利点
+1. 利点  
   ComposerでインストールしたパッケージはVendorディレクトリへ配置し依存関係をを管理してくれる。
 2. オートロード[^composer_cake_autoload]
 
@@ -963,14 +1016,13 @@ composer.jsonで変更できる。
 を追加すればよい。require_once dirname(dirname(__FILE__)) . DS . 'Vendor' . DS . 'autoload.php';
 
 
-
-## <a name="php_ci_phpunit">単体テストツール - PHPUnit</a>
+### <a name="php_test">単体テストツール - PHPUnit</a>
 
 [PHPUnit #x2013; The PHP Testing Framework](https://phpunit.de/)
 
 PHPUnitのインストールの方法は幾つかある。
 
-### phpunit.pharをダウンロード
+#### phpunit.pharをダウンロード
 
 > ➜ wget https://phar.phpunit.de/phpunit.phar
 >
@@ -980,7 +1032,7 @@ PHPUnitのインストールの方法は幾つかある。
 >
 >➜ phpunit --version
 
-### Composerを使いインストール
+#### Composerを使いインストール
 
     // PHPUnitをインストール
     $ composer require "phpunit/phpunit":"3.7.*"
@@ -1059,8 +1111,7 @@ Calc.php
 ### 設定ファイル phpunit.xml
 
 
-
-## <a name="php_ci_xdebug">デバッグ- Xdebug</a>
+### <a name="php_debug">デバッグ- Xdebug</a>
 
 * [Xdebug - Debugger and Profiler Tool for PHP](http://xdebug.org/)
   テストコードカバレッジ取得。
@@ -1069,7 +1120,7 @@ Calc.php
     $ sudo apt-get install php5-xdebug
 
 
-### <a name="php_ci_phpdocumentor">ドキュメンテーションツール - phpDocumentor</a>
+### <a name="php_phpdocumentation">ドキュメンテーションツール - phpDocumentor</a>
 
 [phpDocumentor](http://www.phpdoc.org/)
 
@@ -1081,15 +1132,15 @@ Calc.php
 
 
 
-## <a name="php_ci_inspection">Code Inspections(検査) - PHP_CodeSniffer</a>
+### <a name="php_inspection">Code Inspections(検査) - PHP_CodeSniffer</a>
 
 PHP_CodeSniffer
 
 
 
-# <a name="cakephp_ci">CakePHP開発環境</a>
+## <a name="env_cakephp">CakePHP開発環境</a>
 
-## ツール
+### ツール
 
 * PHPUnit ユニットテスト  
   CakePHPはユニットテストをPHPUnitで行う。
@@ -1103,12 +1154,28 @@ PHP_CodeSniffer
 * behat/mink-goutte-driver  
   JavaScriptを使わずBehatを利用するプラグイン。
 
-## デバッグレベル
+### デバッグレベル
 
 app/Config/core.php
 
     Configure::write('debug', 2);
 
+
+
+# [継続的インテグレーション](#ci)
+
+* [VirtualBox + Vagrant + Chef Soloを使ったCI環境](#virtualbox_vagrant_chef)
+* [CI(継続的インテグレーション)](#ci_ci)
+* [アジャイル](#agile)
+* [BDD:振舞駆動開発 (開発手法)](#bdd)
+* Appendix
+    + [Ruby](#appendix_ruby)
+    + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
+    + [behatインストールで発生したエラーへの対応](#appendix_behat)
+    + [JenkinsのビルドでAPCの書き込みエラーが発生する問題](#appendix_jenkins)
+    + [gitのエディタを変更](#appendix_git_editor)
+    + [用語](#appendix_terms)
+    + [英語](#appendix_en)
 
 
 # <a name="virtualbox_vagrant_chef">VirtualBox + Vagrant + Chef Soloをで継続的CI環境構築(開発環境構築/プロビジョニング/デプロイ)</a>
@@ -1544,104 +1611,7 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 
 
 
-
-
-
-
-## <a name="appendix4">Appendix 4. Ubuntu</a>
-
-### Apache + MySQL + PHPのインストール
-
-    $ sudo apt-get update
-
-    $ sudo apt-get install apache2
-    $ sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql
-    $ sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
-
-### Apache設定ファイル
-
-/etc/apache2/apache2.conf
-
-
-
-## <a name="appendix4">Apenddix 4. Nginx</a>
-
-### プログラム
-
-    $ which nginx
-    /usr/sbin/nginx
-
-
-### 起動・停止・再起動
-
-[ubuntuでnginxの起動と最低限のコマンド](http://joppot.info/2014/03/10/970)
-
-
-### 設定ファイル
-
-    /etc/nginx/nginx.conf
-
-nginx.confに下記記載がある。
-
-    include /etc/nginx/conf.d/*.conf;
-    include /etc/nginx/sites-enabled/*;
-
-### sites-available, sites-enabled
-
-    /etc/nginx/sites-available
-    /etc/nginx/sites-enabled
-
-#### site-available/default
-
-__初期状態ではlocationがコメントアウトされておりphpファイルへアクセスするとダウンロードしてしまう。下記のようにコメントアウトを外す。__
-
-    server {
-        listen 80 default_server;
-        listen [::]:80 default_server ipv6only=on;
-
-        root /var/www/application/current/app/webroot;
-        index index.php index.html index.htm;
-
-        server_name localhost;
-
-        location / {
-            try_files $uri $uri/ /index.php?$args;
-        }
-
-        location ~ \.php$ {
-            try_files $uri =404;
-            include /etc/nginx/fastcgi_params;
-            fastcgi_pass unix:/var/run/php5-fpm.sock;
-            fastcgi_index   index.php;
-            fastcgi_intercept_errors on;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_param CAKE_ENV development;
-        }
-    }
-
-
-sites-availableディレクトリに記載したファイルへのシンボリックリンクをsite-enabledに置く。
-
-[軽量で高速なウェブサーバNginxを、Ubuntu 12.04に導入する(設定編その１) | 近藤嘉雪のプログラミング工房日誌](http://blog.kondoyoshiyuki.com/2012/12/09/setting-1-nginx-on-ubuntu-12-04/)
-
-
-### ログ
-
-nginx.confで設定する。
-
-    ##
-    # Logging Settings
-    ##
-
-    access_log /var/log/sginx/access.log;
-    error_log /var/log/nginx/error.log;
-
-[nginxのログ出力変更 - Qiita](http://qiitj.com/hito3/items/0e539e82ee3c410cccf1u)
-
-
-
-
-## <a name="appendix7">Appendix 7. Ruby</a>
+## <a name="appendix_ruby">Appendix Ruby</a>
 
     $ brew install ruby
 
@@ -1680,14 +1650,14 @@ rbenvはシェルによりrubyを切り替える。
 
 
 
-## <a name="appendix8">Appendix 8. Berkshelfはbundleで管理して使うとエラーがで
+## <a name="appendix_berkshelf">Appendix Berkshelfはbundleで管理して使うとエラーがで
 るのでChefDKを使う</a>
 
 [ChefDk の berkshelf で cookbook をダウンロードする - Qiita](http://qiita.com/shin1x1/items/872cf5b9396516068892)
 [Chef Development Kit | Chef Downloads | Chef](https://downloads.chef.io/chef-dk/mac/#/)
 
 
-## Appendix 8. behatインストールで発生したエラーへの対応
+## <a name="appendix_behat">Appendix behatインストールで発生したエラーへの対応</a>
 
 ### エラー
 
@@ -1727,7 +1697,7 @@ composer.json
 
 
 
-## <a name="appendix9">Appendix 9. JenkinsのビルドでAPCの書き込みエラーが発生
+## <a name="appendix_jenkins">Appendix JenkinsのビルドでAPCの書き込みエラーが発生
 する問題</a>
 
 PHPUnitでの単体テストがうまく行っていない
@@ -1790,7 +1760,7 @@ PHPUnitでの単体テストがうまく行っていない
 
 
 
-## <a name="appendix10">Appendix 10. gitのエディタを変更</a>
+## <a name="appendix_git_editor">Appendix gitのエディタを変更</a>
 
 Ubuntuでnanoをviへ変更
 
@@ -1799,7 +1769,7 @@ git config --global core.editor "vi"
 [gitのエディタをnanoから他へ変更する | J-Linuxer](http://jlinuxer.dip.jp/?p=645)
 
 
-## <a name="appendix11">Appendix 11 用語</a>
+## <a name="appendix_terms">Appendix 用語</a>
 
 > .soファイル 【 shared object file 】 .so形式 / .soフォーマット
 
@@ -1811,7 +1781,7 @@ git config --global core.editor "vi"
 
 
 
-## <a name="appendix12">Appendix 12. 英語</a>
+## <a name="appendix_en">Appendix 英語</a>
 
 * fixture by Weblio
   定着[固定]物，据え付け品; 取り付け具，備品
@@ -1836,13 +1806,6 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
 3【可算名詞】 (野外の)組み立て舞台[ステージ，スタンド].
 【動詞】 【他動詞】
 〈建物に〉足場を設ける.
-
-
-## <a name="appendix13">Appendix 13. Jenkinsのパス</a>
-
-/var/lib/jenkins/jobs/blogapp/workspace/
-
-
 
 
 
@@ -2111,6 +2074,11 @@ Evernoteの「2015.01.16 AWS UbuntuでPHPを動作させる」を参照。
     $ mysql -h <Endpoint> -u <username> -p
 
 AWSではパスワードなしでrootでログインすることはできない。
+
+
+### UTF8でデータベース作成
+
+    CREATE DATABASE <databasename> CHARACTER SET utf8
 
 ### 課金
 
@@ -2832,8 +2800,20 @@ Wikipedia
 
 Wikipedia
 
+# Appendix 1. Ubuntu + Apache + MySQL + PHP
 
-Appendix 
+    $ sudo apt-get update
+
+    $ sudo apt-get install apache2
+    $ sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql
+    $ sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
+
+### Apache設定ファイル
+
+/etc/apache2/apache2.conf
+
+
+# Appendix 2.
 
 とりあえずUbuntu + Nginxで動作した設定
 

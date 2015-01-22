@@ -35,8 +35,7 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
     + [2. Linux](#appendix2)
     + [3. パッケージ管理システム](#appendix3)
     + [4. Ubuntu]
-    + [4. Nginx](#appendix4)
-    + [5. PHP](#appendix5)
+    + [5. Nginx](#appendix4)
     + [6. CakePHP](#appendix6)
     + [7. Ruby](#appendix7)
     + [8. Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix8)
@@ -845,6 +844,8 @@ PHP_CodeSniffer
 
 # <a name="cakephp_ci">CakePHP開発環境</a>
 
+## ツール
+
 * PHPUnit ユニットテスト  
   CakePHPはユニットテストをPHPUnitで行う。
 * CakeDC Migration Plugin  
@@ -856,6 +857,12 @@ PHP_CodeSniffer
   CakePHP2用のプラグイン
 * behat/mink-goutte-driver  
   JavaScriptを使わずBehatを利用するプラグイン。
+
+## デバッグレベル
+
+app/Config/core.php
+
+    Configure::write('debug', 2);
 
 
 
@@ -1646,15 +1653,6 @@ nginx.confで設定する。
 
 [nginxのログ出力変更 - Qiita](http://qiitj.com/hito3/items/0e539e82ee3c410cccf1u)
 
-
-
-## <a name="appendix5">## <a name="appendix6">Appendix 6. CakePHP</a>
-
-### デバッグレベル
-
-app/Config/core.php
-
-    Configure::write('debug', 2);
 
 
 

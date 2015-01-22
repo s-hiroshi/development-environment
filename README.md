@@ -1190,12 +1190,16 @@ PHP_CodeSniffer
 | character_set_server     | latin1                                     |
 | character_set_system     | utf8                                       |
 
+
 ### charcter_set_serverの文字コードをUTF8へ設定
 
     $ sudo vi /etc/mysql/my.cnf
 
     [mysqld]
-    character_set_server = utf8
+    skip-character-set-client-handshake
+    character-set-server = utf8
+    collation-server = utf8_general_ci
+
 
 ### UTF8でデータベース作成
 

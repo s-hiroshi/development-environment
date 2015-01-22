@@ -15,13 +15,18 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 
 # 目次
 
-
+* [ログ](#log)
 * [パッケージ管理システム](#package)
 * [開発環境](#env)
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 
 
+# <a name="log">ログ</a>
+
+Ubuntuを前提としている。
+
+    /var/log
 
 # <a name="package">パッケージ管理システム</a>
 
@@ -270,9 +275,12 @@ rubyの依存関係解決の標準パッケージ管理ツール。
 
 # <a name="env">開発環境</a>
 
+Ubuntuで構築することを前提にする。
+
 * [HTML/CSS/JavaScriptの開発環境](#env_html_css_javascript)
 * [Nginx](#env_nginx)
 * [PHP](#env_php)
+* [MySQL](#env_php)
 * [CakePHPの](#env_cakephp)
 
 
@@ -694,6 +702,10 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
     }
 
 
+[目次 開発環境へ戻る](#env)
+
+
+
 
 ## <a name="env_nginx">Nginx</a>
 
@@ -768,6 +780,9 @@ nginx.confで設定する。
     error_log /var/log/nginx/error.log;
 
 [nginxのログ出力変更 - Qiita](http://qiitj.com/hito3/items/0e539e82ee3c410cccf1u)
+
+
+[目次 開発環境へ戻る](#env)
 
 
 
@@ -1136,6 +1151,73 @@ Calc.php
 
 PHP_CodeSniffer
 
+
+[目次 開発環境へ戻る](#env)
+
+
+
+## <a name="env_mysql">MySQL</a>
+
+### 起動・停止・再起動
+
+    // 起動
+    $ sudo /etc/init.d/mysql start
+     
+    // 停止
+    $ sudo /etc/init.d/mysql stop
+     
+    // 再起動
+    $ sudo /etc/init.d/mysql restart
+ 
+
+### 設定ファイル
+
+    $ sudo find / -name my.cnf
+    /etc/mysql/my.cnf
+
+
+### MySQLの文字コード関連確認
+
+    mysql> show variables like 'character_set_%';
+
+| Variable_name            | Value                                      |
+---------------------------|--------------------------------------------|
+| character_set_client     | utf8                                       |
+| character_set_connection | utf8                                       |
+| character_set_database   | latin1                                     |
+| character_set_filesystem | binary                                     |
+| character_set_results    | utf8                                       |
+| character_set_server     | latin1                                     |
+| character_set_system     | utf8                                       |
+
+### charcter_set_serverの文字コードをUTF8へ設定
+
+    $ sudo vi /etc/mysql/my.cnf
+
+    [mysqld]
+    character_set_server = utf8
+
+### UTF8でデータベース作成
+
+    // 新規
+    CREATE DATABASE <databasename> CHARACTER SET utf8
+    // 変更
+    ALTER DATABASE (<databasename) CHARACTER SET utf8
+
+### テーブル作成情報
+
+    mysql> show create table categories;
+
+### 文字コード(UTF8)を指定してテーブルを作成
+
+    create table <tablename> (
+        ; 定義
+    ) default character set utf8;
+
+
+
+
+[目次 開発環境へ戻る](#env)
 
 
 ## <a name="env_cakephp">CakePHP開発環境</a>
@@ -2076,9 +2158,6 @@ Evernoteの「2015.01.16 AWS UbuntuでPHPを動作させる」を参照。
 AWSではパスワードなしでrootでログインすることはできない。
 
 
-### UTF8でデータベース作成
-
-    CREATE DATABASE <databasename> CHARACTER SET utf8
 
 ### 課金
 

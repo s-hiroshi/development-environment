@@ -234,6 +234,8 @@ Homebrewはパッケージを/usr/local/binへインストールする。
 * コードインスペクション
     + JavaScript  
       JSLint, JSHint
+* デプロイ
+    + grunt-sftp-deploy
 * 自動化ツール Grunt
 
 
@@ -638,6 +640,10 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
         }
       }
     }
+
+### SFTPを使ったデプロイ
+
+[thrashr888/grunt-sftp-deploy · GitHub](https://github.com/thrashr888/grunt-sftp-deploy)
 
 [目次 HTML/CSS/JavaScript開発環境の目次へ戻る](#html_css_javascript)
 

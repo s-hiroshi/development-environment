@@ -1178,12 +1178,21 @@ Calc.php
 
 ### <a name="php_inspection">Code Inspections(検査) - PHP_CodeSniffer</a>
 
+#### インストール
+
 今回はComposerを使いインストールした。
 
     $ composer require "squizlabs/php_codesniffer":"*"
 
 [squizlabs/PHP_CodeSniffer · GitHub](https://github.com/squizlabs/PHP_CodeSniffer)
 [squizlabs/php_codesniffer - Packagist](https://packagist.org/packages/squizlabs/php_codesniffer)
+
+#### CakePHPの規約追加
+
+[cakephp/cakephp-codesniffer](cakephp/CakePHP_CodeSniffer)
+
+    $ composer require "cakephp/cakephp-codesniffer=2.*"
+    $ vendor/bin/phpcs --config-set installed_paths vendor/cakephp/cakephp-codesniffer
 
 
 

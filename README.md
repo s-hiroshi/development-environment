@@ -22,8 +22,8 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 # 目次
 
 * [パッケージ管理システム](#package)
-* [HTML/CSS/JavaScript開発環境](#env_html_css_javascript)
-* [Ubuntu+Nginx+MySQL+PHP開発環境](#env)
+* [HTML/CSS/JavaScript開発環境](#html_css_javascript)
+* [Ubuntu+Nginx+MySQL+PHP開発環境](#ubuntu_nginx_mysql_php)
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 
@@ -217,7 +217,8 @@ Homebrewはパッケージを/usr/local/binへインストールする。
  
 
 
-# <a name="env_html_css_javascript">HTML/CSS/JavaScript開発環境</a>
+
+# <a name="html_css_javascript">HTML/CSS/JavaScript開発環境</a>
 
 ## 開発ツール
 
@@ -638,22 +639,23 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
       }
     }
 
-
-[目次 HTML/JavaScript/CSS開発環境へ戻る](#env_html_javascript_css)
-
+[目次 HTML/CSS/JavaScript開発環境の目次へ戻る](#html_css_javascript)
 
 
-# <a name="env">Ubuntu+Nginx+MySQL+PHP開発環境</a>
+
+
+# <a name="ubuntu_nginx_mysql_php">Ubuntu+Nginx+MySQL+PHP開発環境</a>
 
 AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目指す。
 
 ## 目次
 
-* [Ubuntu](#env_ubuntu)
-* [シェル](#env_shell)
-* [Vi](#env_vi)
-* [Nginx](#env_nginx)
-* [PHP](#env_php)
+* [Ubuntu](#ubuntu)
+* [シェル](#shell)
+* [Vi](#vi)
+* [Nginx, MySQL, PHPインストール](#install_nginx_mysql_php)
+* [Nginx](#nginx)
+* [PHP](#php)
     + [PHP実行環境](#php_exe)
     + [php.ini保存場所](#php_ini)
     + [文字コード](#php_character)
@@ -665,8 +667,8 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
     + [デバッグ - Xdebug](#php_ci_debug)
     + [ドキュメンテーション - phpDocumentor](#php_documentation)
     + [コードインスペクション - PHP_CodeSniffer](#php_inspection)
-* [MySQL](#env_php)
-* [CakePHPの](#env_cakephp)
+* [MySQL](#php)
+* [CakePHPのインストール](#cakephp)
 
 
 ## 構築環境
@@ -1259,7 +1261,6 @@ Calc.php
     $ vendor/bin/phpunit --bootstrap Test/bootstrap.php CalcTest
 
 
-### 設定ファイル phpunit.xml
 
 
 ### <a name="php_debug">デバッグ- Xdebug</a>

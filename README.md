@@ -225,11 +225,12 @@ rubyの依存関係解決の標準パッケージ管理ツール。
 
 # <a name="env">開発環境</a>
 
-Ubuntuで構築することを前提にする。
+Ubuntuで構築することを前提に記載している。
 
 
 * [Ubuntu](#env_ubuntu)
 * [シェル](#env_shell)
+* [Vi](#env_vi)
 * [HTML/CSS/JavaScriptの開発環境](#env_html_css_javascript)
 * [Nginx](#env_nginx)
 * [PHP](#env_php)

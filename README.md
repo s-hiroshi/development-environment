@@ -1178,7 +1178,13 @@ Calc.php
 
 ### <a name="php_inspection">Code Inspections(検査) - PHP_CodeSniffer</a>
 
-PHP_CodeSniffer
+今回はComposerを使いインストールした。
+
+    $ composer require "squizlabs/php_codesniffer":"*"
+
+[squizlabs/PHP_CodeSniffer · GitHub](https://github.com/squizlabs/PHP_CodeSniffer)
+[squizlabs/php_codesniffer - Packagist](https://packagist.org/packages/squizlabs/php_codesniffer)
+
 
 
 [目次 開発環境へ戻る](#env)

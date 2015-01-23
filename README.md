@@ -667,8 +667,8 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
     + [デバッグ - Xdebug](#php_ci_debug)
     + [ドキュメンテーション - phpDocumentor](#php_documentation)
     + [コードインスペクション - PHP_CodeSniffer](#php_inspection)
-* [MySQL](#php)
-* [CakePHPのインストール](#cakephp)
+    + [CakePHPのインストール](#php_cakephp)
+* [MySQL](#mysql)
 
 
 ## 構築環境
@@ -1406,7 +1406,7 @@ Nginx再起動
 
 
 
-## <a name="env_mysql">MySQL</a>
+## <a name="mysql">MySQL</a>
 
 ### 起動・停止・再起動
 
@@ -1610,7 +1610,8 @@ FileZilla設定方法は下記サイトを参考にして設定
     $ sudo nginx -s reload
 
 
-[目次 開発環境へ戻る](#env)
+[Ubuntu+Nginx+MySQL+PHP開発環境の目次へ戻る](#ubuntu_nginx_mysql_php)
+
 
 
 

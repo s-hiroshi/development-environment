@@ -22,55 +22,12 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 # 目次
 
 * [パッケージ管理システム](#package)
-* [開発環境](#env)
+* [HTML/CSS/JavaScript開発環境](#env_html_css_javascript)
+* [Ubuntu+Nginx+MySQL+PHP開発環境](#env)
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 
 # <a name="package">パッケージ管理システム</a>
-
-## 系統
-
-* Debian系
-* Red Hat(RPM)系
-
-## Homebrew — OS X用パッケージマネージャー
-
-Homebrewはパッケージを/usr/local/binへインストールする。
-
-### Homebrewのインストール
-
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
-### バージョン確認
-
-    $ brew --version
-    0.9.5
-
-### パス確認
-
-    $ which brew
-    /usr/local/bin/brew
-
-### パッケージのインストール
-
-    $ brew install パッケージ名  // パッケージのインストール
-
-###  パッケージ一覧確認
-
-     $ brew list        // インストールしたパッケージ
- 
-    ant libyaml readline sqlite wget
-    ios-sim openssl ruby subversion
-
-### パッケージの更新
-
-    $ brew upgrade     // インストールしたパッケージを更新
-
-### Homebrew自体の更新
-
-    $ brew update      // Homebrew自体を更新
- 
-
 
 ## npm
 
@@ -221,56 +178,48 @@ yumはパッケージの置き場であるレポジトリを登録する必要�
 
 rubyの依存関係解決の標準パッケージ管理ツール。
 
+## Homebrew — OS X用パッケージマネージャー
+
+Homebrewはパッケージを/usr/local/binへインストールする。
+
+### Homebrewのインストール
+
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+### バージョン確認
+
+    $ brew --version
+    0.9.5
+
+### パス確認
+
+    $ which brew
+    /usr/local/bin/brew
+
+### パッケージのインストール
+
+    $ brew install パッケージ名  // パッケージのインストール
+
+###  パッケージ一覧確認
+
+     $ brew list        // インストールしたパッケージ
+ 
+    ant libyaml readline sqlite wget
+    ios-sim openssl ruby subversion
+
+### パッケージの更新
+
+    $ brew upgrade     // インストールしたパッケージを更新
+
+### Homebrew自体の更新
+
+    $ brew update      // Homebrew自体を更新
+ 
 
 
-# <a name="env">開発環境</a>
+# <a name="env_html_css_javascript">HTML/CSS/JavaScript開発環境</a>
 
-Ubuntuで構築することを前提に記載している。
-
-
-* [Ubuntu](#env_ubuntu)
-* [シェル](#env_shell)
-* [Vi](#env_vi)
-* [HTML/CSS/JavaScriptの開発環境](#env_html_css_javascript)
-* [Nginx](#env_nginx)
-* [PHP](#env_php)
-* [MySQL](#env_php)
-* [CakePHPの](#env_cakephp)
-
-## <a name="env_ubuntu">Ubuntu</a>
-
-### ログ
-
-    /var/log
-
-## <a name="env_shell">シェル</a>
-
-### 文字コード
-
-    $ sudo apt-get install language-pack-ja
-    $ sudo update-locale LANG=ja_JP.UTF-8
-
-一時てきに切り替える。
-
-    // 現在の設定を確認
-    $ export $LANG
-    en_US.UTF-8
-    // 日本語環境に設定
-    $ export LANG=ja_JP.UTF-8
-
-
-## <a name="env_vi">Vi</a>
-
-### 文字コード
-
-    // 開いているファイルの文字コード確認
-    :set enc?
-    // UTF-8へ変更
-    :set encoding=utf8
-
-## <a name="env_html_css_javascript">HTML/CSS/JavaScriptの開発環境</a>
-
-### 開発ツール
+## 開発ツール
 
 * CSS プリプロセッサー
     + Sass/Compass
@@ -286,11 +235,15 @@ Ubuntuで構築することを前提に記載している。
       JSLint, JSHint
 * 自動化ツール Grunt
 
-### 継続的開発
+
+## 継続的開発
 
 各ツールをGruntで自動化する。
 
-### フォルダ構成の例
+
+## フォルダ構成の例
+
+以下の説明は下記フォルダ構成を前提とする。
 
     example
     |
@@ -324,13 +277,13 @@ Ubuntuで構築することを前提に記載している。
          |— contrib.rb           // Compass設定フィアル
 
 
-### Grunt
+## Grunt
 
 [Grunt: The JavaScript Task Runner](http://gruntjs.com/)
 
 gruntは一般的にgrunt-cliのみグローバルへインストールし、grunt本体も含めて各プラグインはプロジェクトごとのフォルダへインストールする。
 
-#### 1. node/npmのインストール
+### 1. node/npmのインストール
 
 [node.js](http://nodejs.org/)
 
@@ -339,22 +292,22 @@ Gruntはnode.js/npmを使う。
 node.jsはpkgファイルをダウンロードしインストールした。  
 npmはnode.jsと一緒にインストールされた。
 
-#### 2. grunt command line interface(grunt-cli)のグローバルへのインストール
+### 2. grunt command line interface(grunt-cli)のグローバルへのインストール
 
     $ sudo npm install -g grunt-cli
 
-#### 3. プロジェクトフォルダにpackage.jsonを作成
+### 3. プロジェクトフォルダにpackage.jsonを作成
 
     {
       "name": "example",
       "version": "0.0.1"
     }
 
-#### 4. プロジェクトフォルダにGrunt本体とプラグインをインストール
+### 4. プロジェクトフォルダにGrunt本体とプラグインをインストール
 
 grunt本体とプラグインはプロジェクトごとにプロジェクトフォルダへインストールする。
 
-##### 4-1. grunt本体のインストール
+#### 4-1. Grunt本体のインストール
 
     $ cd <path>
     $ npm install grunt --save-dev
@@ -370,7 +323,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
       }
     }
 
-##### 4-2. プラグインインストール例
+#### 4-2. プラグインインストール例
 
     $ npm install grunt-contrib-compass --save-dev
     $ npm install grunt-contrib-cssmin --save-dev
@@ -396,7 +349,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
       }
     }
 
-#### 5. Gruntfile.jsの例
+### 5. Gruntfile.jsの例
 
     module.exports = function(grunt) {
       grunt.initConfig({
@@ -478,7 +431,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
     };
 
 
-#### 6. grunt実行
+### 6. Grunt実行
 
     // 上記例ではgrunt.registerTask( 'default', [ 'watch'] );なのでwatchを実行
     // watchにタスクとして他の処理を指定しているのでそれらも順番に実行
@@ -486,80 +439,80 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
     // 特定のタスクのみ実行
     $ grunt <taskname>
 
-#### package.jsonをもとにしたプラグインのインストール
+### package.jsonをもとにしたプラグインのインストール
 
     $ npm install
 
 既存のnode_modulesフォルダがあれば削除しておく。
 
-#### プラグインのバージョンアップ
+### プラグインのバージョンアップ
 
     $ npm update —save-dev
 
 すべてのプラグインがアップデートされる。
 
 
-### Sass
+## Sass
 
 CSSプリプロセッサー。
 
 [Sass: Syntactically Awesome Style Sheets](http://sass-lang.com/)
 
-#### Sassインストール
+### Sassインストール
 
     $ sudo gem install sass
 
-#### コンパイル
+### コンパイル
 
 style.scssをコンパイルして同じフォルダにstyle.cssを作成する例。
 
     $ sass style.scss style.css
 
-## 変更を監視して自動コンパイル
+### 変更を監視して自動コンパイル
 
     $ sass –watch style.scss:style.css
 
 ターミナルではctrl + Cでwatchを停止する。
 
-#### バージョン確認
+### バージョン確認
 
     $ sass —version
     3.4.9
 
-#### パス確認
+### パス確認
 
     $ which sass
     /usr/bin/sass
 
 
-### Compass
+## Compass
 
 Sassを使ったCSS作成フレームワーク。
 
 [Compass Home | Compass Documentation](http://compass-style.org/)
 [Sass/Compass のインストールと基本的な環境設定 | Web Design Leaves](http://www.webdesignleaves.com/wp/htmlcss/652/)
 
-#### インストール
+### インストール
 
     $ sudo gem install compass
  
-#### バージョン確認
+### バージョン確認
 
     $ compass —version
     1.0.1
 
-#### パス確認
+### パス確認
 
     $ which compass
     /usr/bin/compass
 
-#### コンパス初期化
+### コンパス初期化
 
     $ create compass --bare
 
     contrib.rbとsassフォルダが作成される。
 
-#### config.rb(Compass設定ファイル)
+### config.rb(Compass設定ファイル)
 
     |—css
     |   |— a.css
@@ -582,40 +535,40 @@ contrib.rbの設定例
 
 上記例ではcompassコマンドでコンパイルするとdev/sassフォルダのモジュールファイルを除いたscssファイルをコンパイルしcssディレクトリへ出力する。
 
-#### 変更を監視して自動コンパイル
+### 変更を監視して自動コンパイル
 
     $ compass watch css/sass/main.scss
 
 
-### StyoeDocco
+## StyoeDocco
 
 CSS スタイルガイド。
 
-#### インストール
+### インストール
 
     $ sudo npm install -fg styledocco
 
 オプションfは必須。
 
-#### インストール先
+### インストール先
 
     /usr/local/lib/node_modules/styledocco/bin/styledocco
 
-#### パスの確認
+### パスの確認
 
     $ which styledocco
     /usr/local/bin/styledocco
 
-#### スタイルガイド作成
+### スタイルガイド作成
 
     $ cd mytheme
     $ styledocco -n "My Theme" -o docs/css style.css
 
-#### Grunt + StyleDocco
+### Grunt + StyleDocco
 
 [grunt-styledocco](https://www.npmjs.com/package/grunt-styledocco)
 
-#### Gruntfile.js
+### Gruntfile.js
 
     styledocco: {
       dist: {
@@ -631,24 +584,24 @@ CSS スタイルガイド。
     grunt.loadNpmTasks( 'grunt-styledocco' );
 
 
-### Code Inspections(検査)
+## Code Inspections(検査)
 
  * jsLint  PhpStormはデフォルトでサポート。
  * jsHint  PhpStormはデフォルトでサポート
     jsLintより緩い
 
 
-### QUnit テストツール
+## QUnit テストツール
 
 [QUnit](qunitjs.com)
 
-#### Grunt + Qunit(+PhantomJS)
+### Grunt + Qunit(+PhantomJS)
 
 [gruntjs/grunt-contrib-qunit](https://github.com/gruntjs/grunt-contrib-qunit)
 
 grunt-contrib-qunitはPhantomJSを含む。
 
-#### インストール
+### インストール
 
     $ npm install grunt-contrib-qunit —save-dev
 
@@ -656,20 +609,20 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 ダウンロードして配置した。
 
 
-### YUI Doc - JavaScript キュメンテーションツール
+## YUI Doc - JavaScript キュメンテーションツール
 
 [YUIDoc – Javascript Documentation Tool](http://yui.github.io/yuidoc/)
 [YUIDoc Syntax Reference](http://yui.github.io/yuidoc/syntax/index.html)
 
-#### インストール
+### インストール
 
     npm -g install yuidocjs.
 
-#### コマンド
+### コマンド
 
     yuidoc
 
-#### Grunt + YUI DOC
+### Grunt + YUI DOC
 
     yuidoc: {
       compile: {
@@ -686,8 +639,128 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
     }
 
 
-[目次 開発環境へ戻る](#env)
+[目次 HTML/JavaScript/CSS開発環境へ戻る](#env_html_javascript_css)
 
+
+
+# <a name="env">Ubuntu+Nginx+MySQL+PHP開発環境</a>
+
+AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目指す。
+
+## 目次
+
+* [Ubuntu](#env_ubuntu)
+* [シェル](#env_shell)
+* [Vi](#env_vi)
+* [Nginx](#env_nginx)
+* [PHP](#env_php)
+    + [PHP実行環境](#php_exe)
+    + [php.ini保存場所](#php_ini)
+    + [文字コード](#php_character)
+    + [実行環境の例](#php_exe_sample)
+    + [実行ユーザーの確認](#php_user)
+    + [PECL](#php_pecl)
+    + [Composer](#php_composer)
+    + [単体テスト - PHPUnit](#php_test)
+    + [デバッグ - Xdebug](#php_ci_debug)
+    + [ドキュメンテーション - phpDocumentor](#php_documentation)
+    + [コードインスペクション - PHP_CodeSniffer](#php_inspection)
+* [MySQL](#env_php)
+* [CakePHPの](#env_cakephp)
+
+
+## 構築環境
+
+* Ubuntu 14.04 
+* Nginx  
+  nginx version: nginx/1.4.6 (Ubuntu)
+* MySQL  
+* PHP5   
+  PHP Version 5.5.9-1ubuntu4.5
+
+
+
+## Ubuntuログインユーザー
+
+ユーザーubuntuでログインしていると仮定して記載する。
+
+
+
+## PHP実行ユーザー
+
+* ユーザー  
+  www-data
+* www-dataが属するグループ  
+  www-data
+
+#### PHP実行ユーザー確認
+
+    <?php
+    echo `whoami`;
+
+PHP実行ユーザーはwww-dataと仮定して記載する。
+
+
+
+## <a name="env_ubuntu">Ubuntu</a>
+
+### ログ
+
+    /var/log
+
+
+
+## <a name="env_shell">シェル</a>
+
+### 文字コード
+
+    $ sudo apt-get install language-pack-ja
+    $ sudo update-locale LANG=ja_JP.UTF-8
+
+一時てきに切り替える。
+
+    // 現在の設定を確認
+    $ export $LANG
+    en_US.UTF-8
+    // 日本語環境に設定
+    $ export LANG=ja_JP.UTF-8
+
+
+
+## <a name="env_vi">Vi</a>
+
+### 文字コード
+
+    // 開いているファイルの文字コード確認
+    :set enc?
+    // UTF-8へ変更
+    :set encoding=utf8
+
+
+
+
+## 各種パッケージインストール
+
+Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをインストールする。
+
+    // apt-getを最新へ更新
+    $ sudo apt-get update
+    // 必要パッケージインストール
+    $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
+
+
+
+## ドキュメントルート作成
+
+    $ sudo mkdir -p /var/www/application/current/app/webroot
+
+
+
+## currentディレクトリ以下の所有者とパーミション変更
+ 
+    $ cd /var/www/application
+    $ sudo chown -R www-data current
+    $ sudo chmod -R 755 current
 
 
 
@@ -704,55 +777,7 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 [ubuntuでnginxの起動と最低限のコマンド](http://joppot.info/2014/03/10/970)
 
 
-### 設定ファイル
-
-    /etc/nginx/nginx.conf
-
-nginx.confに下記記載がある。
-
-    include /etc/nginx/conf.d/*.conf;
-    include /etc/nginx/sites-enabled/*;
-
-### sites-available, sites-enabled
-
-    /etc/nginx/sites-available
-    /etc/nginx/sites-enabled
-
-### site-available/default
-
-__初期状態ではlocationがコメントアウトされておりphpファイルへアクセスするとダウンロードしてしまう。下記のようにコメントアウトを外す。__
-
-    server {
-        listen 80 default_server;
-        listen [::]:80 default_server ipv6only=on;
-
-        root /var/www/application/current/app/webroot;
-        index index.php index.html index.htm;
-
-        server_name localhost;
-
-        location / {
-            try_files $uri $uri/ /index.php?$args;
-        }
-
-        location ~ \.php$ {
-            try_files $uri =404;
-            include /etc/nginx/fastcgi_params;
-            fastcgi_pass unix:/var/run/php5-fpm.sock;
-            fastcgi_index   index.php;
-            fastcgi_intercept_errors on;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_param CAKE_ENV development;
-        }
-    }
-
-
-sites-availableディレクトリに記載したファイルへのシンボリックリンクをsite-enabledに置く。
-
-[軽量で高速なウェブサーバNginxを、Ubuntu 12.04に導入する(設定編その１) | 近藤嘉雪のプログラミング工房日誌](http://blog.kondoyoshiyuki.com/2012/12/09/setting-1-nginx-on-ubuntu-12-04/)
-
-
-#### ログ
+### ログ
 
 nginx.confで設定する。
 
@@ -766,27 +791,91 @@ nginx.confで設定する。
 [nginxのログ出力変更 - Qiita](http://qiitj.com/hito3/items/0e539e82ee3c410cccf1u)
 
 
-[目次 開発環境へ戻る](#env)
+### 設定関連ファイル
+
+    (1) /etc/nginx/nginx.conf  // Nginx全体の設定(今回は変更なし)
+    (2) /etc/nginx/sites-available/default  // ホストの設定(変更)
+    (3) /etc/nginx/sites-enabled/default   //  (2)のシンボリックリンク Nginxの起動時に読み込まれる
+
+今回は/etc/nginx/sites-available/defaultを編集する。
+
+
+### site-available/defaultファイル
+
+* ドキュメントルート設定 rootディレクティブ
+* /によるアクセス        indexディレクトリ
+* FastCGIの設定          locationディレクティブ
+
+__初期状態ではlocationがコメントアウトされておりphpファイルへアクセスするとダウンロードしてしまう。下記のようにコメントアウトを外す。__
+
+    server {
+            listen 80 default_server;
+            listen [::]:80 default_server ipv6only=on;
+ 
+            root /var/www/application/current/app/webroot;
+            index index.php index.html index.htm;
+ 
+            # Make site accessible from http://localhost/
+            server_name localhost;
+ 
+            location / {
+                    # First attempt to serve request as file, then
+                    # as directory, then fall back to displaying a 404.
+                    try_files $uri $uri/ =404;
+                    # Uncomment to enable naxsi on this location
+                    # include /etc/nginx/naxsi.rules
+            }
+ 
+            # Only for nginx-naxsi used with nginx-naxsi-ui : process denied requests
+            #location /RequestDenied {
+            #       proxy_pass http://127.0.0.1:8080; 
+            #}
+ 
+            #error_page 404 /404.html;
+ 
+            # redirect server error pages to the static page /50x.html
+            #
+            #error_page 500 502 503 504 /50x.html;
+            #location = /50x.html {
+            #       root /usr/share/nginx/html;
+            #}
+ 
+            # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+            #
+            location ~ \.php$ {
+                    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            #       # NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+            #
+            #       # With php5-cgi alone:
+                    # fastcgi_pass 127.0.0.1:9000;
+                    # With php5-fpm:
+                    fastcgi_pass unix:/var/run/php5-fpm.sock;
+                    fastcgi_index index.php;
+                    include fastcgi_params;
+            }
+ 
+            # deny access to .htaccess files, if Apache's document root
+            # concurs with nginx's one
+            #
+            #location ~ /\.ht {
+            #       deny all;
+            #}
+    }
+
+
+### Nginx(再)起動
+
+    $ sudo nginx -s reload
+
+
+
+[軽量で高速なウェブサーバNginxを、Ubuntu 12.04に導入する(設定編その１) | 近藤嘉雪のプログラミング工房日誌](http://blog.kondoyoshiyuki.com/2012/12/09/setting-1-nginx-on-ubuntu-12-04/)
 
 
 
 ## <a name="env_php">PHPの開発環境</a>
 
-* [PHP実行環境](#php_exe)
-* [php.ini保存場所](#php_ini)
-* [文字コード](#php_character)
-* [実行環境の例](#php_exe_sample)
-* [実行ユーザーの確認](#php_user)
-* [PECL](#php_pecl)
-* [Composer](#php_composer)
-* [単体テスト - PHPUnit](#php_test)
-* [デバッグ - Xdebug](#php_ci_debug)
-* [ドキュメンテーション - phpDocumentor](#php_documentation)
-* [コードインスペクション - PHP_CodeSniffer](#php_inspection)
-
-
-
-### <a name="php_exe">PHP実行環境</a>
+### <a name="env_php_exe">PHP実行環境の分類</a>
 
 * Apache + モジュール/CGI
     - モジュール  
@@ -801,7 +890,7 @@ nginx.confで設定する。
 
 
 
-### <a name="php_ini">php.ini保存場所</a>
+### <a name="env_php_ini">php.ini保存場所</a>
 
 * ブラウザ  
   phpinfo関数を実行する。  
@@ -810,7 +899,7 @@ nginx.confで設定する。
   $ php -r 'phpinfo();' | grep php.ini
 
 
-### <a name="php_character">文字コード</a>
+### <a name="env_php_character">文字コード</a>
 
 UTF8で運用するためphp.iniファイルの文字関連を編集する。
 
@@ -863,9 +952,9 @@ default_charsetにUTF-8を設定すればPHPから出力するとき下記コー
     <meta charset="utf-8">
 
 
-### <a name="php_exe_sample">実行環境の例(phpinfo関数をブラウザで実行)</a>
+### <a name="env_php_exe_sample">実行環境の例(phpinfo関数をブラウザで実行)</a>
 
-| PHP | PHP Version 5.5.9-1ubuntu4.5 |
+| PHPh| PHP Version 5.5.9-1ubuntu4.5 |
 |-----|-----|
 |Configuration File (php.ini) Path|/etc/php5/fpm|
 |Loaded Configuration File|/etc/php5/fpm/php.ini|
@@ -874,16 +963,6 @@ default_charsetにUTF-8を設定すればPHPから出力するとき下記コー
 |PHP API|20121113|
 |PHP Extension|20121212|
 |Zend Extension|220121212|
-
-
-
-### <a name="php_user">PHPの実行ユーザーの確認</a>
-
-下記スクリプトへブラウザでアクセスし実行する。
-
-    <?php
-    echo `whoami`;
-
 
 
 ### <a name="php_pecl">PECL :: The PHP Extension Community Library</a>
@@ -968,9 +1047,15 @@ php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラ�
     error_log = <path>
 
 
-### <a name="php_composer">Composer</a>
+## <a name="env_php_composer">Composer</a>
 
 PHPパッケージ管理ツール。
+
+
+#### パッケージのインストール
+
+    $ cd /var/www/application/current/app
+    $ php composer install
 
 #### Composerのインストール
 
@@ -1086,6 +1171,9 @@ PHPUnitのインストールの方法は幾つかある。
 
 #### Composerを使いインストール
 
+
+PHPUnitの最新版(2015.01.16)は4.4だがCakePHPで利用することを考えめ3.7をインストール
+
     // PHPUnitをインストール
     $ composer require "phpunit/phpunit":"3.7.*"
 
@@ -1094,12 +1182,24 @@ PHPUnitのインストールの方法は幾つかある。
 
     vendor/bin/phpunit
 
-#### 基本テスト
+### 簡単なテスト
+
+    var/www/application/current/app
+        |
+        |…..
+        |— vendor
+                  |…..
+        |— test
+                  |— CalcTest.php
+        |
+        |— webroot
+                  |— Calc.php
+
 
 CalcTest.php
 
     <?php
-    require_once(“Calc.php”);
+    require_once(“/var/www/application/current/app/webroot/Calc.php”);
 
     class CalcTest extends PHPUnit_Framework_TestCase {
         private $calc;
@@ -1129,13 +1229,12 @@ Calc.php
     }
 
 
-#### テスト実行
+### テスト実行
 
-    $ vendor/bin/phpunit CalcTest
+    $ vendor/bin/phpunit test/CalcTest
 
-コマンドが実行されたディレクトリ(ワーキングディレクトリ)からの相対パスでファイルを検索するので上記例では同階層にCalcTest.php/Calc.phpが必要
 
-#### --bootstrapオプション
+### --bootstrapオプション
 
     working_dir
       |
@@ -1166,10 +1265,24 @@ Calc.php
 ### <a name="php_debug">デバッグ- Xdebug</a>
 
 * [Xdebug - Debugger and Profiler Tool for PHP](http://xdebug.org/)
-  テストコードカバレッジ取得。
 
+
+#### インストール
 
     $ sudo apt-get install php5-xdebug
+
+/usr/lib/php5/20121212/xdebug.soへインストールされた。
+
+#### 設定(/etc/php5/fpm/conf.d/20-xdebug.ini)
+
+/etc/php5/fpm/conf.d/20-xdebug.iniへ読込み処理を記載した。
+
+    zend_extension=/usr/lib/php5/20121212/xdebug.so
+
+
+#### 再起動
+
+    sudo service php5-fpm restart
 
 
 ### <a name="php_phpdocumentation">ドキュメンテーションツール - phpDocumentor</a>
@@ -1203,12 +1316,115 @@ Calc.php
     $ vendor/bin/phpcs --config-set installed_paths vendor/cakephp/cakephp-codesniffer
 
 
+## CakePHPのインストール
 
-[目次 開発環境へ戻る](#env)
+    {
+        "name": "sample",
+        "authors": [
+          {
+            "name": "Name",
+            "email": "Email Adress"
+          }
+        ],
+        "require": {
+          "cakephp/cakephp": "2.6.*",
+          "ext-mcrypt": "*"
+
+        },
+        "config": {
+            "vendor-dir": "Vendor/"
+        },
+        
+    }
+
+
+#### 拡張モジュールmcryptエラー
+
+[Mcrypt extension is missing in 14.04 server for mysql - Ask Ubuntu](http://askubuntu.com/questions/460837/mcrypt-extension-is-missing-in-14-04-server-for-mysql)
+
+mcrsyptはapt-getでインストール済み。
+
+    // mcryptをインストール
+    $ sudo apt-get php5-mcrypt
+
+しかしインストールで下記のエラーが発生した。
+
+    Your requirements could not be resolved to an installable set of packages.
+
+      Problem 1
+        - The requested PHP extension ext-mcrypt * is missing from your system.
+      Problem 2
+        - cakephp/cakephp 2.6.1 requires ext-mcrypt * -> the requested PHP extension mcrypt is missing from your system.
+        - cakephp/cakephp 2.6.0 requires ext-mcrypt * -> the requested PHP extension mcrypt is missing from your system.
+        - Installation request for cakephp/cakephp 2.6.* -> satisfiable by cakephp/cakephp[2.6.0, 2.6.1].
+
+
+/etc/php5/fpm/conf.dおよび/etc/php5/cli/conf.dにはcrypt用のiniファイルは存在しなかった。  
+/etc/php5/fpm/conf.dの中身を確認(/etc/php/cli/conf.dも同様)。
+
+    $ ls /etc/php5/fpm/conf.d
+    05-opcache.ini  20-apcu.ini  20-json.ini    20-mysql.ini      20-readline.ini
+    10-pdo.ini      20-curl.ini  20-mysqli.ini  20-pdo_mysql.ini  20-xsl.ini
+
+/etc/php5/fpm/conf.dおよび/etc/php5/cli/conf.dのファイルは/etc/php5/mods-availableの各ファイルへのシンボリックファイルだった
+
+
+    $ ls /etc/php5/mods-available
+    apcu.ini  json.ini    mysqli.ini  opcache.ini  pdo_mysql.ini  xsl.ini
+    curl.ini  mcrypt.ini  mysql.ini   pdo.ini      readline.ini
+
+  
+
+mcryptのシンボリックファイルを作成した。
+
+    $ ln -s /etc/php5/mods-available/mcrypt.ini /etc/php5/cli/conf.d/20-mcrypt.ini
+    $ ln -s /etc/php5/mods-available/mcrypt.ini /etc/php5/fpm/conf.d/20-mcrypt.ini
+
+Nginx再起動
+
+    $ sudo nginx -s reload
+
+
+### ComposerでCakePHPインストール
 
 
 
-## <a name="env_mysql">MySQL</a>
+ ### プロジェクト作成
+
+    ubuntu@xxx:/var/www/application/current/app$ Vendor/bin/cake bake project
+    
+    Welcome to CakePHP v2.6.1 Console
+    ---------------------------------------------------------------
+    App : app
+    Path: /var/www/application/current/app/
+    ---------------------------------------------------------------
+    What is the path to the project you want to bake?  
+    [/var/www/application/current/app/myapp] > /var/www/application/current/app
+    Skel Directory: /var/www/application/current/app/Vendor/cakephp/cakephp/lib/Cake/Console/Templates/skel
+    Will be copied to: /var/www/application/current/app
+    ---------------------------------------------------------------
+    Look okay? (y/n/q) 
+    y
+    ---------------------------------------------------------------
+    Created: app in /var/www/application/current/app
+    ---------------------------------------------------------------
+     * Random hash key created for 'Security.salt'
+     * Random seed created for 'Security.cipherSeed'
+     * Cache prefix set
+     * app/Console/cake.php path set.
+    CakePHP is not on your `include_path`, CAKE_CORE_INCLUDE_PATH will be hard coded.
+    You can fix this by adding CakePHP to your `include_path`.
+     * CAKE_CORE_INCLUDE_PATH set to /var/www/application/current/app/Vendor/cakephp/cakephp/lib in webroot/index.php
+     * CAKE_CORE_INCLUDE_PATH set to /var/www/application/current/app/Vendor/cakephp/cakephp/lib in webroot/test.php
+       * Remember to check these values after moving to production server
+    Project baked successfully!
+
+
+
+
+
+### <a name="env_mysql">MySQL</a>
+
 
 ### 起動・停止・再起動
 
@@ -1271,32 +1487,148 @@ Calc.php
     ) default character set utf8;
 
 
+### AWS RDS
+
+AWSのサービスRDSからMySQLサーバー起動する。
+
+### 接続確認 mysql_test.php
+
+    <?php
+        $url = "<endpoint>";    // RDSでMySQLのインスタンスを作成した際にインスタンスのパネルに表示
+        $user = "<username>";   // RDSでMySQLのインスタンスを作成する際に設定
+        $pass = "<passw0rd>";   // RDSでMySQLのインスタンスを作成する際に設定
+        $db = "<dbname>";       // RDSでMySQLのインスタンスを作成する際に設定
+
+        // 接続
+        $link = mysql_connect($url,$user,$pass) or die("接続失敗。");
+
+        // DB選択
+        $sdb = mysql_select_db($db,$link) or die("DB選択失敗。");
+
+        // クエリ送信する
+        $sql = "SELECT * FROM <tablename>";  // <tablename>は作成済みでデータを何件か挿入済みとする
+        $result = mysql_query($sql, $link) or die("クエリ送信失敗。");
+
+        //行数取得
+        $rows = mysql_num_rows($result);
+
+        //結果保持用メモリ開放
+        mysql_free_result($result);
+
+        // 切断
+        mysql_close($link) or die("切断失敗。");
+    ?>
+    
+    <?php header('Content-Type: text/html; charset=utf-8');?>
+    <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf8">
+        <title>接続テスト</title>
+    </head>
+    <body>
+        <?php echo $rows; ?>
+    </body>
+    </html>
+
+
+
+### Appendix 1. ユーザー、グループの変更
+
+    sudo chown [-f|-R] username (filename|dirname)
+    sudo chgrp  [-f|-R]] groupname (filename|dirname)
+
+
+
+### Appendix 2. PHPファイル作成テスト
+
+    <?PHP
+
+    $file_name = 'test.txt';
+
+    // 存在確認
+    if( !file_exists($file_name) ){
+        // ファイル作成
+        touch( $file_name );
+    }else{
+        header('Content-Type: text/html; charset=utf-8');
+        echo $file_name . 'は存在しています。処理を終了します';
+        exit();
+    }
+
+
+### Appendix 3. Nginxのエラーログ
+
+    /var/log/nginx/error.log
+
+
+### Appendix 4.「CakePHP 継続的インテグレーション」ディレクトリのパーミション
+
+* /var/www/application 
+  ユーザー、グループともにroot。 パーミション755。
+* /var/www/application/current以下  
+    + ユーザーvagrant
+    + グループwww-data
+    + パーミション 775
+
+### Appendix 5. 「CakePHP 継続的インテグレーション」のsite-available/defaultファイル
+
+__初期状態ではlocationがコメントアウトされておりphpファイルへアクセスするとダウンロードしてしまう。
+下記のようにコメントアウトを外す。__
+
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+
+        root /var/www/application/current/app/webroot;
+        index index.php index.html index.htm;
+
+        server_name localhost;
+
+        location / {
+            try_files $uri $uri/ /index.php?$args;
+        }
+
+        location ~ \.php$ {
+            try_files $uri =404;
+            include /etc/nginx/fastcgi_params;
+            fastcgi_pass unix:/var/run/php5-fpm.sock;
+            fastcgi_index   index.php;
+            fastcgi_intercept_errors on;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param CAKE_ENV development;
+        }
+    }
+
+
+
+### Appendix 6. SFTP
+
+FileZilla設定方法は下記サイトを参考にして設定 
+[WordPress】素人でも出来た！AWS EC2へのサーバー移行方法7 旧データをアップロード | 男子風呂（ぐ）](http://danshiblog.com/job/130128-amazon-ec2-server-setting-wordpressdata-upload.html)
+
+
+* SFTPはSSHの使用ポート番号(22)を利用するのでAWSのSecurity Groupsで
+別途ポートを開ける必要は無い。
+* AWSはrootでは接続できないのでubuntuユーザーで接続
+* PHPの実行ユーザーはwww-data
+* FTPソフトでアップロードした場合のディレクトリ/ファイルの所有者はubuntu。
+* 表示するだけならHTML/CSS/JavaScript/PHPの各ファイルの実行権限は004でよい
+  (ディレクトリは755)。
+
+
+### Appendix 7. 手順
+
+    $ sudo apt-get update
+    $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
+    $ sudo mkdir -p /var/www/application/current/app/webroot
+    $ cd /var/www/application
+    $ sudo chown -R www-data current
+    $ sudo chmod -R 775 current
+    $ sudo vi /etc/nginx/sites-available/default
+    $ sudo nginx -s reload
 
 
 [目次 開発環境へ戻る](#env)
-
-
-## <a name="env_cakephp">CakePHP開発環境</a>
-
-### ツール
-
-* PHPUnit ユニットテスト  
-  CakePHPはユニットテストをPHPUnitで行う。
-* CakeDC Migration Plugin  
-  データベースマイグレーション
-* Behat  
-  > Behat is an open source behavior-driven development framework for PHP
-  [Behat Documentation &mdash; Behat 2.5.3 documentation](http://docs.behat.org/en/v2.5/)
-* sizuhiko/Bdd  
-  CakePHP2用のプラグイン
-* behat/mink-goutte-driver  
-  JavaScriptを使わずBehatを利用するプラグイン。
-
-### デバッグレベル
-
-app/Config/core.php
-
-    Configure::write('debug', 2);
 
 
 
@@ -1306,6 +1638,7 @@ app/Config/core.php
 * [CI(継続的インテグレーション)](#ci_ci)
 * [アジャイル](#agile)
 * [BDD:振舞駆動開発 (開発手法)](#bdd)
+* [CakePHP開発環境](#env_cake)
 * Appendix
     + [Ruby](#appendix_ruby)
     + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
@@ -1749,6 +2082,28 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 
 
 
+## <a name="env_cakephp">CakePHP開発環境</a>
+
+* PHPUnit ユニットテスト  
+  CakePHPはユニットテストをPHPUnitで行う。
+* CakeDC Migration Plugin  
+  データベースマイグレーション
+* Behat  
+  > Behat is an open source behavior-driven development framework for PHP
+  [Behat Documentation &mdash; Behat 2.5.3 documentation](http://docs.behat.org/en/v2.5/)
+* sizuhiko/Bdd  
+  CakePHP2用のプラグイン
+* behat/mink-goutte-driver  
+  JavaScriptを使わずBehatを利用するプラグイン。
+
+### デバッグレベル
+
+app/Config/core.php
+
+    Configure::write('debug', 2);
+
+
+
 ## <a name="appendix_ruby">Appendix Ruby</a>
 
     $ brew install ruby
@@ -1957,7 +2312,6 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
 * [Route 53](#aws_route53)
     + 独自ドメイン運用
 * [S3](#aws_s3)
-* [Ubuntu + MySQL + PHP環境構築](#aws_ubuntu_mysql_php)  
 * [Ubuntu + MySQL + CakePHP環境構築](#aws_ubuntu_cakephp)
 * [Ubuntu + Postfixでメールを運用](#aws_postfix) 
 * [課金](#aws_bills)
@@ -2255,557 +2609,9 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 
 ## <a name="aws_s3">S3</a>
 
-## <a name="aws_ubuntu_mysql_php">Ubuntu + MySQL + PHP環境構築</a>
-
-### 目的
-
-Ubuntu + MySQL + PHPの環境をAWSで構築する。
-
-## ゴール
-
-PHPからMySQLへ接続できることを確認する。
-
-## 前提
-
-### 環境
-
-* Ubuntu  
-* Nginx  
-  nginx version: nginx/1.4.6 (Ubuntu)
-* MySQL  
-* PHP5   
-  PHP Version 5.5.9-1ubuntu4.5
-
-
-### ドキュメントルート
-
-    /var/www/application/current/app/webroot
-
-
-### ログインユーザー
-
-ユーザーubuntuでログイン。
-
-
-### PHP実行ユーザー
-
-* ユーザー  
-  www-data
-* www-dataが属するグループ  
-  www-data
-
-### PHP実行ユーザー確認
-
-    <?php
-    echo `whoami`;
-
- www-dataと表示
-
-
-## PHPのインストールから動作確認まで
-
-### パッケージインストール
-
-
-Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをインストールする。
-
-    // apt-getを最新へ更新
-    $ sudo apt-get update
-    // 必要パッケージインストール
-    $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
-
-
-### ドキュメントルートの作成
-
-    sudo mkdir -p /var/www/application/current/app/webroot
-
-
-### currentディレクトリ以下の所有者とパーミション変更
- 
-    $ cd /var/www/application
-    $ sudo chown -R www-data current
-    $ sudo chmod -R 755 current
-
-
-### Nginx設定
-
-#### Nginx関連のファイル
-
-    (1) /etc/nginx/nginx.conf  // Nginx全体の設定(今回は変更なし)
-    (2) /etc/nginx/sites-available/default  // ホストの設定(変更)
-    (3) /etc/nginx/sites-enabled/default   //  (2)のシンボリックリンク Nginxの起動時に読み込まれる
-
-今回は/etc/nginx/sites-available/defaultを編集する。
-
-#### site-available/defaultファイル
-
-* ドキュメントルート設定 rootディレクティブ
-* /によるアクセス        indexディレクトリ
-* FastCGIの設定          locationディレクティブ
-
-
-    server {
-            listen 80 default_server;
-            listen [::]:80 default_server ipv6only=on;
- 
-            root /var/www/application/current/app/webroot;
-            index index.php index.html index.htm;
- 
-            # Make site accessible from http://localhost/
-            server_name localhost;
- 
-            location / {
-                    # First attempt to serve request as file, then
-                    # as directory, then fall back to displaying a 404.
-                    try_files $uri $uri/ =404;
-                    # Uncomment to enable naxsi on this location
-                    # include /etc/nginx/naxsi.rules
-            }
- 
-            # Only for nginx-naxsi used with nginx-naxsi-ui : process denied requests
-            #location /RequestDenied {
-            #       proxy_pass http://127.0.0.1:8080; 
-            #}
- 
-            #error_page 404 /404.html;
- 
-            # redirect server error pages to the static page /50x.html
-            #
-            #error_page 500 502 503 504 /50x.html;
-            #location = /50x.html {
-            #       root /usr/share/nginx/html;
-            #}
- 
-            # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
-            #
-            location ~ \.php$ {
-                    fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            #       # NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
-            #
-            #       # With php5-cgi alone:
-                    # fastcgi_pass 127.0.0.1:9000;
-                    # With php5-fpm:
-                    fastcgi_pass unix:/var/run/php5-fpm.sock;
-                    fastcgi_index index.php;
-                    include fastcgi_params;
-            }
- 
-            # deny access to .htaccess files, if Apache's document root
-            # concurs with nginx's one
-            #
-            #location ~ /\.ht {
-            #       deny all;
-            #}
-    }
-
-#### Nginx(再)起動
-
-    $ sudo nginx -s reload
-
-
-### PHP動作確認 index.php
-
-    <?php
-        phpinfo();
-
-viの文字コード設定 set encoding=utf8
-
-
-### MySQL
-
-#### AWS RDS
-
-AWSのサービスRDSからMySQLサーバー起動する。
-
-### 接続確認 mysql_test.php
-
-    <?php
-        $url = "<endpoint>";    // RDSでMySQLのインスタンスを作成した際にインスタンスのパネルに表示
-        $user = "<username>";   // RDSでMySQLのインスタンスを作成する際に設定
-        $pass = "<passw0rd>";   // RDSでMySQLのインスタンスを作成する際に設定
-        $db = "<dbname>";       // RDSでMySQLのインスタンスを作成する際に設定
-
-        // 接続
-        $link = mysql_connect($url,$user,$pass) or die("接続失敗。");
-
-        // DB選択
-        $sdb = mysql_select_db($db,$link) or die("DB選択失敗。");
-
-        // クエリ送信する
-        $sql = "SELECT * FROM <tablename>";  // <tablename>は作成済みでデータを何件か挿入済みとする
-        $result = mysql_query($sql, $link) or die("クエリ送信失敗。");
-
-        //行数取得
-        $rows = mysql_num_rows($result);
-
-        //結果保持用メモリ開放
-        mysql_free_result($result);
-
-        // 切断
-        mysql_close($link) or die("切断失敗。");
-    ?>
-    
-    <?php header('Content-Type: text/html; charset=utf-8');?>
-    <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf8">
-        <title>接続テスト</title>
-    </head>
-    <body>
-        <?php echo $rows; ?>
-    </body>
-    </html>
-
-viの文字コード設定 set encoding=utf8
-
-
-### Xdebug
-
-デバッグに便利なXdebugをインストールしておく。
-
-#### インストール
-
-    $ sudo apt-get install php5-xdebug
-
-/usr/lib/php5/20121212/xdebug.soへインストールされた。
-
-#### 設定(/etc/php5/fpm/conf.d/20-xdebug.ini)
-
-/etc/php5/fpm/conf.d/20-xdebug.iniへ読込み処理を記載
-
-    zend_extension=/usr/lib/php5/20121212/xdebug.so
-
-#### 再起動
-
-    sudo service php5-fpm restart
-
-
-### Composer
-
-パッケージ管理システムComposerをインストールする。
-
-#### インストール
-
-/var/www/application/current/appへダウンロード。
-
-    $ cd /var/www/application/current/app
-    $ curl -sS https://getcomposer.org/installer | php
-
-今回はcomposer.pharをcomposerへ変更するがグローバルでは利用しないので下記のようなコマンドになる。
-
-    $ php /fullpath/composer --version
-
-
-#### composer.json
-
-    {
-        "require": {
-            "monolog/monolog": "1.0.*"
-        }
-    }
-
-#### パッケージのインストール
-
-    $ cd /var/www/application/current/app
-    $ php composer install
-
-
-#### 動作確認 monolog_test.php
-
-<?php
-
-require '../vendor/autoload.php';
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
-// create a log channel
-$log = new Logger('name');
-$log->pushHandler(new StreamHandler('/var/www/application/current/app/logs/mylog.log', Logger::WARNING));
-
-// add records to the log
-$log->addWarning('Foo');
-$log->addError('Bar');
-
-
-### PHPUnit
-
-#### インストール
-
-Composerを使いインストールする。
-
-composer.jsonへ追記する。
-
-    {
-      "require": {
-      "monolog/monolog": "1.0.*"
-      },
-    "require-dev": {
-      "phpunit/phpunit": "3.7.*"
-      }
-    }
-
-PHPUnitの最新版(2015.01.16)は4.4だがCakePHPで利用することを考えめ3.7をインストール
-
-    $ sudo php composer update -dev
-
-
-    var/www/application/current/app
-        |
-        |…..
-        |— vendor
-                  |…..
-        |— test
-                  |— CalcTest.php
-        |
-        |— webroot
-                  |— Calc.php
-
-
-CalcTest.php
-
-    <?php
-    require_once(“/var/www/application/current/app/webroot/Calc.php”);
-
-    class CalcTest extends PHPUnit_Framework_TestCase {
-        private $calc;
-
-        protected function setUp() {
-            $this->calc = new Calc(10);
-        }
-
-        public function testAdd() {
-            $this->assertEquals(15, $this->calc->add(5));
-        }
-    }
-
-Calc.php
-
-    <?php
-    class Calc {
-        private $value;
-
-        public function __construct($value = 0) {
-            $this->value = $value;
-        }
-
-        public function add($value) {
-            return $this->value + $value;
-        }
-    }
-
-
-#### 実行
-
-    $ vendor/bin/phpunit test/CalcTest.php
-
-
-
-### Appendix 1. ユーザー、グループの変更
-
-    sudo chown [-f|-R] username (filename|dirname)
-    sudo chgrp  [-f|-R]] groupname (filename|dirname)
-
-
-
-### Appendix 2. PHPファイル作成テスト
-
-    <?PHP
-
-    $file_name = 'test.txt';
-
-    // 存在確認
-    if( !file_exists($file_name) ){
-        // ファイル作成
-        touch( $file_name );
-    }else{
-        header('Content-Type: text/html; charset=utf-8');
-        echo $file_name . 'は存在しています。処理を終了します';
-        exit();
-    }
-
-
-### Appendix 3. Nginxのエラーログ
-
-    /var/log/nginx/error.log
-
-
-### Appendix 4.「CakePHP 継続的インテグレーション」ディレクトリのパーミション
-
-* /var/www/application 
-  ユーザー、グループともにroot。 パーミション755。
-* /var/www/application/current以下  
-    + ユーザーvagrant
-    + グループwww-data
-    + パーミション 775
-
-### Appendix 5. 「CakePHP 継続的インテグレーション」のsite-available/defaultファイル
-
-__初期状態ではlocationがコメントアウトされておりphpファイルへアクセスするとダウンロードしてしまう。
-下記のようにコメントアウトを外す。__
-
-    server {
-        listen 80 default_server;
-        listen [::]:80 default_server ipv6only=on;
-
-        root /var/www/application/current/app/webroot;
-        index index.php index.html index.htm;
-
-        server_name localhost;
-
-        location / {
-            try_files $uri $uri/ /index.php?$args;
-        }
-
-        location ~ \.php$ {
-            try_files $uri =404;
-            include /etc/nginx/fastcgi_params;
-            fastcgi_pass unix:/var/run/php5-fpm.sock;
-            fastcgi_index   index.php;
-            fastcgi_intercept_errors on;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_param CAKE_ENV development;
-        }
-    }
-
-
-
-### Appendix 6. SFTP
-
-FileZilla設定方法は下記サイトを参考にして設定 
-[WordPress】素人でも出来た！AWS EC2へのサーバー移行方法7 旧データをアップロード | 男子風呂（ぐ）](http://danshiblog.com/job/130128-amazon-ec2-server-setting-wordpressdata-upload.html)
-
-
-* SFTPはSSHの使用ポート番号(22)を利用するのでAWSのSecurity Groupsで
-別途ポートを開ける必要は無い。
-* AWSはrootでは接続できないのでubuntuユーザーで接続
-* PHPの実行ユーザーはwww-data
-* FTPソフトでアップロードした場合のディレクトリ/ファイルの所有者はubuntu。
-* 表示するだけならHTML/CSS/JavaScript/PHPの各ファイルの実行権限は004でよい
-  (ディレクトリは755)。
-
-
-### Appendix 7. 手順
-
-    $ sudo apt-get update
-    $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
-    $ sudo mkdir -p /var/www/application/current/app/webroot
-    $ cd /var/www/application
-    $ sudo chown -R www-data current
-    $ sudo chmod -R 775 current
-    $ sudo vi /etc/nginx/sites-available/default
-    $ sudo nginx -s reload
-
-
 ## <a name="aws_ubuntu_cakephp">CakePHP環境構築</a>
 
-### 前提 Ubuntu 14.04
-
-
-### ComposerでCakePHPインストール
-
-#### composer.json
-
-    {
-        "name": "min-ker.com",
-        "authors": [
-          {
-            "name": "Name",
-            "email": "Email Adress"
-          }
-        ],
-        "require": {
-          "cakephp/cakephp": "2.6.*",
-          "ext-mcrypt": "*"
-
-        },
-        "config": {
-            "vendor-dir": "Vendor/"
-        },
-        
-    }
-
-
-#### 拡張モジュールmcryptエラー
-
-[Mcrypt extension is missing in 14.04 server for mysql - Ask Ubuntu](http://askubuntu.com/questions/460837/mcrypt-extension-is-missing-in-14-04-server-for-mysql)
-
-mcrsyptはapt-getでインストール済み。
-
-    // mcryptをインストール
-    $ sudo apt-get php5-mcrypt
-
-しかしインストールで下記のエラーが発生した。
-
-    Your requirements could not be resolved to an installable set of packages.
-
-      Problem 1
-        - The requested PHP extension ext-mcrypt * is missing from your system.
-      Problem 2
-        - cakephp/cakephp 2.6.1 requires ext-mcrypt * -> the requested PHP extension mcrypt is missing from your system.
-        - cakephp/cakephp 2.6.0 requires ext-mcrypt * -> the requested PHP extension mcrypt is missing from your system.
-        - Installation request for cakephp/cakephp 2.6.* -> satisfiable by cakephp/cakephp[2.6.0, 2.6.1].
-
-
-/etc/php5/fpm/conf.dおよび/etc/php5/cli/conf.dにはcrypt用のiniファイルは存在しなかった。  
-/etc/php5/fpm/conf.dの中身を確認(/etc/php/cli/conf.dも同様)。
-
-    $ ls /etc/php5/fpm/conf.d
-    05-opcache.ini  20-apcu.ini  20-json.ini    20-mysql.ini      20-readline.ini
-    10-pdo.ini      20-curl.ini  20-mysqli.ini  20-pdo_mysql.ini  20-xsl.ini
-
-/etc/php5/fpm/conf.dおよび/etc/php5/cli/conf.dのファイルは/etc/php5/mods-availableの各ファイルへのシンボリックファイルだった
-
-
-    $ ls /etc/php5/mods-available
-    apcu.ini  json.ini    mysqli.ini  opcache.ini  pdo_mysql.ini  xsl.ini
-    curl.ini  mcrypt.ini  mysql.ini   pdo.ini      readline.ini
-
-  
-
-mcryptのシンボリックファイルを作成した。
-
-    $ ln -s /etc/php5/mods-available/mcrypt.ini /etc/php5/cli/conf.d/20-mcrypt.ini
-    $ ln -s /etc/php5/mods-available/mcrypt.ini /etc/php5/fpm/conf.d/20-mcrypt.ini
-
-Nginx再起動
-
-    $ sudo nginx -s reload
-
-
- ### プロジェクト作成
-
-    ubuntu@xxx:/var/www/application/current/app$ Vendor/bin/cake bake project
-    
-    Welcome to CakePHP v2.6.1 Console
-    ---------------------------------------------------------------
-    App : app
-    Path: /var/www/application/current/app/
-    ---------------------------------------------------------------
-    What is the path to the project you want to bake?  
-    [/var/www/application/current/app/myapp] > /var/www/application/current/app
-    Skel Directory: /var/www/application/current/app/Vendor/cakephp/cakephp/lib/Cake/Console/Templates/skel
-    Will be copied to: /var/www/application/current/app
-    ---------------------------------------------------------------
-    Look okay? (y/n/q) 
-    y
-    ---------------------------------------------------------------
-    Created: app in /var/www/application/current/app
-    ---------------------------------------------------------------
-     * Random hash key created for 'Security.salt'
-     * Random seed created for 'Security.cipherSeed'
-     * Cache prefix set
-     * app/Console/cake.php path set.
-    CakePHP is not on your `include_path`, CAKE_CORE_INCLUDE_PATH will be hard coded.
-    You can fix this by adding CakePHP to your `include_path`.
-     * CAKE_CORE_INCLUDE_PATH set to /var/www/application/current/app/Vendor/cakephp/cakephp/lib in webroot/index.php
-     * CAKE_CORE_INCLUDE_PATH set to /var/www/application/current/app/Vendor/cakephp/cakephp/lib in webroot/test.php
-       * Remember to check these values after moving to production server
-    Project baked successfully!
-
-
-
-
+### 前提 Ubuntu 
 ## <a name="aws_postfix">Ubuntu + Postfixでメールを運用</a>
 
 

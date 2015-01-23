@@ -681,30 +681,12 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
   PHP Version 5.5.9-1ubuntu4.5
 
 
+## <a name="ubuntu">Ubuntu</a>
 
-## Ubuntuログインユーザー
+### Ubuntuログインユーザー
 
 ユーザーubuntuでログインしていると仮定して記載する。
 
-
-
-## PHP実行ユーザー
-
-* ユーザー  
-  www-data
-* www-dataが属するグループ  
-  www-data
-
-#### PHP実行ユーザー確認
-
-    <?php
-    echo `whoami`;
-
-PHP実行ユーザーはwww-dataと仮定して記載する。
-
-
-
-## <a name="env_ubuntu">Ubuntu</a>
 
 ### ログ
 
@@ -712,14 +694,14 @@ PHP実行ユーザーはwww-dataと仮定して記載する。
 
 
 
-## <a name="env_shell">シェル</a>
+## <a name="shell">シェル</a>
 
-### 文字コード
+### 日本語環境インストール
 
     $ sudo apt-get install language-pack-ja
     $ sudo update-locale LANG=ja_JP.UTF-8
 
-一時てきに切り替える。
+一時てきに日本語環境へ切り替える。
 
     // 現在の設定を確認
     $ export $LANG
@@ -729,19 +711,22 @@ PHP実行ユーザーはwww-dataと仮定して記載する。
 
 
 
-## <a name="env_vi">Vi</a>
+## <a name="vi">Vi</a>
 
-### 文字コード
+### 文字コード確認
 
     // 開いているファイルの文字コード確認
     :set enc?
+
+
+### 文字コード設定
+
     // UTF-8へ変更
     :set encoding=utf8
 
 
 
-
-## 各種パッケージインストール
+## <a name="install_nginx_mysql_php">Nginx + MySQL + PHPインストール</a>
 
 Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをインストールする。
 
@@ -756,6 +741,19 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 
     $ sudo mkdir -p /var/www/application/current/app/webroot
 
+## PHP実行ユーザー
+
+* ユーザー  
+  www-data
+* www-dataが属するグループ  
+  www-data
+
+### PHP実行ユーザー確認
+
+    <?php
+    echo `whoami`;
+
+以下PHP実行ユーザーはwww-dataと仮定する。
 
 
 ## currentディレクトリ以下の所有者とパーミション変更
@@ -875,9 +873,9 @@ __初期状態ではlocationがコメントアウトされておりphpファイ�
 
 
 
-## <a name="env_php">PHPの開発環境</a>
+## <a name="php">PHPの開発環境</a>
 
-### <a name="env_php_exe">PHP実行環境の分類</a>
+### <a name="php_exe">PHP実行環境の分類</a>
 
 * Apache + モジュール/CGI
     - モジュール  
@@ -892,7 +890,7 @@ __初期状態ではlocationがコメントアウトされておりphpファイ�
 
 
 
-### <a name="env_php_ini">php.ini保存場所</a>
+### <a name="php_ini">php.ini保存場所</a>
 
 * ブラウザ  
   phpinfo関数を実行する。  
@@ -901,7 +899,7 @@ __初期状態ではlocationがコメントアウトされておりphpファイ�
   $ php -r 'phpinfo();' | grep php.ini
 
 
-### <a name="env_php_character">文字コード</a>
+### <a name="php_character">文字コード</a>
 
 UTF8で運用するためphp.iniファイルの文字関連を編集する。
 
@@ -954,7 +952,7 @@ default_charsetにUTF-8を設定すればPHPから出力するとき下記コー
     <meta charset="utf-8">
 
 
-### <a name="env_php_exe_sample">実行環境の例(phpinfo関数をブラウザで実行)</a>
+### <a name="php_exe_sample">実行環境の例(phpinfo関数をブラウザで実行)</a>
 
 | PHPh| PHP Version 5.5.9-1ubuntu4.5 |
 |-----|-----|
@@ -1049,7 +1047,7 @@ php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラ�
     error_log = <path>
 
 
-## <a name="env_php_composer">Composer</a>
+## <a name="php_composer">Composer</a>
 
 PHPパッケージ管理ツール。
 
@@ -1261,8 +1259,6 @@ Calc.php
     $ vendor/bin/phpunit --bootstrap Test/bootstrap.php CalcTest
 
 
-
-
 ### <a name="php_debug">デバッグ- Xdebug</a>
 
 * [Xdebug - Debugger and Profiler Tool for PHP](http://xdebug.org/)
@@ -1317,7 +1313,11 @@ Calc.php
     $ vendor/bin/phpcs --config-set installed_paths vendor/cakephp/cakephp-codesniffer
 
 
-## CakePHPのインストール
+## <a name="php_cakephp">CakePHP</a>
+
+### インストール
+
+Composerを使いインストールする。
 
     {
         "name": "sample",
@@ -1339,7 +1339,7 @@ Calc.php
     }
 
 
-#### 拡張モジュールmcryptエラー
+### 拡張モジュールmcryptエラー
 
 [Mcrypt extension is missing in 14.04 server for mysql - Ask Ubuntu](http://askubuntu.com/questions/460837/mcrypt-extension-is-missing-in-14-04-server-for-mysql)
 
@@ -1386,11 +1386,7 @@ Nginx再起動
     $ sudo nginx -s reload
 
 
-### ComposerでCakePHPインストール
-
-
-
- ### プロジェクト作成
+### プロジェクト作成
 
     ubuntu@xxx:/var/www/application/current/app$ Vendor/bin/cake bake project
     
@@ -1405,27 +1401,12 @@ Nginx再起動
     Will be copied to: /var/www/application/current/app
     ---------------------------------------------------------------
     Look okay? (y/n/q) 
-    y
-    ---------------------------------------------------------------
-    Created: app in /var/www/application/current/app
-    ---------------------------------------------------------------
-     * Random hash key created for 'Security.salt'
-     * Random seed created for 'Security.cipherSeed'
-     * Cache prefix set
-     * app/Console/cake.php path set.
-    CakePHP is not on your `include_path`, CAKE_CORE_INCLUDE_PATH will be hard coded.
-    You can fix this by adding CakePHP to your `include_path`.
-     * CAKE_CORE_INCLUDE_PATH set to /var/www/application/current/app/Vendor/cakephp/cakephp/lib in webroot/index.php
-     * CAKE_CORE_INCLUDE_PATH set to /var/www/application/current/app/Vendor/cakephp/cakephp/lib in webroot/test.php
-       * Remember to check these values after moving to production server
-    Project baked successfully!
+    .....
+    .....
 
 
 
-
-
-### <a name="env_mysql">MySQL</a>
-
+## <a name="env_mysql">MySQL</a>
 
 ### 起動・停止・再起動
 
@@ -2275,32 +2256,6 @@ git config --global core.editor "vi"
 
 
 
-## <a name="appendix_en">Appendix 英語</a>
-
-* fixture by Weblio
-  定着[固定]物，据え付け品; 取り付け具，備品
-* Fabric by Weblio
-1a【不可算名詞】 [種類・個々には 【可算名詞】] 布，織物 《★【比較】 cloth のほうが一般的》.
-用例
-enough fabric to make a coat 上着を作るのに十分な布.
-b【不可算名詞】 織り方，生地.
-2[単数形で]
-a[集合的に] (教会などの)建物の外部 《屋根・壁など》.
-b構造，組織 〔of〕.
-* scaffold
-音節scaf・fold 発音記号/skˈæf(ə)ld, ‐foʊld｜‐fəʊld/音声を聞く
-【名詞】
-1【可算名詞】
-a(建築現場などの)足場.
-b(ビルの窓をふく時に使うような)吊り足場.
-2a【可算名詞】 絞首台，断頭台.
-b[the scaffold] (絞首・断頭による)死刑.
-用例
-go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
-3【可算名詞】 (野外の)組み立て舞台[ステージ，スタンド].
-【動詞】 【他動詞】
-〈建物に〉足場を設ける.
-
 
 
 # <a name="aws">AWS(Amazon Web Services)でWEBサービス運用</a>
@@ -2313,7 +2268,6 @@ go to [mount] the scaffold 絞首台に登る, 死刑に処せられる.
 * [Route 53](#aws_route53)
     + 独自ドメイン運用
 * [S3](#aws_s3)
-* [Ubuntu + MySQL + CakePHP環境構築](#aws_ubuntu_cakephp)
 * [Ubuntu + Postfixでメールを運用](#aws_postfix) 
 * [課金](#aws_bills)
 * [Linuxコマンド(Ubuntu)](#aws_cmd_ubuntu)
@@ -2608,11 +2562,7 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 
 
 
-## <a name="aws_s3">S3</a>
 
-## <a name="aws_ubuntu_cakephp">CakePHP環境構築</a>
-
-### 前提 Ubuntu 
 ## <a name="aws_postfix">Ubuntu + Postfixでメールを運用</a>
 
 

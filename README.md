@@ -766,8 +766,11 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
  
     $ cd /var/www/application
     $ sudo chown -R www-data current
-    $ sudo chmod -R 755 current
+    $ sudo chmod -R 775 current
 
+## ubuntuユーザーをwww-dataグループへ追加
+
+    $ sudo usermod -G www-data ubuntu
 
 
 ## <a name="env_nginx">Nginx</a>
@@ -1611,6 +1614,7 @@ FileZilla設定方法は下記サイトを参考にして設定
     $ sudo mkdir -p /var/www/application/current/app/webroot
     $ cd /var/www/application
     $ sudo chown -R www-data current
+    $ sudo usermod -G www-data ubuntu
     $ sudo chmod -R 775 current
     $ sudo vi /etc/nginx/sites-available/default
     $ sudo nginx -s reload

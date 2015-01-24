@@ -808,20 +808,22 @@ nginx.confで設定する。
 
 ### 設定関連ファイル
 
-    (1) /etc/nginx/nginx.conf  // Nginx全体の設定(今回は変更なし)
-    (2) /etc/nginx/sites-available/default  // ホストの設定(変更)
-    (3) /etc/nginx/sites-enabled/default   //  (2)のシンボリックリンク Nginxの起動時に読み込まれる
+    (1) /etc/nginx/nginx.conf              // Nginx全体の設定(今回は変更なし)
+    (2) /etc/nginx/sites-available/default // ホストの設定(変更)
+    (3) /etc/nginx/sites-enabled/default   // (2)のシンボリックリンク Nginxの起動時に読み込まれる
 
 今回は/etc/nginx/sites-available/defaultを編集する。
 
 
 ### site-available/defaultファイル
 
-* ドキュメントルート設定 rootディレクティブ
-* /によるアクセス        indexディレクトリ
-* FastCGIの設定          locationディレクティブ
+* ドキュメントルート設定  
+  rootディレクティブ
+* /でアクセスしたときの制御  
+  indexディレクトリ
+* FastCGIの設定  
+  locationディレクティブ
 
-__初期状態ではlocationがコメントアウトされておりphpファイルへアクセスするとダウンロードしてしまう。下記のようにコメントアウトを外す。__
 
     server {
             listen 80 default_server;
@@ -881,8 +883,6 @@ __初期状態ではlocationがコメントアウトされておりphpファイ�
 ### Nginx(再)起動
 
     $ sudo nginx -s reload
-
-
 
 [軽量で高速なウェブサーバNginxを、Ubuntu 12.04に導入する(設定編その１) | 近藤嘉雪のプログラミング工房日誌](http://blog.kondoyoshiyuki.com/2012/12/09/setting-1-nginx-on-ubuntu-12-04/)
 

@@ -26,6 +26,7 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 * [Ubuntu+Nginx+MySQL+PHP開発環境](#ubuntu_nginx_mysql_php)
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
+* [Linuxコマンド](#cmd)
 
 # <a name="package">パッケージ管理システム</a>
 
@@ -2748,3 +2749,20 @@ Wikipedia
                     include         fastcgi_params;
             }
      }
+ 
+
+ <a name="cmd">コマンド</a>
+
+* ポートの確認  
+  $ netstat -tlnp
+* インストール済みパッケージの確認  
+  $ dpkg -l
+  $ aptitude search "~i"
+* プロセス  
+  ps -ef|grep postfix
+* DNS確認  
+  $ nslookup ndsname domain  
+  $ host domain
+* cat
+  標準出力へ出力
+* find . -name <target>

@@ -664,8 +664,8 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
 * [Nginx, MySQL, PHPインストール](#install_nginx_mysql_php)
 * [Nginx](#nginx)
 * [PHP](#php)
-    + [PHP実行環境](#php_exe)
-    + [php.ini保存場所](#php_ini)
+    + [PHP実行環境の分類](#php_exe)
+    + [php.ini保存場所の確認](#php_ini)
     + [文字コード](#php_character)
     + [実行環境の例](#php_exe_sample)
     + [実行ユーザーの確認](#php_user)
@@ -890,22 +890,21 @@ nginx.confで設定する。
 
 ## <a name="php">PHPの開発環境</a>
 
-### <a name="php_exe">PHP実行環境の分類</a>
+### <a name="php_exe">実行環境の分類</a>
 
 * Apache + モジュール/CGI
     - モジュール  
       Apache + php_mod: Apacheのモジュールとして動かす。
     - CGI  
       Apach + php-cgi: ApacheからCGIとして呼び出す。
-* Nginx + php-fpm  
+* Nginx + php-fpm(以下この構成を前提として記載する)  
   [PHP: FastCGI Process Manager (FPM) - Manual](http://php.net/manual/ja/install.fpm.php)
   NginxのCGIからCGIとして呼び出す。
 * CLI(Command Line Interface)  
   コマンドで実行する
 
 
-
-### <a name="php_ini">php.ini保存場所</a>
+### <a name="php_ini">php.ini保存場所確認</a>
 
 * ブラウザ  
   phpinfo関数を実行する。  

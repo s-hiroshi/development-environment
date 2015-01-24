@@ -659,6 +659,8 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
 * [Ubuntu](#ubuntu)
 * [シェル](#shell)
 * [Vi](#vi)
+* [ドキュメントルート](#documentroot)
+* [ユーザーとパーミション](#user)
 * [Nginx, MySQL, PHPインストール](#install_nginx_mysql_php)
 * [Nginx](#nginx)
 * [PHP](#php)
@@ -743,11 +745,15 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 
 
 
-## ドキュメントルート作成
+## <a name="documentroot">ドキュメントルート作成</a>
 
     $ sudo mkdir -p /var/www/application/current/app/webroot
 
-## PHP実行ユーザー
+## <a name="user">ユーザーとパーミション</a>
+
+### PHP実行ユーザー
+
+以下PHP実行ユーザー/グループはwww-dataとして記載する。
 
 * ユーザー  
   www-data
@@ -762,13 +768,13 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 以下PHP実行ユーザーはwww-dataと仮定する。
 
 
-## currentディレクトリ以下の所有者とパーミション変更
+### currentディレクトリ以下の所有者とパーミション変更
  
     $ cd /var/www/application
     $ sudo chown -R www-data current
     $ sudo chmod -R 775 current
 
-## ubuntuユーザーをwww-dataグループへ追加
+### ubuntuユーザーをwww-dataグループへ追加
 
     $ sudo usermod -G www-data ubuntu
 

@@ -1415,6 +1415,12 @@ Nginx再起動
 
 ## <a name="mysql">MySQL</a>
 
+MySQLは識別子(テーブル名やカラム名)に予約語を含む場合はバッククォートで囲む必要がある。
+
+    explain hoge    // hogeは予約語でないのでバッククォートは必要ない。
+    explain `table` // 仮にtableテーブルを作成しているときの例。
+
+
 ### 起動・停止・再起動
 
     // 起動
@@ -1478,10 +1484,22 @@ Nginx再起動
         ; 定義
     ) default character set utf8;
 
+### テーブル定義表示
+
+    SHOW CREATE TABLE `<tablename>`;
+
+<tablename>の定義が表示される。ALTER TABLEで変更した内容も反省されている。
+
+### テーブル情報
+
+    desc `<tablename>`        // またはSELECTなのど文
+    explain `<tablename>`     // 
+
 
 ### AWS RDS
 
-AWSのサービスRDSからMySQLサーバー起動する。
+AWSではEC2インスタンスへMySQLをインストールし、ローカルホストから接続して利用することができる。
+また可搬性を高めるためAWSのサービスRDSでMySQLサーバーを構築することもできる。
 
 ### 接続確認 mysql_test.php
 
@@ -2559,25 +2577,6 @@ git config --global core.editor "vi"
         }
     }
 
-
-### <a name="sql">SQL</a>
-
-MySQLのSQL。
-
-    SHOW CREATE TABLE `<tablename>`;
-
-<tablename>の定義が表示される。ALTER TABLEで変更した内容も反省されている。
-
-    desc `<tablename>`        // またはSELECTなのど文
-    explain `<tablename>`     // 
-
-引数で指定された値に対する情報を表示する。
-
-MySQLは識別子(テーブル名やカラム名)に予約語を含む場合はバッククォートで囲む。
-上記<tablename>がhogeの場合は
-
-desc hoge    // hogeは予約語でないのでバッククォートは必要ない。
-desc `table` // 仮にtableテーブルを作成しているときの例。
 
 ### Appendix AWS EC2へSFTP接続
 

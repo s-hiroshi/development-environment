@@ -1,6 +1,6 @@
 # 内容
 
-AWSでWEBサービスを運用するために勉強している内容を書き留めた個人的なメモ書き。
+WEBサービスをAWSで運用するために勉強していることを書き留めた個人的なメモ書き。
 
 # 目標
 
@@ -18,6 +18,8 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 * [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 * [「CakePHP2 実践入門」(WEB+DB PRESS plus) 安藤 祐介, 岸田 健一郎, 新原 雅司, 市川 快, 渡辺 一, 鈴木 則夫](http://www.amazon.co.jp/gp/product/4774153249/ref=pd_lpo_sbs_dp_ss_2?pf_rd_p=187205609&pf_rd_s=lpo-top-stripe&pf_rd_t=201&pf_rd_i=4839924317&pf_rd_m=AN1VRQENFRJN5&pf_rd_r=0Y02W25AP82Z83YPCYQR)
 * [「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)
+* [「Amazon Web Services クラウドデザインパターン実装ガイド」 大澤 文孝, 玉川 憲, 片山 暁雄, 鈴木 宏康](http://www.amazon.co.jp/gp/product/4822211983/ref=pd_lpo_sbs_dp_ss_2?pf_rd_p=187205609&pf_rd_s=lpo-top-stripe&pf_rd_t=201&pf_rd_i=4822211967&pf_rd_m=AN1VRQENFRJN5&pf_rd_r=1NXM6E1R7GBQEBM40WFP)
+
 
 # 目次
 
@@ -305,7 +307,7 @@ Gruntはnode.js/npmを使う。
 node.jsはpkgファイルをダウンロードしインストールした。  
 npmはnode.jsと一緒にインストールされた。
 
-### 2. grunt command line interface(grunt-cli)のグローバルへのインストール
+### 2. grunt command line interface(grunt-cli)をグローバルへインストール
 
     $ sudo npm install -g grunt-cli
 
@@ -695,6 +697,7 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
 * Nginx  
   nginx version: nginx/1.4.6 (Ubuntu)
 * MySQL  
+  5.5.40-0ubuntu0.14.04.1
 * PHP5   
   PHP Version 5.5.9-1ubuntu4.5
 
@@ -783,6 +786,7 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
     $ cd /var/www/application
     $ sudo chown -R www-data current
     $ sudo chmod -R 775 current
+
 
 ### ubuntuユーザーをwww-dataグループへ追加
 
@@ -1071,17 +1075,12 @@ php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラ�
     error_log = <path>
 
 
-## <a name="php_composer">Composer</a>
+### <a name="php_composer">Composer</a>
 
 PHPパッケージ管理ツール。
 
 
-#### パッケージのインストール
-
-    $ cd /var/www/application/current/app
-    $ php composer install
-
-#### Composerのインストール
+#### Composerインストール
 
     $ curl -sS https://getcomposer.org/installer | php
 
@@ -1096,13 +1095,11 @@ composer.pharがカレントディレクトリにダウンロードされる。
 
     $ php /fullpath/composer --version
 
-
-#### Composerの初期化
+#### Composer初期化
 
     $ composer init
 
 composer.jsonファイルが作成される。
-
 
 #### composer.jsonの例
 
@@ -1119,7 +1116,6 @@ composer.jsonファイルが作成される。
 [^conposer-cake]: デフォルトはConposerはインストールしたパッケージをvendorディレクトリに配置する。しかしCakePHPではVendorディレクトリを利用するためvendorから
 Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパティで設定する。
 
-
 #### composer.jsonに記載されたパッケージのインストール
 
     $ composer install
@@ -1128,8 +1124,7 @@ Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパテ�
 1. パッケージをインストール
 2. composer.lockファイルを作成しバージョンを固定する。
 
-
-#### パッケージの追加
+#### パッケージ追加
   
     // 通常の追加
     $ composer require <package>
@@ -1139,7 +1134,6 @@ Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパテ�
 composer requireはパッケージを追加しcomposer.jsonへ追記する。
 composer require --devは開発環境でのみ必要なパッケージを追加するときに使う。  
 composer installではインストールされず--devオプションを付けてcomposer install --devでインストールされる。
-
 
 #### パッケージのインストール場所
 
@@ -1194,7 +1188,6 @@ PHPUnitのインストールの方法は幾つかある。
 >➜ phpunit --version
 
 #### Composerを使いインストール
-
 
 PHPUnitの最新版(2015.01.16)は4.4だがCakePHPで利用することを考えめ3.7をインストール
 
@@ -1252,13 +1245,11 @@ Calc.php
         }
     }
 
-
-### テスト実行
+#### テスト実行
 
     $ vendor/bin/phpunit test/CalcTest
 
-
-### --bootstrapオプション
+#### --bootstrapオプション
 
     working_dir
       |
@@ -1300,7 +1291,6 @@ Calc.php
 
     zend_extension=/usr/lib/php5/20121212/xdebug.so
 
-
 #### 再起動
 
     sudo service php5-fpm restart
@@ -1315,7 +1305,6 @@ Calc.php
     $ composer require "phpdocumentor/phpdocumentor:2.*"
 
 [Installing Using Composer](http://www.phpdoc.org/docs/latest/getting-started/installing.html#using-composer)
-
 
 
 ### <a name="php_inspection">Code Inspections(検査) - PHP_CodeSniffer</a>
@@ -1337,9 +1326,9 @@ Calc.php
     $ vendor/bin/phpcs --config-set installed_paths vendor/cakephp/cakephp-codesniffer
 
 
-## <a name="php_cakephp">CakePHP</a>
+### <a name="php_cakephp">CakePHP</a>
 
-### インストール
+#### インストール
 
 Composerを使いインストールする。
 
@@ -1362,8 +1351,7 @@ Composerを使いインストールする。
         
     }
 
-
-### 拡張モジュールmcryptエラー
+#### 拡張モジュールmcryptエラー
 
 [Mcrypt extension is missing in 14.04 server for mysql - Ask Ubuntu](http://askubuntu.com/questions/460837/mcrypt-extension-is-missing-in-14-04-server-for-mysql)
 
@@ -1393,12 +1381,9 @@ mcrsyptはapt-getでインストール済み。
 
 /etc/php5/fpm/conf.dおよび/etc/php5/cli/conf.dのファイルは/etc/php5/mods-availableの各ファイルへのシンボリックファイルだった
 
-
     $ ls /etc/php5/mods-available
     apcu.ini  json.ini    mysqli.ini  opcache.ini  pdo_mysql.ini  xsl.ini
     curl.ini  mcrypt.ini  mysql.ini   pdo.ini      readline.ini
-
-  
 
 mcryptのシンボリックファイルを作成した。
 
@@ -1409,8 +1394,7 @@ Nginx再起動
 
     $ sudo nginx -s reload
 
-
-### プロジェクト作成
+#### プロジェクト作成
 
     ubuntu@xxx:/var/www/application/current/app$ Vendor/bin/cake bake project
     
@@ -1427,7 +1411,6 @@ Nginx再起動
     Look okay? (y/n/q) 
     .....
     .....
-
 
 
 ## <a name="mysql">MySQL</a>

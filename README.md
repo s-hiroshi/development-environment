@@ -28,13 +28,13 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 * [Linuxコマンド](#cmd)
 * [Appendix](#appendix)
+    + [SQL](#sql)
     + [Ruby](#appendix_ruby)
     + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
     + [behatインストールで発生したエラーへの対応](#appendix_behat)
     + [JenkinsのビルドでAPCの書き込みエラーが発生する問題](#appendix_jenkins)
     + [gitのエディタを変更](#appendix_git_editor)
     + [用語](#appendix_terms)
-    + [英語](#appendix_en)
 
 
 # <a name="package">パッケージ管理システム</a>
@@ -2469,7 +2469,7 @@ git config --global core.editor "vi"
 
 
 
-### Appendix 2. PHPのファイル作成雛形
+### Appendix PHPのファイル作成雛形
 
     <?PHP
 
@@ -2540,6 +2540,20 @@ git config --global core.editor "vi"
             fastcgi_param CAKE_ENV development;
         }
     }
+
+
+### <a name="sql">SQL</a>
+
+MySQLのSQL。
+
+    SHOW CREATE TABLE `<tablename>`;
+
+<tablename>の定義が表示される。ALTER TABLEで変更した内容も反省されている。
+
+    desc `<tablename>`        // またはSELECTなのど文
+    explain `<tablename>`     // 
+
+引数で指定された値に対する情報を表示する。
 
 
 ### Appendix AWS EC2へSFTP接続

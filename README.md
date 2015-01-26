@@ -27,6 +27,15 @@ AWSでWEBサービスを運用するために勉強している内容を書き�
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 * [Linuxコマンド](#cmd)
+* [Appendix](#appendix)
+    + [Ruby](#appendix_ruby)
+    + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
+    + [behatインストールで発生したエラーへの対応](#appendix_behat)
+    + [JenkinsのビルドでAPCの書き込みエラーが発生する問題](#appendix_jenkins)
+    + [gitのエディタを変更](#appendix_git_editor)
+    + [用語](#appendix_terms)
+    + [英語](#appendix_en)
+
 
 # <a name="package">パッケージ管理システム</a>
 
@@ -1529,102 +1538,6 @@ AWSのサービスRDSからMySQLサーバー起動する。
 
 
 
-### Appendix 1. ユーザー、グループの変更
-
-    sudo chown [-f|-R] username (filename|dirname)
-    sudo chgrp  [-f|-R]] groupname (filename|dirname)
-
-
-
-### Appendix 2. PHPファイル作成テスト
-
-    <?PHP
-
-    $file_name = 'test.txt';
-
-    // 存在確認
-    if( !file_exists($file_name) ){
-        // ファイル作成
-        touch( $file_name );
-    }else{
-        header('Content-Type: text/html; charset=utf-8');
-        echo $file_name . 'は存在しています。処理を終了します';
-        exit();
-    }
-
-
-### Appendix 3. Nginxのエラーログ
-
-    /var/log/nginx/error.log
-
-
-### Appendix 4.「CakePHP 継続的インテグレーション」ディレクトリのパーミション
-
-* /var/www/application 
-  ユーザー、グループともにroot。 パーミション755。
-* /var/www/application/current以下  
-    + ユーザーvagrant
-    + グループwww-data
-    + パーミション 775
-
-### Appendix 5. 「CakePHP 継続的インテグレーション」のsite-available/defaultファイル
-
-__初期状態ではlocationがコメントアウトされておりphpファイルへアクセスするとダウンロードしてしまう。
-下記のようにコメントアウトを外す。__
-
-    server {
-        listen 80 default_server;
-        listen [::]:80 default_server ipv6only=on;
-
-        root /var/www/application/current/app/webroot;
-        index index.php index.html index.htm;
-
-        server_name localhost;
-
-        location / {
-            try_files $uri $uri/ /index.php?$args;
-        }
-
-        location ~ \.php$ {
-            try_files $uri =404;
-            include /etc/nginx/fastcgi_params;
-            fastcgi_pass unix:/var/run/php5-fpm.sock;
-            fastcgi_index   index.php;
-            fastcgi_intercept_errors on;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_param CAKE_ENV development;
-        }
-    }
-
-
-
-### Appendix 6. SFTP
-
-FileZilla設定方法は下記サイトを参考にして設定 
-[WordPress】素人でも出来た！AWS EC2へのサーバー移行方法7 旧データをアップロード | 男子風呂（ぐ）](http://danshiblog.com/job/130128-amazon-ec2-server-setting-wordpressdata-upload.html)
-
-
-* SFTPはSSHの使用ポート番号(22)を利用するのでAWSのSecurity Groupsで
-別途ポートを開ける必要は無い。
-* AWSはrootでは接続できないのでubuntuユーザーで接続
-* PHPの実行ユーザーはwww-data
-* FTPソフトでアップロードした場合のディレクトリ/ファイルの所有者はubuntu。
-* 表示するだけならHTML/CSS/JavaScript/PHPの各ファイルの実行権限は004でよい
-  (ディレクトリは755)。
-
-
-### Appendix 7. 手順
-
-    $ sudo apt-get update
-    $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
-    $ sudo mkdir -p /var/www/application/current/app/webroot
-    $ cd /var/www/application
-    $ sudo chown -R www-data current
-    $ sudo usermod -G www-data ubuntu
-    $ sudo chmod -R 775 current
-    $ sudo vi /etc/nginx/sites-available/default
-    $ sudo nginx -s reload
-
 
 [Ubuntu+Nginx+MySQL+PHP開発環境の目次へ戻る](#ubuntu_nginx_mysql_php)
 
@@ -1638,14 +1551,6 @@ FileZilla設定方法は下記サイトを参考にして設定
 * [アジャイル](#agile)
 * [BDD:振舞駆動開発 (開発手法)](#bdd)
 * [CakePHP開発環境](#env_cake)
-* Appendix
-    + [Ruby](#appendix_ruby)
-    + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
-    + [behatインストールで発生したエラーへの対応](#appendix_behat)
-    + [JenkinsのビルドでAPCの書き込みエラーが発生する問題](#appendix_jenkins)
-    + [gitのエディタを変更](#appendix_git_editor)
-    + [用語](#appendix_terms)
-    + [英語](#appendix_en)
 
 
 # <a name="virtualbox_vagrant_chef">VirtualBox + Vagrant + Chef Soloをで継続的CI環境構築(開発環境構築/プロビジョニング/デプロイ)</a>
@@ -2103,174 +2008,6 @@ app/Config/core.php
 
 
 
-## <a name="appendix_ruby">Appendix Ruby</a>
-
-    $ brew install ruby
-
-brewをつかい最新版をインストールした(2.2.0)。
-バージョンの確認をすると下記のようにMac OSに標準でインストールされているバージョンが表示される。
-
-    $ ruby --version
-    ruby 2.0.0p481 (2014-05-08 revision 45883) [universal.x86_64-darwin13]
-
-rubyのバージョンを完全にアップデートする方法は解らなかった。
-下記をためしたが解決はしていない。
-
-
-### rbenv/ruby-buildでインストール
-
-rbenvはシェルによりrubyを切り替える。
-
-
-    $ brew update
-    $ brew install rbenv ruby-build
-
-    $ echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
-
-    $ source ~/.bash_profile
-    $ rbenv --version
-    rbenv 0.4.0
-
-
-[rbenv を利用した Ruby 環境の構築 ｜ Developers.IO](http://dev.classmethod.jp/server-side/language/build-ruby-environment-by-rbenv/)
-
-
-    $ ruby —version
-    ruby 2.0.0p481 (2014-05-08 revision 45883) [universal.x86_64-darwin13]
-
-やはりMac OS標準のRubyが使われる。
-
-
-
-## <a name="appendix_berkshelf">Appendix Berkshelfはbundleで管理して使うとエラーがで
-るのでChefDKを使う</a>
-
-[ChefDk の berkshelf で cookbook をダウンロードする - Qiita](http://qiita.com/shin1x1/items/872cf5b9396516068892)
-[Chef Development Kit | Chef Downloads | Chef](https://downloads.chef.io/chef-dk/mac/#/)
-
-
-## <a name="appendix_behat">Appendix behatインストールで発生したエラーへの対応</a>
-
-### エラー
-
-Could not fetch https://api.github.com/repos/sizuhiko/Bdd/git/refs/heads?per_page=100, enter your GitHub credentials to go over the API rate limit
-The credentials will be swapped for an OAuth token stored in /home/vagrant/.composer/auth.json, your password will not be stored
-To revoke access to this token you can visit https://github.com/settings/applications
-Username: xxxxx
-Password:xxxxx
-Token successfully created
-
-Could not fetch https://api.github.com/authorizations, enter your GitHub credentials to go over the API rate limit
-The credentials will be swapped for an OAuth token stored in /home/vagrant/.composer/auth.json, your password will not be stored
-To revoke access to this token you can visit https://github.com/settings/applications
-Username:xxxxx
-Password:xxxxx
-An existing OAuth token for Composer is present and will be reused
-
-### 対応
-
-下記ファイルに記載されているトークン(Token)をcomposer.jsonファイルのconfigへ追記する。
-[Composer Update Fails due to Github Authorization · Issue #3542 · composer/composer](https://github.com/composer/composer/issues/3542)
-
-    /home/vagrant/.composer/auth.json
-
-composer.json
-
-    {
-        …..
-        "config": {
-            "vendor-dir": "Vendor",
-            "github-oauth": {
-                “github.com”: <Token>
-            }
-        },
-        …..
-    }
-
-
-
-## <a name="appendix_jenkins">Appendix JenkinsのビルドでAPCの書き込みエラーが発生
-する問題</a>
-
-PHPUnitでの単体テストがうまく行っていない
-
-
-    vagrant@ci:/var/lib/jenkins/jobs/blogapp/workspace/app$  Console/cake test app AllTests
-    PHP Warning:  _cake_core_ cache was unable to write 'cake_dev_eng' to File cache in /var/lib/jenkins/jobs/blogapp/workspace/app/Vendor/cakephp/cakephp/lib/Cake/Cache/Cache.php on line 323
-
-[シェルからCakePHPを使うとAPC書き込みに失敗する問題 - 創作メモ帳](http://sousaku-memo.net/php-system/952)
-
-### 1. /etc/php5/cli/conf.dディレクトリ20-apc.iniを作成。
-
-
-/etc/php5/cli/conf.d/20-apc.iniの内容
-
-    ;apc extension module を有効にします。
-    ;extension = apc.so
-    ;apc.enabled=1
-
-    ;# apc extension module のオプションを設定します。
-
-    ;## コンパイラキャッシュのために割り当てる共有メモリセグメントの数。
-    apc.shm_segments=1
-
-    ;## 個々の共有メモリセグメントの大きさを MB 単位で指定します。
-    ;#apc.shm_size=32
-    apc.shm_size=128M
-
-    ;## 最適化レベル。ゼロは最適化を無効にし、 値を大きくするほど最適化のレベルが高くなります。
-    apc.optimization=0
-
-    ;## キャッシュされているエントリが、 他のエントリに割り当てられるまでスロットに残っていることの可能な秒数。
-    ;#apc.ttl=7200
-    apc.ttl=86400
-    ;#apc.user_ttl=7200
-    apc.user_ttl=86400
-
-    ;## Web サーバで読み込まれるソースファイルの総数についての 「ヒント」。よくわからない場合はゼロを指定するか、 単に無視してください。
-    apc.num_files_hint=1024
-
-    ;## --enable-mmap を用いて MMAP サポートつきでコンパイルされている場合、ここで mktemp 形式のファイルマスクを指定します。
-    apc.mmap_file_mask=/tmp/apc.XXXXXX
-
-    ;## たいていは、テストやデバッグ用に使用します。これを設定すると CLI バージョンの PHP で APC を有効にします。
-    apc.enable_cli=1
-
-    ;## デフォルトで On です。しかし、これを Off にして + で始まる apc.filters  とともに使用することで、 フィルタに一致したファイルのみをキャッシュすることが可能です。
-    apc.cache_by_default=1
-
-### 1を記載したら下記のエラーがでるようになった。
-
-    PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php5/20121212/apc.so' - /usr/lib/php5/20121212/apc.so: cannot open shared object file: No such file or directory in Unknown on line 0
-
-1. apc.soをインストールしたい。
-2. sudo pecl install APCではエラー出てインストールできなかった。
-3. apc.soはphp-develに含まれるらしい。
-4. php-develをインストールするためにyumをインストールした。
-  sudo apt-get install yum
-5. yum install php-develではエラー
-
-
-
-## <a name="appendix_git_editor">Appendix gitのエディタを変更</a>
-
-Ubuntuでnanoをviへ変更
-
-git config --global core.editor "vi"
-
-[gitのエディタをnanoから他へ変更する | J-Linuxer](http://jlinuxer.dip.jp/?p=645)
-
-
-## <a name="appendix_terms">Appendix 用語</a>
-
-> .soファイル 【 shared object file 】 .so形式 / .soフォーマット
-
-> soファイル / so形式
-> UNIX系OSの共有ライブラリのファイル形式。拡張子が「.so」であることからこのように呼ばれる。実行可能形式のプログラムが格納されているが、単体で起動することはできず、他のプログラムにリンクしてその機能を呼び出すようになっている。
->この形式のファイルはプログラムの実行時にリンクされる動的リンク(ダイナミックリンク)ライブラリで、ビルド時にリンクされる静的リンク(スタティックリンク)ライブラリの場合は「.a」(archiveの略)という拡張子になる。
-
-[.soファイルとは 〔 soファイル 〕 【 shared object file 】 - 意味/解説/説明/定義 ： IT用語辞典](http://e-words.jp/w/2EsoE38395E382A1E382A4E383AB.html)
-
 
 
 
@@ -2667,19 +2404,22 @@ Aレコードにexample.comを設定している。
 
 
 
-## <a name="aws_cmd_ubuntu">Linuxコマンド(Ubuntu)</a> 
+## <a name="cmd">Linuxコマンド(Ubuntu)</a> 
 
-* ポートの確認
+* ポートの確認  
   $ netstat -tlnp
-* インストール済みパッケージの確認
+* インストール済みパッケージの確認  
   $ dpkg -l
   $ aptitude search "~i"
-* プロセス
+* プロセス  
   ps -ef|grep postfix
-* DNS確認
-  host domain
+* DNS確認  
+  $ nslookup ndsname domain  
+  $ host domain
 * cat
   標準出力へ出力
+* find . -name <target>
+
 
 ## <a name="aws_terms">用語</a>
 
@@ -2709,22 +2449,46 @@ Wikipedia
 
 Wikipedia
 
-# Appendix 1. Ubuntu + Apache + MySQL + PHP
-
-    $ sudo apt-get update
-
-    $ sudo apt-get install apache2
-    $ sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql
-    $ sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
-
-### Apache設定ファイル
-
-/etc/apache2/apache2.conf
 
 
-# Appendix 2.
+## <a name="appendix">Apendix</a>
 
-とりあえずUbuntu + Nginxで動作した設定
+### Appendix ディレクトリ/ファイル所有者・グループ変更
+
+    sudo chown [-f|-R] username (filename|dirname)
+    sudo chgrp  [-f|-R]] groupname (filename|dirname)
+
+
+### <a name="appendix_git_editor">Appendix Ubuntuエディタを変更</a>
+
+Ubuntuでnanoをviへ変更
+
+git config --global core.editor "vi"
+
+[gitのエディタをnanoから他へ変更する | J-Linuxer](http://jlinuxer.dip.jp/?p=645)
+
+
+
+### Appendix 2. PHPのファイル作成雛形
+
+    <?PHP
+
+        $file_name = 'test.txt';
+
+        // 存在確認
+        if( !file_exists($file_name) ){
+            // ファイル作成
+            touch( $file_name );
+        }else{
+            header('Content-Type: text/html; charset=utf-8');
+            echo $file_name . 'は存在しています。処理を終了します';
+            exit();
+        }
+
+
+### Appendix  とりあえず動作したNginx設定ファイルsite-available/default
+
+とりあえずUbuntu + Nginxで動作した設定。
 
     server {
             listen 80 default_server;
@@ -2749,20 +2513,227 @@ Wikipedia
                     include         fastcgi_params;
             }
      }
- 
 
- <a name="cmd">コマンド</a>
 
-* ポートの確認  
-  $ netstat -tlnp
-* インストール済みパッケージの確認  
-  $ dpkg -l
-  $ aptitude search "~i"
-* プロセス  
-  ps -ef|grep postfix
-* DNS確認  
-  $ nslookup ndsname domain  
-  $ host domain
-* cat
-  標準出力へ出力
-* find . -name <target>
+### Appendix 書籍「CakePHP 継続的インテグレーション」のNginx設定ファイルsite-available/default
+
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+
+        root /var/www/application/current/app/webroot;
+        index index.php index.html index.htm;
+
+        server_name localhost;
+
+        location / {
+            try_files $uri $uri/ /index.php?$args;
+        }
+
+        location ~ \.php$ {
+            try_files $uri =404;
+            include /etc/nginx/fastcgi_params;
+            fastcgi_pass unix:/var/run/php5-fpm.sock;
+            fastcgi_index   index.php;
+            fastcgi_intercept_errors on;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param CAKE_ENV development;
+        }
+    }
+
+
+### Appendix AWS EC2へSFTP接続
+
+FileZilla設定方法は下記サイトを参考にして設定 
+[WordPress】素人でも出来た！AWS EC2へのサーバー移行方法7 旧データをアップロード | 男子風呂（ぐ）](http://danshiblog.com/job/130128-amazon-ec2-server-setting-wordpressdata-upload.html)
+
+
+* SFTPはSSHの使用ポート番号(22)を利用するのでAWSのSecurity Groupsで
+別途ポートを開ける必要は無い。
+* AWSはrootでは接続できないのでubuntuユーザーで接続
+* PHPの実行ユーザーはwww-data
+* FTPソフトでアップロードした場合のディレクトリ/ファイルの所有者はubuntu。
+* 表示するだけならHTML/CSS/JavaScript/PHPの各ファイルの実行権限は004でよい
+  (ディレクトリは755)。
+
+
+# Appendix Ubuntu + Apache + MySQL + PHP
+
+    $ sudo apt-get update
+
+    $ sudo apt-get install apache2
+    $ sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql
+    $ sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
+
+### Apache設定ファイル
+
+/etc/apache2/apache2.conf
+
+
+### <a name="appendix_berkshelf">Appendix Berkshelfはbundleで管理して使うとエラーがで</a>
+るのでChefDKを使う</a>
+
+[ChefDk の berkshelf で cookbook をダウンロードする - Qiita](http://qiita.com/shin1x1/items/872cf5b9396516068892)
+[Chef Development Kit | Chef Downloads | Chef](https://downloads.chef.io/chef-dk/mac/#/)
+
+
+### <a name="appendix_behat">Appendix behatインストールで発生したエラーへの対応</a>
+
+#### エラー
+
+Could not fetch https://api.github.com/repos/sizuhiko/Bdd/git/refs/heads?per_page=100, enter your GitHub credentials to go over the API rate limit
+The credentials will be swapped for an OAuth token stored in /home/vagrant/.composer/auth.json, your password will not be stored
+To revoke access to this token you can visit https://github.com/settings/applications
+Username: xxxxx
+Password:xxxxx
+Token successfully created
+
+Could not fetch https://api.github.com/authorizations, enter your GitHub credentials to go over the API rate limit
+The credentials will be swapped for an OAuth token stored in /home/vagrant/.composer/auth.json, your password will not be stored
+To revoke access to this token you can visit https://github.com/settings/applications
+Username:xxxxx
+Password:xxxxx
+An existing OAuth token for Composer is present and will be reused
+
+#### 対応
+
+下記ファイルに記載されているトークン(Token)をcomposer.jsonファイルのconfigへ追記する。
+[Composer Update Fails due to Github Authorization · Issue #3542 · composer/composer](https://github.com/composer/composer/issues/3542)
+
+    /home/vagrant/.composer/auth.json
+
+composer.json
+
+    {
+        …..
+        "config": {
+            "vendor-dir": "Vendor",
+            "github-oauth": {
+                “github.com”: <Token>
+            }
+        },
+        …..
+    }
+
+
+### <a name="appendix_jenkins">Appendix JenkinsのビルドでAPCの書き込みエラーが発生する問題</a>
+
+PHPUnitでの単体テストがうまく行っていない
+
+
+    vagrant@ci:/var/lib/jenkins/jobs/blogapp/workspace/app$  Console/cake test app AllTests
+    PHP Warning:  _cake_core_ cache was unable to write 'cake_dev_eng' to File cache in /var/lib/jenkins/jobs/blogapp/workspace/app/Vendor/cakephp/cakephp/lib/Cake/Cache/Cache.php on line 323
+
+[シェルからCakePHPを使うとAPC書き込みに失敗する問題 - 創作メモ帳](http://sousaku-memo.net/php-system/952)
+
+#### 1. /etc/php5/cli/conf.dディレクトリ20-apc.iniを作成。
+
+
+/etc/php5/cli/conf.d/20-apc.iniの内容
+
+    ;apc extension module を有効にします。
+    ;extension = apc.so
+    ;apc.enabled=1
+
+    ;# apc extension module のオプションを設定します。
+
+    ;## コンパイラキャッシュのために割り当てる共有メモリセグメントの数。
+    apc.shm_segments=1
+
+    ;## 個々の共有メモリセグメントの大きさを MB 単位で指定します。
+    ;#apc.shm_size=32
+    apc.shm_size=128M
+
+    ;## 最適化レベル。ゼロは最適化を無効にし、 値を大きくするほど最適化のレベルが高くなります。
+    apc.optimization=0
+
+    ;## キャッシュされているエントリが、 他のエントリに割り当てられるまでスロットに残っていることの可能な秒数。
+    ;#apc.ttl=7200
+    apc.ttl=86400
+    ;#apc.user_ttl=7200
+    apc.user_ttl=86400
+
+    ;## Web サーバで読み込まれるソースファイルの総数についての 「ヒント」。よくわからない場合はゼロを指定するか、 単に無視してください。
+    apc.num_files_hint=1024
+
+    ;## --enable-mmap を用いて MMAP サポートつきでコンパイルされている場合、ここで mktemp 形式のファイルマスクを指定します。
+    apc.mmap_file_mask=/tmp/apc.XXXXXX
+
+    ;## たいていは、テストやデバッグ用に使用します。これを設定すると CLI バージョンの PHP で APC を有効にします。
+    apc.enable_cli=1
+
+    ;## デフォルトで On です。しかし、これを Off にして + で始まる apc.filters  とともに使用することで、 フィルタに一致したファイルのみをキャッシュすることが可能です。
+    apc.cache_by_default=1
+
+#### 1を記載したら下記のエラーがでるようになった。
+
+    PHP Warning:  PHP Startup: Unable to load dynamic library '/usr/lib/php5/20121212/apc.so' - /usr/lib/php5/20121212/apc.so: cannot open shared object file: No such file or directory in Unknown on line 0
+
+1. apc.soをインストールしたい。
+2. sudo pecl install APCではエラー出てインストールできなかった。
+3. apc.soはphp-develに含まれるらしい。
+4. php-develをインストールするためにyumをインストールした。
+  sudo apt-get install yum
+5. yum install php-develではエラー
+
+
+### Appendix soファイル
+
+> .soファイル 【 shared object file 】 .so形式 / .soフォーマット
+>
+> soファイル / so形式
+> UNIX系OSの共有ライブラリのファイル形式。拡張子が「.so」であることからこのように呼ばれる。実行可能形式のプログラムが格納されているが、単体で起動することはできず、他のプログラムにリンクしてその機能を呼び出すようになっている。
+>この形式のファイルはプログラムの実行時にリンクされる動的リンク(ダイナミックリンク)ライブラリで、ビルド時にリンクされる静的リンク(スタティックリンク)ライブラリの場合は「.a」(archiveの略)という拡張子になる。
+
+[.soファイルとは 〔 soファイル 〕 【 shared object file 】 - 意味/解説/説明/定義 ： IT用語辞典](http://e-words.jp/w/2EsoE38395E382A1E382A4E383AB.html)
+
+
+### <a name="appendix_ruby">Appendix Ruby</a>
+
+    $ brew install ruby
+
+brewをつかい最新版をインストールした(2.2.0)。
+バージョンの確認をすると下記のようにMac OSに標準でインストールされているバージョンが表示される。
+
+    $ ruby --version
+    ruby 2.0.0p481 (2014-05-08 revision 45883) [universal.x86_64-darwin13]
+
+rubyのバージョンを完全にアップデートする方法は解らなかった。
+下記をためしたが解決はしていない。
+
+
+#### rbenv/ruby-buildでインストール
+
+rbenvはシェルによりrubyを切り替える。
+
+
+    $ brew update
+    $ brew install rbenv ruby-build
+
+    $ echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
+
+    $ source ~/.bash_profile
+    $ rbenv --version
+    rbenv 0.4.0
+
+
+[rbenv を利用した Ruby 環境の構築 ｜ Developers.IO](http://dev.classmethod.jp/server-side/language/build-ruby-environment-by-rbenv/)
+
+
+    $ ruby —version
+    ruby 2.0.0p481 (2014-05-08 revision 45883) [universal.x86_64-darwin13]
+
+やはりMac OS標準のRubyが使われる。
+
+
+### Appendix AWS構築手順
+
+    $ sudo apt-get update
+    $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
+    $ sudo mkdir -p /var/www/application/current/app/webroot
+    $ cd /var/www/application
+    $ sudo chown -R www-data current
+    $ sudo usermod -G www-data ubuntu
+    $ sudo chmod -R 775 current
+    $ sudo vi /etc/nginx/sites-available/default
+    $ sudo nginx -s reload

@@ -2555,6 +2555,11 @@ MySQLのSQL。
 
 引数で指定された値に対する情報を表示する。
 
+MySQLは識別子(テーブル名やカラム名)に予約語を含む場合はバッククォートで囲む。
+上記<tablename>がhogeの場合は
+
+desc hoge    // hogeは予約語でないのでバッククォートは必要ない。
+desc `table` // 仮にtableテーブルを作成しているときの例。
 
 ### Appendix AWS EC2へSFTP接続
 

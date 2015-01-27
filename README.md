@@ -26,6 +26,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 * [パッケージ管理システム](#package)
 * [HTML/CSS/JavaScript開発環境](#html_css_javascript)
 * [Ubuntu+Nginx+MySQL+PHP開発環境](#ubuntu_nginx_mysql_php)
+* [Gitインストール](#git)
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 * [Linuxコマンド](#cmd)
@@ -1578,6 +1579,47 @@ myuserはホスト名を指定せずに作成した。ホスト名を指定し�
 [Ubuntu+Nginx+MySQL+PHP開発環境の目次へ戻る](#ubuntu_nginx_mysql_php)
 
 
+# <a name="git">Git</a>
+
+デプロイサーバからGitHubのソースを取得できるようにする。
+
+1. UbuntuへGitをインストールする。
+2. 公開鍵/秘密鍵を作成する。
+3. GitHubへ公開鍵を設定する。
+4. GitHubのリポジトリからソースを取得する(デプロイ処理)。
+
+
+## 1 Gitインストール
+
+    $ sudo apt-get install git
+
+## 2. 公開鍵/秘密鍵作成
+
+ホームディレクトリでssh-keygenコマンドを実行
+
+    $ cd
+    $ ssh-keygen
+    // パスフレーズは入力しない。
+
+ホームディレクトリ直下の.sshディレクトリに下記ファイルが作成される。
+
+    authorized_keys
+    id_rsa
+    id_rsa.pub
+
+3. 公開鍵id_rsa.pubの内容をGitHubへ登録する。
+
+4. リポジトリを取得するテスト
+
+    $ mkdir gittest
+    $ cd gittest
+    $ git init
+    $ git remote add origin git@github.com:xxx/yyy.git
+    $ git pull origin master
+    // 初回は下記メッセージが表示
+    The authenticity of host 'github.com (xxx.xxx.xxx.xxx)' can't be established.
+    RSA key fingerprint is xxx.xxx
+    Are you sure you want to continue connecting (yes/no)? 
 
 
 # <a name="ci">継続的インテグレーション</a>

@@ -1297,7 +1297,7 @@ Calc.php
     sudo service php5-fpm restart
 
 
-### <a name="php_phpdocumentation">ドキュメンテーションツール - phpDocumentor</a>
+### <a name="php_documentation">ドキュメンテーションツール - phpDocumentor</a>
 
 [phpDocumentor](http://www.phpdoc.org/)
 

@@ -26,6 +26,10 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 * [パッケージ管理システム](#package)
 * [HTML/CSS/JavaScript開発環境](#html_css_javascript)
 * [Ubuntu+Nginx+MySQL+PHP開発環境](#ubuntu_nginx_mysql_php)
+    + [Ubuntu](#ubuntu)
+    + [Nginx](#nginx)
+    + [PHP](#php)
+    + [MySQL](#mysql)
 * [Git](#git)
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
@@ -676,11 +680,11 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
 ## 目次
 
 * [Ubuntu](#ubuntu)
-* [シェル](#shell)
-* [Vi](#vi)
-* [ドキュメントルート](#documentroot)
-* [ユーザーとパーミション](#user)
-* [Nginx, MySQL, PHPインストール](#install_nginx_mysql_php)
+    + [シェル](#shell)
+    + [Vi](#vi)
+    + [ユーザーとパーミション](#user)
+    + [ドキュメントルート](#documentroot)
+    + [Nginx, MySQL, PHPインストール](#install_nginx_mysql_php)
 * [Nginx](#nginx)
 * [PHP](#php)
     + [PHP実行環境の分類](#php_exe)
@@ -1608,6 +1612,27 @@ AWSではEC2インスタンスへMySQLをインストールし利用すること
         <?php echo $rows; ?>
     </body>
     </html>
+
+
+### MySQLが起動できない問題と対応
+
+    $ sudo /etc/init.d/mysql stop           [OK]
+    $ sudo /etc/init.d/mysql start          [fail]
+
+下記のようにログ(/var/log/mysql/error.log)が記載。
+    
+    InnoDB: Unable to lock ./ibdata1, error: 11
+    InnoDB: Check that you do not already have another mysqld process
+
+killコマンドでプロセスを終了したら起動できた。
+
+    $ ps aux | grep mysql
+    mysql    14065  0.0 11.8 623916 44216 ?        Ssl  05:00   0:01 /usr/sbin/mysqld
+    $ sudo kill -9 14065
+
+    $ sudo /etc/init.d/mysql start         [OK]
+     
+[mysqlの起動に失敗（MySQL Daemon failed to start）](http://www.crossl.net/blog/mysql_failed_start/)
 
 
 

@@ -30,14 +30,20 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 * [Linuxコマンド](#cmd)
+* [用語](#terms)
 * [Appendix](#appendix)
-    + [SQL](#sql)
-    + [Ruby](#appendix_ruby)
+    + [ディレクトリ/ファイル所有者・グループ変更](#appendix_owner)
+    + [PHPのファイル作成雛形](#appendix_php_file)
+    + [動作したNginx設定ファイルsite-available/default](#appendix_nginx_default)
+    + [書籍「CakePHP 継続的インテグレーション」のNginx設定ファイルsite-available/default](#appendix_nginx_default_book)
+    + [FileZillaを使ったAWS EC2へのSFTP接続](#appendix_aws_sftp)
+    + [Ubuntu + Apache + MySQL + PHP](#appendix_ubuntu_apache_mysql_php)
     + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
     + [behatインストールで発生したエラーへの対応](#appendix_behat)
     + [JenkinsのビルドでAPCの書き込みエラーが発生する問題](#appendix_jenkins)
-    + [gitのエディタを変更](#appendix_git_editor)
-    + [用語](#appendix_terms)
+    + [soファイル](#appendix_so)
+    + [Ruby](#appendix_ruby)
+    + [AWS構築手順](#appendix_recipe)
 
 
 # <a name="package">パッケージ管理システム</a>
@@ -259,7 +265,7 @@ Homebrewはパッケージを/usr/local/binへインストールする。
 
 ## フォルダ構成の例
 
-以下の説明は下記フォルダ構成を前提とする。
+以下の説明では下記フォルダ構成を前提とする。
 
     example
     |
@@ -745,6 +751,12 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
 
     // UTF-8へ変更
     :set encoding=utf8
+
+### GitのエディタをnanoからViへ変更
+
+    $ git config --global core.editor "vi"
+
+[gitのエディタをnanoから他へ変更する | J-Linuxer](http://jlinuxer.dip.jp/?p=645)
 
 
 
@@ -1308,6 +1320,9 @@ Calc.php
 [Installing Using Composer](http://www.phpdoc.org/docs/latest/getting-started/installing.html#using-composer)
 
 
+    $ phpdoc -d <src> -t <output>
+
+
 ### <a name="php_inspection">Code Inspections(検査) - PHP_CodeSniffer</a>
 
 #### インストール
@@ -1406,7 +1421,7 @@ Nginx再起動
     ---------------------------------------------------------------
     What is the path to the project you want to bake?  
     [/var/www/application/current/app/myapp] > /var/www/application/current/app
-    Skel Directory: /var/www/application/current/app/Vendor/cakephp/cakephp/lib/Cake/Console/Templates/skel
+    Skel Dir/ectory: /var/www/application/current/app/Vendor/cakephp/cakephp/lib/Cake/Console/Templates/skel
     Will be copied to: /var/www/application/current/app
     ---------------------------------------------------------------
     Look okay? (y/n/q) 
@@ -1416,7 +1431,9 @@ Nginx再起動
 
 ## <a name="mysql">MySQL</a>
 
-MySQLは識別子(テーブル名やカラム名)に予約語を含む場合はバッククォートで囲む必要がある。
+以下の説明はUbuntuにMySQLをインストールしている前提で記載する。
+
+MySQLでは識別子(テーブル名やカラム名)が予約語を含むときはバッククォートで囲む必要がある。
 
     explain hoge    // hogeは予約語でないのでバッククォートは必要ない。
     explain `table` // 仮にtableテーブルを作成しているときの例。
@@ -1496,6 +1513,12 @@ MySQLは識別子(テーブル名やカラム名)に予約語を含む場合は�
     desc `<tablename>`        // またはSELECTなのど文
     explain `<tablename>`     // 
 
+
+### ダンプ
+
+    $ mysqldump -u <username> - <databasename> > /path/to/buckupfile.sql
+
+### インポート
 
 ### AWS RDS
 
@@ -2499,7 +2522,7 @@ Aレコードにexample.comを設定している。
 * find . -name <target>
 
 
-## <a name="aws_terms">用語</a>
+## <a name="terms">用語</a>
 
 ### Amazon Virtual Private Cloud VPC
 
@@ -2531,23 +2554,13 @@ Wikipedia
 
 ## <a name="appendix">Apendix</a>
 
-### Appendix ディレクトリ/ファイル所有者・グループ変更
+### <a name="appendix_owner">Appendix ディレクトリ/ファイル所有者・グループ変更</a>
 
     sudo chown [-f|-R] username (filename|dirname)
     sudo chgrp  [-f|-R]] groupname (filename|dirname)
 
 
-### <a name="appendix_git_editor">Appendix Ubuntuエディタを変更</a>
-
-Ubuntuでnanoをviへ変更
-
-git config --global core.editor "vi"
-
-[gitのエディタをnanoから他へ変更する | J-Linuxer](http://jlinuxer.dip.jp/?p=645)
-
-
-
-### Appendix PHPのファイル作成雛形
+### <a name="appendix_php_file">Appendix PHPのファイル作成雛形</a>
 
     <?PHP
 
@@ -2563,8 +2576,7 @@ git config --global core.editor "vi"
             exit();
         }
 
-
-### Appendix  とりあえず動作したNginx設定ファイルsite-available/default
+### <a name="appendix_nginx_default">Appendix 動作したNginx設定ファイルsite-available/default</a>
 
 とりあえずUbuntu + Nginxで動作した設定。
 
@@ -2593,7 +2605,7 @@ git config --global core.editor "vi"
      }
 
 
-### Appendix 書籍「CakePHP 継続的インテグレーション」のNginx設定ファイルsite-available/default
+### <a name="appendix_nginx_default_book">Appendix 書籍「CakePHP 継続的インテグレーション」のNginx設定ファイルsite-available/default</a>
 
     server {
         listen 80 default_server;
@@ -2620,7 +2632,7 @@ git config --global core.editor "vi"
     }
 
 
-### Appendix AWS EC2へSFTP接続
+### <a name="appendix_aws_sftp">Appendix FileZillaを使ったAWS EC2へのSFTP接続</a>
 
 FileZilla設定方法は下記サイトを参考にして設定 
 [WordPress】素人でも出来た！AWS EC2へのサーバー移行方法7 旧データをアップロード | 男子風呂（ぐ）](http://danshiblog.com/job/130128-amazon-ec2-server-setting-wordpressdata-upload.html)
@@ -2635,7 +2647,7 @@ FileZilla設定方法は下記サイトを参考にして設定
   (ディレクトリは755)。
 
 
-# Appendix Ubuntu + Apache + MySQL + PHP
+### <a name="appendix_ubuntu_apache_mysql_php">Appendix Ubuntu + Apache + MySQL + PHP</a>
 
     $ sudo apt-get update
 
@@ -2755,7 +2767,7 @@ PHPUnitでの単体テストがうまく行っていない
 5. yum install php-develではエラー
 
 
-### Appendix soファイル
+### <a name="appendix_so">Appendix soファイル</a>
 
 > .soファイル 【 shared object file 】 .so形式 / .soフォーマット
 >
@@ -2804,7 +2816,7 @@ rbenvはシェルによりrubyを切り替える。
 やはりMac OS標準のRubyが使われる。
 
 
-### Appendix AWS構築手順
+### <a name="appendix_aws_recipe">Appendix AWS構築手順</a>
 
     $ sudo apt-get update
     $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx

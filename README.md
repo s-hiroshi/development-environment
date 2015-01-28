@@ -1450,14 +1450,57 @@ MySQLでは識別子(テーブル名やカラム名)が予約語を含むとき�
     // 再起動
     $ sudo /etc/init.d/mysql restart
  
+
 ### バージョン
 
+    $ mysqld --version
     mysql> SELECT version();
+
 
 ### 設定ファイル
 
     $ sudo find / -name my.cnf
     /etc/mysql/my.cnf
+
+
+### ユーザー管理
+
+#### ユーザー作成(ユーザーmyuser)
+
+    mysql> GRANT ALL PRIVILEGES ON *.* TO myuser IDENTIFIED BY 'passw0rd';
+
+#### パスワード設定
+
+    // MySQLログインユーザーのパスワード設定
+    mysql> set password = password('passw0rd');
+    // 他ユーザーのパスワード変更
+    SET PASSWORD FOR 'other'@'localhost' = PASSWORD('passw0rd');
+
+#### ユーザーの確認
+
+    mysql> USE user;
+    mysql> SELECT user, host FROM user;
+
+| user             | host             |
+|------------------|------------------|
+| myuser           | %                |
+| root             | 127.0.0.1        |
+| root             | ::1              |
+| root             | ip-xx-xxx-xxx-xx |
+| debian-sys-maint | localhost        |
+| root             | localhost        |
+
+myuserはホスト名を指定せずに作成した。  
+ホスト名の指定がないときはすべてのホストからアクセス可能であるワイルドカード%が指定される。
+
+    mysql> GRANT ALL PRIVILEGES ON *.* TO myuser IDENTIFIED BY 'passw0rd';
+    mysql> GRANT ALL PRIVILEGES ON *.* TO `myuser`@`%` IDENTIFIED BY 'passw0rd';
+
+#### ユーザーの削除
+
+    mysql> DROP USER <username>@<hostname>
+
+[Ubuntu+Nginx+MySQL+PHP開発環境の目次へ戻る](#ubuntu_nginx_mysql_php)
 
 
 ### MySQLの文字コード関連確認
@@ -1516,7 +1559,7 @@ MySQLでは識別子(テーブル名やカラム名)が予約語を含むとき�
 
 ### ダンプ
 
-    $ mysqldump -u <username> - <databasename> > /path/to/buckupfile.sql
+    $ mysqldump -u <username> -p <databasename> > /path/to/dumpfile.sql
 
 ### インポート
 
@@ -1564,42 +1607,6 @@ EC2インスタンスへMySQLをインストールしローカルホストから
     </body>
     </html>
 
-### ユーザー管理
-
-MySQLへログインしているユーザーのパスワード設定(rootの場合)
-
-    mysql> set password = password('passw0rd');
-
-### ユーザー作成(ユーザーmyuser)
-
-    mysql> GRANT ALL PRIVILEGES ON *.* TO myuser IDENTIFIED BY 'passw0rd';
-
-
-### ユーザーの確認
-
-    mysql> USE user;
-    mysql> SELECT user, host FROM user;
-
-| user             | host             |
-|------------------|------------------|
-| myuser           | %                |
-| root             | 127.0.0.1        |
-| root             | ::1              |
-| root             | ip-xx-xxx-xxx-xx |
-| debian-sys-maint | localhost        |
-| root             | localhost        |
-
-
-myuserはホスト名を指定せずに作成した。ホスト名を指定しないとすべてのホストからアクセス可能であるワイルドカード%が指定される。
-
-    mysql> GRANT ALL PRIVILEGES ON *.* TO myuser IDENTIFIED BY 'passw0rd';
-    mysql> GRANT ALL PRIVILEGES ON *.* TO `myuser`@`%` IDENTIFIED BY 'passw0rd';
-
-### ユーザーの削除
-
-    mysql> DROP USER <username>@<hostname>
-
-[Ubuntu+Nginx+MySQL+PHP開発環境の目次へ戻る](#ubuntu_nginx_mysql_php)
 
 
 # <a name="git">Git</a>

@@ -1453,6 +1453,11 @@ MySQLでは識別子(テーブル名やカラム名)が予約語を含むとき�
      
     // 再起動
     $ sudo /etc/init.d/mysql restart
+
+    // 起動確認
+    $ mysqladmin ping
+
+[MySQL サーバが起動中であるかを確認する - MySQL 逆引きリファレンス](http://mysql.javarou.com/dat/000409.html)
  
 
 ### バージョン
@@ -1528,7 +1533,9 @@ myuserはホスト名を指定せずに作成した。
 
     [mysqld]
     ..........
-    default-character-set = utf8
+    character-set-server = utf8
+    ..........
+    # 上記を誤ってdefault-character-set = utf8と記載してmysqldが起動しなくて困った。
 
     [mysqldump]
     default-character-set = utf8

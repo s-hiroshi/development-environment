@@ -1616,15 +1616,24 @@ AWSではEC2インスタンスへMySQLをインストールし利用すること
 
 ### MySQLが起動できない問題と対応
 
+下記エラーが発生した。
+
+    mysql -u <username -p
+    Enter password: 
+    ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+
+MySQLサーバーを下記の通り停止・起動したが起動できなかった。
+
+
     $ sudo /etc/init.d/mysql stop           [OK]
     $ sudo /etc/init.d/mysql start          [fail]
 
-下記のようにログ(/var/log/mysql/error.log)が記載。
+ログファイル(/var/log/mysql/error.log)に以下のように記載されていた。
     
     InnoDB: Unable to lock ./ibdata1, error: 11
     InnoDB: Check that you do not already have another mysqld process
 
-killコマンドでプロセスを終了したら起動できた。
+killコマンドでmysqlプロセスを終了したら起動できた。
 
     $ ps aux | grep mysql
     mysql    14065  0.0 11.8 623916 44216 ?        Ssl  05:00   0:01 /usr/sbin/mysqld

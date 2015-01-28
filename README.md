@@ -1478,7 +1478,7 @@ MySQLでは識別子(テーブル名やカラム名)が予約語を含むとき�
 
 #### ユーザーの確認
 
-    mysql> USE user;
+    mysql> USE mysql;
     mysql> SELECT user, host FROM user;
 
 | user             | host             |

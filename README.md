@@ -1509,7 +1509,7 @@ myuserはホスト名を指定せずに作成した。
 
 ### MySQLの文字コード関連確認
 
-    mysql> show variables like 'character_set_%';
+    mysql> show variables like 'char%';
 
 | Variable_name            | Value                                      |
 ---------------------------|--------------------------------------------|
@@ -1527,6 +1527,35 @@ myuserはホスト名を指定せずに作成した。
     $ sudo vi /etc/mysql/my.cnf
 
     [mysqld]
+    ..........
+    default-character-set = utf8
+
+    [mysqldump]
+    default-character-set = utf8
+
+    [mysql]
+    default-character-set = utf8
+
+文字コード確認。
+
+    mysql> show variables like 'char%';
+
+| Variable_name            | Value                                      |
+---------------------------|--------------------------------------------|
+| character_set_client     | utf8                                       |
+| character_set_connection | utf8                                       |
+| character_set_database   | utf8                                       |
+| character_set_filesystem | binary                                     |
+| character_set_results    | utf8                                       |
+| character_set_server     | utf8                                       |
+| character_set_system     | utf8                                       |
+   
+
+上記設定でブラウザの確認では文字化けは起こらないがmysqlクライアントで確認すると文字化けが発生している。  
+原因はわからない。
+
+my.cnfの[mysqld]部分を下記のように記載しても変わらなかった。
+
     skip-character-set-client-handshake
     character-set-server = utf8
     collation-server = utf8_general_ci

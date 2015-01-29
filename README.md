@@ -728,6 +728,10 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
 
 ## <a name="shell">シェル</a>
 
+### 使用シェルを確認
+
+    $ echo $SHELL
+
 ### 日本語環境インストール
 
     $ sudo apt-get install language-pack-ja

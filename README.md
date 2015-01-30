@@ -30,7 +30,8 @@ WEBサービスをAWSで運用するために勉強していることを書き�
     + [Nginx](#nginx)
     + [PHP](#php)
     + [MySQL](#mysql)
-* [Git](#git)
+    + [Postfix](#postfix)
+    + [Git](#git)
 * [継続的インテグレーション](#ci)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 * [Linuxコマンド](#cmd)
@@ -700,6 +701,7 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
     + [コードインスペクション - PHP_CodeSniffer](#php_inspection)
     + [CakePHPのインストール](#php_cakephp)
 * [MySQL](#mysql)
+* [Postfixでメール送信](#postfix)
 
 
 ## 構築環境
@@ -1685,7 +1687,68 @@ killコマンドでmysqlプロセスを終了したら起動できた。
 
 
 
-# <a name="git">Git</a>
+## <a name="postfix">Postfixでメール送信</a>
+
+### Postfixインストール
+
+    $ sudo apt-get install postfix
+    // バージョン確認
+    $ /usr/sbin/postconf | grep mail_version
+    mail_version = 2.11.0
+
+[Postfixのバージョンを確認する | CoDE4U](http://blog.code4u.org/archives/1135)
+
+
+### 設定ファイル(/etc/postfix/main.cf)
+
+下記記事を参考にして契約プロバイダーのSMTPを経由して送信する設定を行った。  
+[『Varying Vagrant Vagrants』から外部へのメール送信を設定したよ | 鉄王](http://www.tecking.org/archives/3663)
+
+    relayhost = [mail.example.com]:587                         # リレー先
+    smtp_sasl_auth_enable = yes                                # 追加
+    smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd    # 追加
+    smtp_sasl_mechanism_filter = CRAM-MD5                      # 追加
+
+/etc/postfixにsasl_passwdを作成し下記内容を記載。
+
+    mail.example.com <account>:<password>
+
+sasl_passwdのパーミションを変更を変更する。
+
+    $ sudo chmod 600 sasl_passwd
+
+postmapコマンドでdbファイルを作成する。
+
+    $ sudo postmap /etc/postfix/sasl_passwd
+
+sasl_passwd.dbが作成される。  
+Postfixを再起動する。
+    
+
+### postfix 再起動
+
+    $ sudo /etc/init.d/postfix restart
+    // または
+    $ sudo service postfix reload
+
+
+### mailコマンドで送信確認
+
+#### インストール
+
+    $ sudo apt-get install mailutils
+
+試した環境ではmailコマンドの終了は.ではなくエンター + Ctrl + D。
+
+
+### メールログ
+
+    /var/log/mail.log
+    /var/log/mail.err
+
+
+
+## <a name="git">Git</a>
 
 デプロイサーバからGitHubのソースを取得できるようにする。
 
@@ -1695,11 +1758,12 @@ killコマンドでmysqlプロセスを終了したら起動できた。
 4. GitHubのリポジトリからソースを取得する(デプロイ処理)。
 
 
-## 1 Gitインストール
+### 1 Gitインストール
 
     $ sudo apt-get install git
 
-## 2. 公開鍵/秘密鍵作成
+
+### 2. 公開鍵/秘密鍵作成
 
 ホームディレクトリでssh-keygenコマンドを実行
 
@@ -1713,9 +1777,9 @@ killコマンドでmysqlプロセスを終了したら起動できた。
     id_rsa
     id_rsa.pub
 
-3. 公開鍵id_rsa.pubの内容をGitHubへ登録する。
+### 3. 公開鍵id_rsa.pubの内容をGitHubへ登録する。
 
-4. リポジトリを取得するテスト
+### 4. リポジトリを取得するテスト
 
     $ mkdir gittest
     $ cd gittest
@@ -1726,6 +1790,8 @@ killコマンドでmysqlプロセスを終了したら起動できた。
     The authenticity of host 'github.com (xxx.xxx.xxx.xxx)' can't be established.
     RSA key fingerprint is xxx.xxx
     Are you sure you want to continue connecting (yes/no)? 
+
+
 
 
 # <a name="ci">継続的インテグレーション</a>

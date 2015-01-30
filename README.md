@@ -2538,7 +2538,7 @@ Aレコードにexample.comを設定している。
 ### インストール
 
     $ sudo apt-get install postfix
-        // バージョン確認
+    // バージョン確認
     $ /usr/sbin/postconf | grep mail_version
     mail_version = 2.11.0
 
@@ -2554,7 +2554,7 @@ Aレコードにexample.comを設定している。
 
 * [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
 * [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
-*[Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
+* [Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
 
 ## postfix 再起動
 

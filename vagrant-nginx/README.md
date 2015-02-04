@@ -134,7 +134,7 @@ rubyパッケージ管理ツール。
 
 ### パッケージ更新
 
-    $ sudo gem update <packagename>    // gemでインストールしたパッケージの更新
+    $ sudo gem update packagename    // gemでインストールしたパッケージの更新
 
 ### gem自体の更新
  
@@ -336,10 +336,10 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
 
 #### 4-1. Grunt本体のインストール
 
-    $ cd <path>
+    $ cd /path/to/project
     $ npm install grunt --save-dev
 
-\<path\>は上記フォルダ構成の例でははdevのパス。  
+/path/to/projectは上記フォルダ構成の例でははdevのパス。  
 –save-devをつければpackage.jsonのdevDependenciesプラグイン情報が追記される。
 
     {
@@ -464,7 +464,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
     // watchにタスクとして他の処理を指定しているのでそれらも順番に実行
     $ grunt
     // 特定のタスクのみ実行
-    $ grunt <taskname>
+    $ grunt taskname
 
 ### package.jsonをもとにしたプラグインのインストール
 
@@ -1095,7 +1095,7 @@ php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラ�
     display_errors = Off
 
     log_errors = On
-    error_log = <path>
+    error_log = /path/to/logfile
 
 
 ### <a name="php_composer">Composer</a>
@@ -1150,9 +1150,9 @@ Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパテ�
 #### パッケージ追加
   
     // 通常の追加
-    $ composer require <package>
+    $ composer require packagename
     // 開発でのみ必要なパッケージの追加
-    $ composer require --dev <package>
+    $ composer require --dev packagename
  
 composer requireはパッケージを追加しcomposer.jsonへ追記する。
 composer require --devは開発環境でのみ必要なパッケージを追加するときに使う。  
@@ -1330,7 +1330,7 @@ Calc.php
 [Installing Using Composer](http://www.phpdoc.org/docs/latest/getting-started/installing.html#using-composer)
 
 
-    $ phpdoc -d <src> -t <output>
+    $ phpdoc -d src -t output
 
 
 ### <a name="php_inspection">Code Inspections(検査) - PHP_CodeSniffer</a>
@@ -1445,8 +1445,8 @@ Nginx再起動
 
 MySQLでは識別子(テーブル名やカラム名)が予約語を含むときはバッククォートで囲む必要がある。
 
-    explain hoge    // hogeは予約語でないのでバッククォートは必要ない。
-    explain `table` // 仮にtableテーブルを作成しているときの例。
+    EXPLAIN hoge    // hogeは予約語でないのでバッククォートは必要ない。
+    EXPLAIN `table` // 仮にtableテーブルを作成しているときの例。
 
 
 ### 起動・停止・再起動
@@ -1487,7 +1487,7 @@ MySQLでは識別子(テーブル名やカラム名)が予約語を含むとき�
 #### パスワード設定
 
     // MySQLログインユーザーのパスワード設定
-    mysql> set password = password('passw0rd');
+    mysql> SET PASSWORD = PASSWORD('passw0rd');
     // 他ユーザーのパスワード変更
     SET PASSWORD FOR 'other'@'localhost' = PASSWORD('passw0rd');
 
@@ -1513,7 +1513,7 @@ myuserはホスト名を指定せずに作成した。
 
 #### ユーザーの削除
 
-    mysql> DROP USER <username>@<hostname>
+    mysql> DROP USER username@hostname
 
 [Ubuntu+Nginx+MySQL+PHP開発環境の目次へ戻る](#ubuntu_nginx_mysql_php)
 
@@ -1551,7 +1551,7 @@ myuserはホスト名を指定せずに作成した。
 
 文字コード確認。
 
-    mysql> show variables like 'char%';
+    mysql> SHOW VARIABLES LIKE 'char%';
 
 | Variable_name            | Value                                      |
 ---------------------------|--------------------------------------------|
@@ -1577,39 +1577,39 @@ my.cnfの[mysqld]部分を下記のように記載しても変わらなかった
 ### UTF8でデータベース作成
 
     // 新規
-    CREATE DATABASE <databasename> CHARACTER SET utf8
+    CREATE DATABASE databasename CHARACTER SET utf8
     // 変更
-    ALTER DATABASE (<databasename) CHARACTER SET utf8
+    ALTER DATABASE databasename CHARACTER SET utf8
 
 ### テーブル作成情報
 
-    mysql> show create table categories;
+    mysql> SHOW CREATE TABLE tablename;
 
 ### 文字コード(UTF8)を指定してテーブルを作成
 
-    create table <tablename> (
+    CREATE TABLE tablename (
         ; 定義
     ) default character set utf8;
 
 ### テーブル定義表示
 
-    SHOW CREATE TABLE `<tablename>`;
+    SHOW CREATE TABLE tablename;
 
-<tablename>の定義が表示される。ALTER TABLEで変更した内容も反省されている。
+tablenameの定義が表示される。ALTER TABLEで変更した内容も反省されている。
 
 ### テーブル情報
 
-    desc `<tablename>`        // またはSELECTなのど文
-    explain `<tablename>`     // 
+    DESC tablename        // またはSELECTなのど文
+    EXPLAIN tablename     // 
 
 
 ### ダンプ
 
-    $ mysqldump -u <username> -p <databasename> > /path/to/dumpfile.sql
+    $ mysqldump -u username -p databasename > /path/to/dumpfile.sql
 
 ### インポート
 
-    $ mysql -u <username> -p --database=<databasename> --host=<hostname> < dumpfile.sql
+    $ mysql -u username -p --database=databasename --host=hostname < /path/to/dumpfile.sql
 
 ### AWS RDS
 
@@ -1619,10 +1619,10 @@ AWSではEC2インスタンスへMySQLをインストールし利用すること
 ### 接続確認 mysql_test.php
 
     <?php
-        $url = "<endpoint>";    // RDSでMySQLのインスタンスを作成した際にインスタンスのパネルに表示
-        $user = "<username>";   // RDSでMySQLのインスタンスを作成する際に設定
-        $pass = "<passw0rd>";   // RDSでMySQLのインスタンスを作成する際に設定
-        $db = "<dbname>";       // RDSでMySQLのインスタンスを作成する際に設定
+        $url = "endpoint";    // RDSでMySQLのインスタンスを作成した際にインスタンスのパネルに表示
+        $user = "username";   // RDSでMySQLのインスタンスを作成する際に設定
+        $pass = "passw0rd";   // RDSでMySQLのインスタンスを作成する際に設定
+        $db = "dbname";       // RDSでMySQLのインスタンスを作成する際に設定
 
         // 接続
         $link = mysql_connect($url,$user,$pass) or die("接続失敗。");
@@ -1631,7 +1631,7 @@ AWSではEC2インスタンスへMySQLをインストールし利用すること
         $sdb = mysql_select_db($db,$link) or die("DB選択失敗。");
 
         // クエリ送信する
-        $sql = "SELECT * FROM <tablename>";  // <tablename>は作成済みでデータを何件か挿入済みとする
+        $sql = "SELECT * FROM tablename";  // tablenameは作成済みでデータを何件か挿入済みとする
         $result = mysql_query($sql, $link) or die("クエリ送信失敗。");
 
         //行数取得
@@ -1660,7 +1660,7 @@ AWSではEC2インスタンスへMySQLをインストールし利用すること
 
 下記エラーが発生した。
 
-    mysql -u <username -p
+    mysql -u username -p
     Enter password: 
     ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
 
@@ -1711,7 +1711,7 @@ killコマンドでmysqlプロセスを終了したら起動できた。
 
 /etc/postfixにsasl_passwdを作成し下記内容を記載。
 
-    mail.example.com <account>:<password>
+    mail.example.com account:password
 
 sasl_passwdのパーミションを変更を変更する。
 
@@ -1932,11 +1932,11 @@ Chef関連のツール集(Berkshelf, Knife-soloなど)
 
 Bundlerでエラーが発生した下記処理もChefDKで解決した。
 
-    $ bundle exec knife cookbook create <name> -o site-cookbooks
+    $ bundle exec knife cookbook create name -o site-cookbooks
 
 #### ChefDk導入後
 
-    $ knife cookbook create <name> -o site-cookbooks
+    $ knife cookbook create name -o site-cookbooks
 
 ## Vagrant, Chefを使ったプロビジョニング手順
 
@@ -2375,10 +2375,10 @@ su rootができる。
 #### 個別のユーザー情報
 
     // パスワードやホームディレクトリなど
-    $ cat /etc/passwd | grep <username>
+    $ cat /etc/passwd | grep username
 
     // 所属グループなどの情報
-    $ id <username>
+    $ id username
 
 #### グループ一覧
 
@@ -2386,11 +2386,11 @@ su rootができる。
 
 #### ユーザーをグループに追加/削除
 
-    $ sudo gpasswd -a <username> <groupname>
+    $ sudo gpasswd -a username groupname
 
 __aオプションを指定しないと既存グループが削除される。__
 
-   $ sudo gpasswd -d <username> <groupname>
+   $ sudo gpasswd -d username groupname
 
 
 ### サービス
@@ -2406,7 +2406,7 @@ __aオプションを指定しないと既存グループが削除される。__
 
 #### サービス停止
 
-    $ sudo sysv-rc-conf <service> Off
+    $ sudo sysv-rc-conf service Off
 
 ### ネットワークセキュリティ
 
@@ -2456,7 +2456,7 @@ Amazon Linux AMI 2014.09.1 (HVM) - ami-4985b048
     + NETWORK & SECURITY
         - Key Pairs
 
-    $ ssh -i <private_key_file> <destination>
+    $ ssh -i private_key_file destination
 
 
 ### <a name="aws_ec2_security">Security Groups</a>
@@ -2522,7 +2522,7 @@ Evernoteの「2015.01.16 AWS UbuntuでPHPを動作させる」を参照。
 
 [Amazon RDS ～EC2インスタンスからDBインスタンスへの接続～　|ec2 db インスタンス　接続　方法 | ナレコムAWSレシピ](http://recipe.kc-cloud.jp/archives/397)
 
-    $ mysql -h <Endpoint> -u <username> -p
+    $ mysql -h endpoint -u username -p
 
 AWSではパスワードなしでrootでログインすることはできない。
 
@@ -2550,7 +2550,7 @@ AWSではパスワードなしでrootでログインすることはできない�
 
 DNSサーバー正しく設定されているかを確認する。
 
-    $ nslookup <dns> <domain>
+    $ nslookup dns domain
 
 
 
@@ -2668,7 +2668,7 @@ Aレコードにexample.comを設定している。
   $ host domain
 * cat
   標準出力へ出力
-* find . -name <target>
+* find . -name target
 
 
 ## <a name="terms">用語</a>
@@ -2809,8 +2809,7 @@ FileZilla設定方法は下記サイトを参考にして設定
 /etc/apache2/apache2.conf
 
 
-### <a name="appendix_berkshelf">Appendix Berkshelfはbundleで管理して使うとエラーがで</a>
-るのでChefDKを使う</a>
+### <a name="appendix_berkshelf">Appendix Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う</a>
 
 [ChefDk の berkshelf で cookbook をダウンロードする - Qiita](http://qiita.com/shin1x1/items/872cf5b9396516068892)
 [Chef Development Kit | Chef Downloads | Chef](https://downloads.chef.io/chef-dk/mac/#/)
@@ -2848,7 +2847,7 @@ composer.json
         "config": {
             "vendor-dir": "Vendor",
             "github-oauth": {
-                “github.com”: <Token>
+                “github.com”: Token
             }
         },
         …..

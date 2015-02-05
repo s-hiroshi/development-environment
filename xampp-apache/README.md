@@ -13,13 +13,8 @@ XAMPPにバーチャルホストを設定する。
     + [設定ファイル](#setting)
     + [サブドメイン](#sub-domain)
     + [ポート番号](#port)
-* [MySQL](#mysql)
-    + [接続情報](#db-connect)
-    + [データベース名](#db-name)
-* [Macのパーミッション](#permission)
-* [ログファイル](#log)
-    + [PHP](#log-php)
-    + [Apache](#log-apache)
+
+
 
 ## <a name="install">インストール</a>
 

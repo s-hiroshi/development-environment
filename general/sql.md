@@ -1,6 +1,6 @@
 # SQL
 
-# キーワード
+## キーワード
 
     SET NOCOUNT ON;
     CASE
@@ -10,7 +10,8 @@
     カーソル
     メモリテーブル
     ISNULL (Transact-SQL)
-    
+
+
 ##  関係代数
 
 > 1) SQLと関係代数
@@ -83,36 +84,35 @@
 
 &raquo; [I-22-3. 集合演算の概念 | 日本OSS推進フォーラム](http://ossforum.jp/en/node/710)
 
-# 結合
+
+## 結合
     
-## 内部結合(INNER JOIN)
+### 内部結合(INNER JOIN)
 
 	SELECT field1, field2 FROM table_left INNER JOIN table_right ON table_left.field1 = table_right.field1
 
-## 外部結合(OUTER JOIN)
+### 外部結合(OUTER JOIN)
 
-左表の行は条件節(ON, USING)を満たす行が右表になくてもNULLで埋めて全て取り出す。  
-
-下記2つは等価。
+左の表を全て残す。左表は条件節を満たす行が右表になくてもNULLで埋めて全て取り出す(下記2つは等価)。
 
 	SELECT field1, field2 FROM table_left LEFT OUTER JOIN table_right ON table_left.field1 = table_right.field1
 	SELECT field1, field2 FROM table_left LEFT JOIN table_right ON table_left.field1 = table_right.field1
 
 RIGHT OUTER JOINは右の表を全て残す。
 
-## クロス結合(直積)
 
-両テーブルの直積。MySQLはJOINでON, USINGの指定が無い場合と同じ働き。
+### クロス結合(直積)
 
-下記3つは等価。
+両テーブルの直積。MySQLはJOINで条件説(ON、USING)が指定されていないときはクロス結合する(下記3つは等価)。
 
 	SELECT field1, field2 FROM table_left CROSS JOIN table_right
 	SELECT field1, field2 FROM table_left JOIN table_right
 	SELECT field1, field2 FROM table_left ,table_right
 
-## データの格納
 
-### 値を格納 変数宣言と値設定
+## データの格納 Transact-SQL
+
+### 値を格納(変数宣言と値設定)
 
 宣言
 
@@ -123,13 +123,12 @@ RIGHT OUTER JOINは右の表を全て残す。
     SELECT @myvariable = mytable.myvariable FROM mytable
     -- SET @myvariable = (SELECT myvariable FROM mytable) -- 上記と同じ
 
-## 結果レコード格納
+### 結果レコード格納
 
 * WITH文
-* メモリテーブル #memorytable  メモリテーブルは先頭に#を付ける
+* メモリテーブル \#memorytable  メモリテーブルは先頭に\#を付ける
 
-
-### メモリテーブル
+#### メモリテーブル
 
     SELECT
          field1
@@ -145,9 +144,9 @@ RIGHT OUTER JOINは右の表を全て残す。
     
 &raquo; [SELECT INTO を使用した行の挿入](http://technet.microsoft.com/ja-jp/library/ms190750%28v=sql.105%29.aspx)
 
-## 結果レコードの取り出し
+### 結果レコードの取り出し
 
-### カーソル(CURSOR)
+#### カーソル(CURSOR)
 
     DECLARE my_cursor CURSOR
         FOR SELECT
@@ -175,9 +174,10 @@ RIGHT OUTER JOINは右の表を全て残す。
     CLOSE my_cursor
     DEALLOCATE my_cursor
 
-<strong>カーソル名はサフィックスにcursorを付ける</strong>
+__カーソル名はサフィックスにcursorを付ける__
 
-# 条件分岐
+
+## 条件分岐
 
     CASE WHEN THEN ELSE END
 

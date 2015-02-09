@@ -8,10 +8,14 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 
 # 前提とする環境
 
-* Ubuntu
-* Nginx
-* MySQL
-* PHP
+* Ubuntu  
+  14.04
+* Nginx  
+  nginx version: nginx/1.4.6 (Ubuntu)
+* MySQL  
+  5.5.40-0ubuntu0.14.04.1
+* PHP  
+  PHP Version 5.5.9-1ubuntu4.5
 
 # 参考書
 

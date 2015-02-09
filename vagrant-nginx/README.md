@@ -951,7 +951,6 @@ sndfileディレクティブがonのときNginxはsendfile()APIを使いカー�
 [nginx連載3回目: nginxの設定、その1 - インフラエンジニアway - Powered by HEARTBEATS](http://heartbeats.jp/hbblog/2012/02/nginx03.html)
 
 
-
 ### Nginx(再)起動
 
     $ sudo nginx -s reload

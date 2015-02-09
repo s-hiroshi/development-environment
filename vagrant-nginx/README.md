@@ -941,9 +941,15 @@ IPアドレスでアクセスし実行すると下記のようなエラーが発
 
 確認するとブラウザはキャッシュを行わない設定にしているが最新のJavaScriptを読み込んでいなかった。
 
-Nginxのsendfileディレクティブをoffにしたら解決した。
+Nginxのsendfile(/etc/nginx/nginx.conf)ディレクティブをoffにしたら解決した。
 
 sndfileディレクティブがonのときNginxはsendfile()APIを使いカーネルにキャッシュしているデータを送信する。
+
+
+[VagrantでCSSの更新が反映されない場合の対処法 - Qiita](view-source:http://qiita.com/shoyan/items/12389d5beaa8695b1a53)  
+[Vagrant上のjavascriptで「Uncaught SyntaxError: Unexpected token ILLEGAL」 - Qiita](http://qiita.com/shibukk/items/07bb794981fe2d0daf7c)  
+[nginx連載3回目: nginxの設定、その1 - インフラエンジニアway - Powered by HEARTBEATS](http://heartbeats.jp/hbblog/2012/02/nginx03.html)
+
 
 
 ### Nginx(再)起動

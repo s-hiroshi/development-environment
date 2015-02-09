@@ -833,27 +833,39 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 [ubuntuでnginxの起動と最低限のコマンド](http://joppot.info/2014/03/10/970)
 
 
-### ログ
-
-nginx.confで設定する。
-
-    ##
-    # Logging Settings
-    ##
-
-    access_log /var/log/sginx/access.log;
-    error_log /var/log/nginx/error.log;
-
-[nginxのログ出力変更 - Qiita](http://qiitj.com/hito3/items/0e539e82ee3c410cccf1u)
-
 
 ### 設定関連ファイル
 
-    (1) /etc/nginx/nginx.conf              // Nginx全体の設定(今回は変更なし)
+    (1) /etc/nginx/nginx.conf              // Nginx全体の設定
     (2) /etc/nginx/sites-available/default // ホストの設定(変更)
     (3) /etc/nginx/sites-enabled/default   // (2)のシンボリックリンク Nginxの起動時に読み込まれる
 
 今回は/etc/nginx/sites-available/defaultを編集する。
+
+
+### 設定ファイルの記載法
+
+Nginx設定ファイルはディレクティブで設定を行う。  
+ディレクティブは1行のもと数行にわたるブロックの2種種類に分けることができる。
+またディレクティブは入れ子にできる。
+
+    # 1行のディレクティブの例
+    sendfile on;
+
+    # ブロックディレクティブの例
+    http {
+        ..... 
+        sendfile off; # 入れ子
+        .....
+        server {
+            listen 80 default_server;
+            ......
+        
+        }
+        .....
+     }
+
+[Beginner’s Guide](http://nginx.org/en/docs/beginners_guide.html)
 
 
 ### site-available/defaultファイル
@@ -861,10 +873,9 @@ nginx.confで設定する。
 * ドキュメントルート設定  
   rootディレクティブ
 * /でアクセスしたときの制御  
-  indexディレクトリ
-* FastCGIの設定  
+  indexディレクティブ
+* FastCGI設定  
   locationディレクティブ
-
 
     server {
             listen 80 default_server;
@@ -920,12 +931,40 @@ nginx.confで設定する。
             #}
     }
 
+### sendfileディレクティブ
+
+Vagrantのconfig.vm.synced_folderに設定したフォルダーのファイルを直接開いてJavaScriptを実行するとエラーは発生しないが、
+IPアドレスでアクセスし実行すると下記のようなエラーが発生した。
+
+    uncaught syntaxerror: unexpected end of input
+    Uncaught SyntaxError: Unexpected token ILLEGAL
+
+確認するとブラウザはキャッシュを行わない設定にしているが最新のJavaScriptを読み込んでいなかった。
+
+Nginxのsendfileディレクティブをoffにしたら解決した。
+
+sndfileディレクティブがonのときNginxはsendfile()APIを使いカーネルにキャッシュしているデータを送信する。
+
 
 ### Nginx(再)起動
 
     $ sudo nginx -s reload
 
 [軽量で高速なウェブサーバNginxを、Ubuntu 12.04に導入する(設定編その１) | 近藤嘉雪のプログラミング工房日誌](http://blog.kondoyoshiyuki.com/2012/12/09/setting-1-nginx-on-ubuntu-12-04/)
+
+
+### ログ
+
+nginx.confで設定する。
+
+    ##
+    # Logging Settings
+    ##
+
+    access_log /var/log/sginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+[nginxのログ出力変更 - Qiita](http://qiitj.com/hito3/items/0e539e82ee3c410cccf1u)
 
 
 

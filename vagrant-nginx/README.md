@@ -700,7 +700,7 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
     + [PECL](#php_pecl)
     + [Composer](#php_composer)
     + [単体テスト - PHPUnit](#php_test)
-    + [デバッグ - Xdebug](#php_ci_debug)
+    + [デバッグ - Xdebug](#php_debug)
     + [ドキュメンテーション - phpDocumentor](#php_documentation)
     + [コードインスペクション - PHP_CodeSniffer](#php_inspection)
     + [CakePHPのインストール](#php_cakephp)

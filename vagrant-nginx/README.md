@@ -983,8 +983,8 @@ nginx.confで設定する。
     - CGI  
       Apach + php-cgi: ApacheからCGIとして呼び出す。
 * Nginx + php-fpm(以下この構成を前提として記載する)  
-  [PHP: FastCGI Process Manager (FPM) - Manual](http://php.net/manual/ja/install.fpm.php)
-  NginxのCGIからCGIとして呼び出す。
+  [PHP: FastCGI Process Manager (FPM) - Manual](http://php.net/manual/ja/install.fpm.php)  
+  NginxからCGIとして呼び出す。
 * CLI(Command Line Interface)  
   コマンドで実行する
 

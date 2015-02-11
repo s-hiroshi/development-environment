@@ -45,6 +45,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
     + [PHPのファイル作成雛形](#appendix_php_file)
     + [動作したNginx設定ファイルsite-available/default](#appendix_nginx_default)
     + [書籍「CakePHP 継続的インテグレーション」のNginx設定ファイルsite-available/default](#appendix_nginx_default_book)
+    + [Appendix php.iniの設定を反映されないときの対処](#appendix_php_ini)
     + [FileZillaを使ったAWS EC2へのSFTP接続](#appendix_aws_sftp)
     + [Ubuntu + Apache + MySQL + PHP](#appendix_ubuntu_apache_mysql_php)
     + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
@@ -986,7 +987,7 @@ nginx.confで設定する。
   [PHP: FastCGI Process Manager (FPM) - Manual](http://php.net/manual/ja/install.fpm.php)  
   NginxからCGIとして呼び出す。
 * CLI(Command Line Interface)  
-  コマンドで実行する
+  コマンドで実行する。
 
 
 ### <a name="php_ini">php.ini保存場所確認</a>
@@ -2827,6 +2828,36 @@ Wikipedia
             fastcgi_param CAKE_ENV development;
         }
     }
+
+
+### <a name="appendix_php_ini">Appendix php.iniの設定を反映されないときの対処</a>
+
+php.ini(/etc/php5/fpm/php.ini)を変更しNginxを再起動したが変更内容が反映されなかった(phpinfo関数で確認)。  
+
+    $ sudo nginx -s stop
+    $ sudo nginx
+    // 再起動
+    $ sudo nginx -s reload
+
+php5-fpmを起動すると設定が反映された。
+
+    $ cd /etc/init.d/p
+    $ sudo php5-fpm
+
+sudo php5-fpmを実行するさい下記エラーが表示された。
+
+    [11-Feb-2015 07:05:36] ERROR: An another FPM instance seems to already listen on /var/run/php5-fpm.sock
+    [11-Feb-2015 07:05:36] ERROR: FPM initialization failed
+
+既存のプロセスを停止しさいどsudo php5-fpmを実行したらphp.iniの内容が反映された。
+
+    $ ps aux | grep php-fpm
+    root      2889  0.0  1.6 313876  6228 ?        Ss   06:07   0:00 php-fpm: master process (/etc/php5/fpm/php-fpm.conf)
+    www-data  2890  0.0  2.0 313996  7564 ?        S    06:07   0:00 php-fpm: pool www
+    www-data  2891  0.0  1.4 313876  5280 ?        S    06:07   0:00 php-fpm: pool www
+    
+    $ sudo kill -9 2889 2890 2891
+    $ sudo php5-fpm
 
 
 ### <a name="appendix_aws_sftp">Appendix FileZillaを使ったAWS EC2へのSFTP接続</a>

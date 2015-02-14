@@ -414,6 +414,21 @@ contrib.rbの設定例
 
 
 
+## SassDoc
+
+[SassDoc](http://sassdoc.com/)
+
+
+### インストール
+
+    $ sudo npm install sassdoc -g
+    
+__npmのバージョン2.5.1で下記コマンドを実行するとsudo: npm: command not foundというメッセージが表示され  
+それ以降、npmコマンドが使えなくなりnode.jsを再ストールした。__
+
+    $ sudo npm install npm@latest -g
+
+
 ## Grunt
 
 [Grunt: The JavaScript Task Runner](http://gruntjs.com/)

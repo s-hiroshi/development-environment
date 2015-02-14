@@ -379,7 +379,7 @@ Sassを使ったCSS作成フレームワーク。
 
 ### コンパス初期化
 
-    $ create compass --bare
+    $ compass create --bare
 
     contrib.rbとsassフォルダが作成される。
 

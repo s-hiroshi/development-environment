@@ -158,9 +158,9 @@ RIGHT OUTER JOINは右の表を全て残す。
         AND
             col2 = #memorytable.field2
 
-        OPEN jisseki_cursor
+        OPEN my_cursor
 
-        FETCH NEXT FROM jisseki_cursor
+        FETCH NEXT FROM my_cursor
             INTO col1, col2
 
         WHILE (@@fetch_status = 0)

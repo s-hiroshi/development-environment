@@ -420,6 +420,7 @@ contrib.rbの設定例
 
 gruntは一般的にgrunt-cliのみグローバルへインストールし、grunt本体も含めて各プラグインはプロジェクトごとのフォルダへインストールする。
 
+
 ### 1. node/npmのインストール
 
 [node.js](http://nodejs.org/)
@@ -429,9 +430,11 @@ Gruntはnode.js/npmを使う。
 node.jsはpkgファイルをダウンロードしインストールした。  
 npmはnode.jsと一緒にインストールされた。
 
+
 ### 2. grunt command line interface(grunt-cli)をグローバルへインストール
 
     $ sudo npm install -g grunt-cli
+
 
 ### 3. プロジェクトフォルダにpackage.jsonを作成
 
@@ -439,6 +442,7 @@ npmはnode.jsと一緒にインストールされた。
       "name": "example",
       "version": "0.0.1"
     }
+
 
 ### 4. プロジェクトフォルダにGrunt本体とプラグインをインストール
 
@@ -469,10 +473,10 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
     $ npm install grunt-contrib-watch --save-dev
     $ npm install grunt-contrib-yuidoc --save-dev
     $ npm install grunt-styledocco --save-dev
-
+    $ npm install grunt-sassdoc --save-dev 
 
     {
-      "name": "example-project",
+      "name": "example",
       "version": "0.0.1",
       "devDependencies": {
         "grunt": "^0.4.5",
@@ -482,9 +486,11 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
         "grunt-contrib-uglify": "^0.2.7",
         "grunt-contrib-watch": "^0.5.3",
         "grunt-contrib-yuidoc": "^0.5.2",
-        "grunt-styledocco": "^0.2.1"
+        "grunt-styledocco": "^0.2.1",
+        "grunt-sassdoc": "^2.0.0"
       }
     }
+
 
 ### 5. Gruntfile.jsの例
 
@@ -576,11 +582,13 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
     // 特定のタスクのみ実行
     $ grunt taskname
 
+
 ### package.jsonをもとにしたプラグインのインストール
 
     $ npm install
 
-既存のnode_modulesフォルダがあれば削除しておく。
+既存のnode_modulesフォルダがあれば削除してする。
+
 
 ### プラグインのバージョンアップ
 
@@ -588,93 +596,6 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
 
 すべてのプラグインがアップデートされる。
 
-
-## Sass
-
-CSSプリプロセッサー。
-
-[Sass: Syntactically Awesome Style Sheets](http://sass-lang.com/)
-
-### Sassインストール
-
-    $ sudo gem install sass
-
-### コンパイル
-
-style.scssをコンパイルして同じフォルダにstyle.cssを作成する例。
-
-    $ sass style.scss style.css
-
-### 変更を監視して自動コンパイル
-
-    $ sass –watch style.scss:style.css
-
-ターミナルではctrl + Cでwatchを停止する。
-
-### バージョン確認
-
-    $ sass —version
-    3.4.9
-
-### パス確認
-
-    $ which sass
-    /usr/bin/sass
-
-
-## Compass
-
-Sassを使ったCSS作成フレームワーク。
-
-[Compass Home | Compass Documentation](http://compass-style.org/)
-[Sass/Compass のインストールと基本的な環境設定 | Web Design Leaves](http://www.webdesignleaves.com/wp/htmlcss/652/)
-
-### インストール
-
-    $ sudo gem install compass
- 
-### バージョン確認
-
-    $ compass —version
-    1.0.1
-
-### パス確認
-
-    $ which compass
-    /usr/bin/compass
-
-### コンパス初期化
-
-    $ create compass --bare
-
-    contrib.rbとsassフォルダが作成される。
-
-### config.rb(Compass設定ファイル)
-
-    |—css
-    |   |— a.css
-    |
-    |—dev
-    |  |— sass
-    |  |    |— a.scss
-    |  |
-    |  |— contrib.rb
-    |
-    |—index.html
-
-contrib.rbの設定例
-
-    // 設定
-    css_dir = "../css"
-    sass_dir = “sass”
-    // compass専用コメントの出力を停止するとき(config.rb)
-    line_comments = false
-
-上記例ではcompassコマンドでコンパイルするとdev/sassフォルダのモジュールファイルを除いたscssファイルをコンパイルしcssディレクトリへ出力する。
-
-### 変更を監視して自動コンパイル
-
-    $ compass watch css/sass/main.scss
 
 
 ## StyoeDocco

@@ -309,6 +309,108 @@ Homebrewはパッケージを/usr/local/binへインストールする。
          |— contrib.rb           // Compass設定フィアル
 
 
+
+## Sass
+
+CSSプリプロセッサー。
+
+[Sass: Syntactically Awesome Style Sheets](http://sass-lang.com/)
+
+
+### Sassインストール
+
+    $ sudo gem install sass
+
+
+### コンパイル
+
+style.scssをコンパイルして同じフォルダにstyle.cssを作成する例。
+
+    $ sass style.scss style.css
+
+
+### 変更を監視して自動コンパイル
+
+    $ sass –watch style.scss:style.css
+
+ターミナルではctrl + Cでwatchを停止する。
+
+
+### バージョン確認
+
+    $ sass —version
+    3.4.9
+
+
+### パス確認
+
+    $ which sass
+    /usr/bin/sass
+
+
+
+## Compass
+
+Sassを使ったCSS作成フレームワーク。
+
+[Compass Home | Compass Documentation](http://compass-style.org/)
+[Sass/Compass のインストールと基本的な環境設定 | Web Design Leaves](http://www.webdesignleaves.com/wp/htmlcss/652/)
+
+
+### インストール
+
+    $ sudo gem install compass
+ 
+ 
+### バージョン確認
+
+    $ compass —version
+    1.0.1
+
+
+### パス確認
+
+    $ which compass
+    /usr/bin/compass
+
+
+### コンパス初期化
+
+    $ create compass --bare
+
+    contrib.rbとsassフォルダが作成される。
+
+
+### config.rb(Compass設定ファイル)
+
+    |—css
+    |   |— a.css
+    |
+    |—dev
+    |  |— sass
+    |  |    |— a.scss
+    |  |
+    |  |— contrib.rb
+    |
+    |—index.html
+
+contrib.rbの設定例
+
+    // 設定
+    css_dir = "../css"
+    sass_dir = “sass”
+    // compass専用コメントの出力を停止するとき(config.rb)
+    line_comments = false
+
+上記例ではcompassコマンドでコンパイルするとdev/sassフォルダのモジュールファイルを除いたscssファイルをコンパイルしcssディレクトリへ出力する。
+
+
+### 変更を監視して自動コンパイル
+
+    $ compass watch css/sass/main.scss
+
+
+
 ## Grunt
 
 [Grunt: The JavaScript Task Runner](http://gruntjs.com/)

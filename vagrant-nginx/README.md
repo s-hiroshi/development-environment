@@ -304,8 +304,11 @@ Homebrewはパッケージを/usr/local/binへインストールする。
                    |— scripts-test.js
          |
          |— node_modules         // Grunt本体・パッケージのインストールフォルダ
+         |
          |— package.json         // Gruntパッケージファイル
+         |
          |— Gruntfile.js         // Grunt設定ファイル
+         |
          |— contrib.rb           // Compass設定フィアル
 
 

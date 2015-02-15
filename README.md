@@ -1,4 +1,4 @@
-# 内容
+# 開発ガイド
 
 * [Vagrant+Ubuntu+Nginx+MySQL+PHPをAWSで運用するメモ](vagrant-nginx/README.md)  
   WEBサービスをAWSで運用するために勉強していることを書き留めた覚え書き。
@@ -6,3 +6,4 @@
   MacでXAMPPを使いLAMPの環境を構築する覚え書き。
 * [各技術のまとめ](elemental-technology/README.md)  
   個別技術の覚え書き。
+* [コーディングガイド](#coding-guide)

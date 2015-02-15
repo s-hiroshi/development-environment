@@ -6,4 +6,4 @@
   MacでXAMPPを使いLAMPの環境を構築する覚え書き。
 * [各技術のまとめ](elemental-technology/README.md)  
   個別技術の覚え書き。
-* [コーディングガイド](#coding-guide)
+* [コーディングガイド](coding-guide/README.md)

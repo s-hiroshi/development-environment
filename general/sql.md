@@ -2,7 +2,7 @@
 
 ## キーワード
 
-    SET NOCOUNT ON;
+    関係代数
     CASE
     INNER JOIN
     UNION ALL
@@ -10,6 +10,7 @@
     カーソル
     メモリテーブル
     ISNULL (Transact-SQL)
+
 
 
 ##  関係代数
@@ -82,14 +83,18 @@
 > 
 > 列は複数指定も可能。
 
-&raquo; [I-22-3. 集合演算の概念 | 日本OSS推進フォーラム](http://ossforum.jp/en/node/710)
+[I-22-3. 集合演算の概念 | 日本OSS推進フォーラム](http://ossforum.jp/en/node/710)
+
 
 
 ## 結合
-    
+
+[結合の図](https://cacoo.com/diagrams/zUGZdgTqhVmHjXcl)
+
 ### 内部結合(INNER JOIN)
 
 	SELECT field1, field2 FROM table_left INNER JOIN table_right ON table_left.field1 = table_right.field1
+
 
 ### 外部結合(OUTER JOIN)
 
@@ -110,9 +115,12 @@ RIGHT OUTER JOINは右の表を全て残す。
 	SELECT field1, field2 FROM table_left ,table_right
 
 
-## データの格納 Transact-SQL
 
-### 値を格納(変数宣言と値設定)
+## Transact-SQL
+
+### データの格納
+
+#### 値を格納(変数宣言と値設定)
 
 宣言
 
@@ -123,12 +131,12 @@ RIGHT OUTER JOINは右の表を全て残す。
     SELECT @myvariable = mytable.myvariable FROM mytable
     -- SET @myvariable = (SELECT myvariable FROM mytable) -- 上記と同じ
 
-### 結果レコード格納
+#### 結果レコード格納
 
 * WITH文
 * メモリテーブル \#memorytable  メモリテーブルは先頭に\#を付ける
 
-#### メモリテーブル
+##### メモリテーブル
 
     SELECT
          field1
@@ -142,11 +150,11 @@ RIGHT OUTER JOINは右の表を全て残す。
         WHERE field3 = 1
     )
     
-&raquo; [SELECT INTO を使用した行の挿入](http://technet.microsoft.com/ja-jp/library/ms190750%28v=sql.105%29.aspx)
+[SELECT INTO を使用した行の挿入](http://technet.microsoft.com/ja-jp/library/ms190750%28v=sql.105%29.aspx)
 
-### 結果レコードの取り出し
+#### 結果レコードの取り出し
 
-#### カーソル(CURSOR)
+##### カーソル(CURSOR)
 
     DECLARE my_cursor CURSOR
         FOR SELECT
@@ -177,11 +185,12 @@ RIGHT OUTER JOINは右の表を全て残す。
 __カーソル名はサフィックスにcursorを付ける__
 
 
-## 条件分岐
+### 条件分岐
 
     CASE WHEN THEN ELSE END
 
-## IF文
+
+### IF文
 
     IF 条件式
         BEGIN
@@ -197,6 +206,44 @@ __カーソル名はサフィックスにcursorを付ける__
         END
 
 
-# ISNULL (Transact-SQL)
+### ISNULL (Transact-SQL)
 
-&raquo; [ISNULL (Transact-SQL)](http://msdn.microsoft.com/ja-jp/library/ms184325.aspx)
+[ISNULL (Transact-SQL)](http://msdn.microsoft.com/ja-jp/library/ms184325.aspx)
+
+#### ColdFusionのnullの扱い
+
+> ColdFusion では、null データ型は使用されません。ただし、データベースや Java オブジェクトなどの外部ソースから null 値を受け取った場合は、単純値として使用されるまで null 値が維持され、使用時に空の文字列 ("") に変換されます。また、Java オブジェクトを呼び出す際に JavaCast 関数を使用して、ColdFusion の空の文字列を Java の null に変換することができます。
+
+[Adobe&#160;ColdFusion&#160;9 * データ型](http://help.adobe.com/ja_JP/ColdFusion/9.0/Developing/WSc3ff6d0ea77859461172e0811cbec09af4-7ffa.html)
+
+
+### 文字列から日付型への変換
+
+Transact-SQL 日付型へ変更可能な文字列 2014/11/26 13:26:03.000
+
+
+### ユーザー定義関数実装(例としてテーブル値関数)
+  
+1. Microsoft SQL Server Management Studio起動
+2. オブジェクトエクスプローラー接続 
+3. データベース選択(Manage)
+4. プログラミング > 関数 > テーブル値函数
+5. 右クリック > 新しいインラインテーブル関数
+6. SQLを記載
+7. 実行 - 関数が作成されうる。
+  
+同名の関数が既にあるときは一度削除して実行する。
+
+### SQL Tips
+
+条件文を動的に作成するときのTIPS。  
+WHERE 1 = 1(つねに真)をつけることで条件式をwhere, andでかき分ける必要が無い。
+
+	SELECT col1, col2 form table
+	WHERE 1 = 1
+	<cfif Trim(col1Value) neq "">
+		and  col1 = <CFQUERYPARAM value="#Col1Value#" cfsqltype="CF_SQL_INTEGER">
+	</cfif>
+	<cfif Trim(col2Value) neq "">
+		and  col2 = <CFQUERYPARAM value="#Col2Value#" cfsqltype="CF_SQL_VARCHAR">
+	</cfif>

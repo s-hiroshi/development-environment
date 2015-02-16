@@ -408,13 +408,14 @@ diffでツールを使うときはgit diffの代わりにgit difftoolを使う�
 
 git取り消し(やり直し)のまとめ。
 
+[Git - 作業のやり直し](http://git-scm.com/book/ja/v1/Git-%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%BD%9C%E6%A5%AD%E3%81%AE%E3%82%84%E3%82%8A%E7%9B%B4%E3%81%97)
+[Git チュートリアル: 変更を元に戻す | アトラシアン](https://www.atlassian.com/ja/git/tutorial/undoing-changes)
+
 #### reset コミットに対して行う処理
 
 	$ git reset --soft HEAD^    // HEADをHEAD^へ変更 インデックス、ワーキングツリーは変更しない
 	$ git reset HEAD^           // HEADとインデックスをHEAD^へ変更、ワーキングツリーは変更しない
 	$ git reset --hard HEAD^    // HEAD、インデックス、ワーキングツリーをすべてHEAD^へ変更
-
-resetはファイル単位の変更には対応していない。
 
 ## checkout
 

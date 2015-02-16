@@ -424,6 +424,7 @@ resetはファイル単位の変更には対応していない。
 
 fileのワーキングディレクトリの内容をHEADへ戻す。
 
+
 __checkoutをコミットを指定して実行したらdetahed HEADという警告が表示された。その対処が下記記事に記載したある。__
 
     $ git checkout <commit>

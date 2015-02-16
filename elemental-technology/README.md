@@ -418,11 +418,10 @@ resetはファイル単位の変更には対応していない。
 
 ## checkout
 
-
 	$ git checkout file
-	$ git checkout # すべてのファイル
+	$ git checkout 
 
-HEADから行ったfileへの変更を取り消す(ワーキングツリーの変更はとりけさない)。  
+fileのワーキングディレクトリの内容をHEADへ戻す。
 fオプションをつけるとワーキングディレクトリの内容もHEADヘ戻す。
 
     $ git checkout -f file

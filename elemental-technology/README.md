@@ -424,6 +424,12 @@ resetはファイル単位の変更には対応していない。
 
 fileのワーキングディレクトリの内容をHEADへ戻す。
 
+__checkoutをコミットを指定して実行したらdetahed HEADという警告が表示された。その対処が下記記事に記載したある。__
+
+    $ git checkout <commit>
+
+[gitのHEADがブランチから外れてしまう現象とその直し方 - 西尾泰和のはてなダイアリー](http://d.hatena.ne.jp/nishiohirokazu/20110513/1305290792)
+
 
 
 # <a name="ssh">SSH(Secure Shell)</a>

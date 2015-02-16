@@ -422,10 +422,6 @@ resetはファイル単位の変更には対応していない。
 	$ git checkout 
 
 fileのワーキングディレクトリの内容をHEADへ戻す。
-fオプションをつけるとワーキングディレクトリの内容もHEADヘ戻す。
-
-    $ git checkout -f file
-    $ git checkout -f
 
 
 

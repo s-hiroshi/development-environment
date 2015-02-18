@@ -396,7 +396,7 @@ __フォルダー構成など開発環境の整備__
 
 とくべつの理由が無いときはstylesheet_directoryを使う。
 
-    blog( 'stylesheet_directory' );
+    bloginfo( 'stylesheet_directory' );
 
 ### <a name="style"> スタイルシート(CSS)関連のガイド
 

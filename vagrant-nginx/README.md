@@ -45,7 +45,8 @@ WEBサービスをAWSで運用するために勉強していることを書き�
     + [PHPのファイル作成雛形](#appendix_php_file)
     + [動作したNginx設定ファイルsite-available/default](#appendix_nginx_default)
     + [書籍「CakePHP 継続的インテグレーション」のNginx設定ファイルsite-available/default](#appendix_nginx_default_book)
-    + [Appendix php.iniの設定を反映されないときの対処](#appendix_php_ini)
+    + [php.iniの設定を反映されないときの対処](#appendix_php_ini)
+    + [zipインストール](#appendix_zip)
     + [FileZillaを使ったAWS EC2へのSFTP接続](#appendix_aws_sftp)
     + [Ubuntu + Apache + MySQL + PHP](#appendix_ubuntu_apache_mysql_php)
     + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
@@ -2899,6 +2900,28 @@ sudo php5-fpmを実行するさい下記エラーが表示された。
     
     $ sudo kill -9 2889 2890 2891
     $ sudo php5-fpm
+
+
+### <a name="appendix_zip">zipのインストール</a>
+
+    $ sudo apt-get install zip
+    
+初回インストールで下記メッセージが表示された。
+
+	E: いくつかのアーカイブを取得できません。apt-get update を実行するか --fix-missing オプションを付けて試してみてください。
+
+sudo apt-get updateを実行後はインストールが正常に行われた。
+
+    |-- example
+        |
+        |-- target
+            |
+            |...
+
+targetを圧縮するサンプル
+
+    $ cd /path/to/example
+    $ zip -r target.zip ./target/
 
 
 ### <a name="appendix_aws_sftp">Appendix FileZillaを使ったAWS EC2へのSFTP接続</a>

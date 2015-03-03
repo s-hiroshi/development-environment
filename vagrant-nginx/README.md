@@ -1891,7 +1891,7 @@ Postfixを再起動する。
 * [CI(継続的インテグレーション)](#ci_ci)
 * [アジャイル](#agile)
 * [BDD:振舞駆動開発 (開発手法)](#bdd)
-* [CakePHP開発環境](#env_cake)
+* [CakePHP開発環境](#env_cakephp)
 
 
 # <a name="virtualbox_vagrant_chef">VirtualBox + Vagrant + Chef Soloをで継続的CI環境構築(開発環境構築/プロビジョニング/デプロイ)</a>
@@ -2341,6 +2341,7 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 * behat/mink-goutte-driver  
   JavaScriptを使わずBehatを利用するプラグイン。
 
+
 ### デバッグレベル
 
 app/Config/core.php
@@ -2348,10 +2349,49 @@ app/Config/core.php
     Configure::write('debug', 2);
 
 
+### テスト用データベース設定
+
+Config/database.phpで本番用に加えテスト用のデータベース設定を記載する。
+
+(記載例)
+
+	class DATABASE_CONFIG {
+	
+		public $default = array(
+			'datasource' => 'Database/Mysql',
+			'persistent' => false,
+			'host' => 'localhost',
+			'login' => 'example',
+			'password' => 'passw0rd!',
+			'database' => 'example',
+			'prefix' => '',
+			//'encoding' => 'utf8',
+		);
+	
+		public $test = array(
+			'datasource' => 'Database/Mysql',
+			'persistent' => false,
+			'host' => 'localhost',
+			'login' => 'example',
+			'password' => 'passw0rd!',
+			'database' => 'example_test',
+			'prefix' => '',
+			//'encoding' => 'utf8',
+		);
+	}
 
 
+### テスト実行
+
+* ブラウザ
+* コマンド
 
 
+### ブラウザ
+
+IPを192.168.33.10に設定している場合の例。
+
+    http://192.168.33.10/test.php
 
 # <a name="aws">AWS(Amazon Web Services)でWEBサービス運用</a>
 

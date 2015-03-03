@@ -2342,14 +2342,25 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
   JavaScriptを使わずBehatを利用するプラグイン。
 
 
-### デバッグレベル
+### CakePHP テスト環境
+
+[テスト &mdash; CakePHP Cookbook 2.x ドキュメント](http://book.cakephp.org/2.0/ja/development/testing.html)
+
+以下、CakePHPはIPアドレス192.168.33.10が振られたホストへインストールしNginxのドキュメントルート(root)はwebrootであることを前提とする。
+
+[「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
+
+(例)
+
+    /var/www/application/current/app/webroot
+
+#### デバッグレベル
 
 app/Config/core.php
 
     Configure::write('debug', 2);
 
-
-### テスト用データベース設定
+#### テスト用データベース設定
 
 Config/database.phpで本番用に加えテスト用のデータベース設定を記載する。
 
@@ -2381,7 +2392,7 @@ Config/database.phpで本番用に加えテスト用のデータベース設定�
 	}
 
 
-### テスト実行
+#### テスト実行
 
 * ブラウザ
 * コマンド
@@ -2392,6 +2403,10 @@ Config/database.phpで本番用に加えテスト用のデータベース設定�
 IPを192.168.33.10に設定している場合の例。
 
     http://192.168.33.10/test.php
+
+
+
+
 
 # <a name="aws">AWS(Amazon Web Services)でWEBサービス運用</a>
 

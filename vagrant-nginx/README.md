@@ -2395,11 +2395,45 @@ Config/database.phpで本番用に加えテスト用のデータベース設定�
 
 #### 本番用/テスト用のデータベース切替処理
 
-1. サーバーの環境変数を利用する
+サーバーの環境変数を利用する方法を記載する。  
+環境変数WEB_APP_ENVを設定しその値に応じてテスト用DBと本番環境用DBを切り替える。
 
-Apacheは.htaccessでsetEnvディレクティブで環境変数を定義できる。
+今回192.168.33.10がテスト用のホスト、192.168.33.200が本番環境と仮定する。
 
-(例) .htaccessでsetEnvディレクティブでWEB_APP_ENVを定義
+##### Nginx
+
+設定アフィル(今回は/etc/nginx/sites-available/defaul)のlocationディレクティブfastcgi_paramを指定する。
+
+192.168.33.100(本番環境)
+
+    location {
+		fastcgi_param WEB_APP_ENV  production;
+    }
+
+192.168.33.10(テスト環境)
+
+	location {
+		fastcgi_param WEB_APP_ENV  development;
+    }
+
+##### Apache
+
+Apacheは環境変数を定義できる。
+
+(例) .htaccessのsetEnvディレクティブでWEB_APP_ENVを定義する例
+
+
+192.168.33.100(本番環境)
+
+	Alias /foo /var/www/foo/app/webroot
+	
+	<Location /foo>
+		.....
+		SetEnv WEB_APP_ENV production
+		.....
+	</Location>
+
+192.168.33.100(テスト環境)
 
 	Alias /foo /var/www/foo/app/webroot
 	
@@ -2412,7 +2446,9 @@ Apacheは.htaccessでsetEnvディレクティブで環境変数を定義でき�
 
 #### 切換
 
-1. Model/AppModelで切り替える。
+1. 環境変数を使った切り換え
+
+Model/AppModelで切り替える。
 
     <?php
     // app/Model/AppModel.php
@@ -2421,12 +2457,14 @@ Apacheは.htaccessでsetEnvディレクティブで環境変数を定義でき�
 		if ($env === 'production') {
 			$this->useDbConfig = 'production';
 		} else {
-			$this->useDbConfig = 'production';
+			$this->useDbConfig = 'test';
 		}
 		....
     }
 
-2. テストケースでClassRegistry::initで対象をロードする。
+2. ClassRegistry::initを使ったきりかえ
+
+ModelクラスをnewせずClassRegistry::initを使いロードすると自動的にテスト用のDBを参照する。
 
 
 #### テスト実行

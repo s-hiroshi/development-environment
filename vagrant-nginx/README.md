@@ -2329,17 +2329,17 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 
 ## <a name="env_cakephp">CakePHP開発環境</a>
 
-* PHPUnit ユニットテスト  
+
+* DBマイグレーション - CakeDC Migration Plugin
+* ユニットテスト - PHPUnit 
   CakePHPはユニットテストをPHPUnitで行う。
-* CakeDC Migration Plugin  
-  データベースマイグレーション
-* Behat  
+* BDDテストフレームワーク - Behat  
   > Behat is an open source behavior-driven development framework for PHP
   [Behat Documentation &mdash; Behat 2.5.3 documentation](http://docs.behat.org/en/v2.5/)
-* sizuhiko/Bdd  
-  CakePHP2用のプラグイン
-* behat/mink-goutte-driver  
-  JavaScriptを使わずBehatを利用するプラグイン。
+	+ sizuhiko/Bdd  
+    CakePHP2用のプラグイン。
+	+ behat/mink-goutte-driver  
+    JavaScriptを使わずBehatを利用するプラグイン。
 
 
 ### CakePHP テスト環境
@@ -2354,11 +2354,12 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 
     /var/www/application/current/app/webroot
 
-#### デバッグレベル
+#### デバッグレベル設定
 
 app/Config/core.php
 
     Configure::write('debug', 2);
+
 
 #### テスト用データベース設定
 
@@ -2390,6 +2391,42 @@ Config/database.phpで本番用に加えテスト用のデータベース設定�
 			//'encoding' => 'utf8',
 		);
 	}
+
+
+#### 本番用/テスト用のデータベース切替処理
+
+1. サーバーの環境変数を利用する
+
+Apacheは.htaccessでsetEnvディレクティブで環境変数を定義できる。
+
+(例) .htaccessでsetEnvディレクティブでWEB_APP_ENVを定義
+
+	Alias /foo /var/www/foo/app/webroot
+	
+	<Location /foo>
+		.....
+		SetEnv WEB_APP_ENV production
+		.....
+	</Location>
+
+
+#### 切換
+
+1. Model/AppModelで切り替える。
+
+    <?php
+    // app/Model/AppModel.php
+    class AppModel extends Model {
+		.....
+		if ($env === 'production') {
+			$this->useDbConfig = 'production';
+		} else {
+			$this->useDbConfig = 'production';
+		}
+		....
+    }
+
+2. テストケースでClassRegistry::initで対象をロードする。
 
 
 #### テスト実行

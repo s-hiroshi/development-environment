@@ -2346,7 +2346,7 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 
 [テスト &mdash; CakePHP Cookbook 2.x ドキュメント](http://book.cakephp.org/2.0/ja/development/testing.html)
 
-以下、本番環境は192.168.33.200、テスト環境は192.168.33.10のIPアドレスが振られたホストとする。Nginxのドキュメントルート(root)はwebrootとする。
+以下、本番環境は192.168.33.200、テスト環境は192.168.33.10のIPアドレスが振られNginxのドキュメントルート(root)はwebrootとする。
 
 [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 
@@ -2398,7 +2398,7 @@ Config/database.phpで本番用に加えテスト用のデータベース設定�
 サーバーの環境変数を利用する方法を記載する。  
 環境変数WEB_APP_ENVを設定しその値に応じてテスト用DBと本番環境用DBを切り替える。
 
-今回192.168.33.10がテスト用のホスト、192.168.33.200が本番環境と仮定する。
+192.168.33.10をテスト用ホスト、192.168.33.200を本番環境のホストと仮定する。
 
 ##### Nginx
 
@@ -2446,7 +2446,7 @@ Apacheは環境変数を定義できる。
 
 #### 切換
 
-1. 環境変数を使った切り換え
+##### 環境変数で切替
 
 Model/AppModelで切り替える。
 
@@ -2462,9 +2462,9 @@ Model/AppModelで切り替える。
 		....
     }
 
-2. ClassRegistry::initを使ったきりかえ
+##### ClassRegistry::initで切替
 
-Modelクラスをnewせず８ClassRegistry::initを使いロードすると自動的にテスト用のDBを参照する。
+Modelクラスはnewを使わずClassRegistry::initでインスタンスが作成されると自動的にテスト用のDBを参照する。
 
 
 #### テスト実行
@@ -2472,20 +2472,19 @@ Modelクラスをnewせず８ClassRegistry::initを使いロードすると自�
 * ブラウザ
 * コマンド
 
-
-### ブラウザ
+##### ブラウザ
 
 IPを192.168.33.10に設定している場合の例。
 
     http://192.168.33.10/test.php
 
-#### コマンド
+##### コマンド
 
     $ Console/cake test [options] [<category>] [<file>]
     
 (例1) アプリケーションのテスト
 
-    $ Console/cake text app
+    $ Console/cake test app
 
 下記のようなアプリケーションの作成済みテスト一覧が表示されるので選択して実行する。
 
@@ -2495,6 +2494,9 @@ IPを192.168.33.10に設定している場合の例。
     [3] Model/Example
     ......
 
+(例2) Test/Model/ExampleTest.phpの実行
+
+    $ Console/cake test app Model/Example
 
 #### Modelのテスト例
 

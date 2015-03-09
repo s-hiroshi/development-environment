@@ -2479,6 +2479,162 @@ IPを192.168.33.10に設定している場合の例。
 
     http://192.168.33.10/test.php
 
+#### コマンド
+
+    $ Console/cake test [options] [<category>] [<file>]
+    
+(例1) アプリケーションのテスト
+
+    $ Console/cake text app
+
+下記のようなアプリケーションの作成済みテスト一覧が表示されるので選択して実行する。
+
+    App Test Cases:
+    [1] AllTests
+    [2] Controller/ExampleController
+    [3] Model/Example
+    ......
+
+
+#### Modelのテスト例
+
+Exampleモデルのsomeメソッドをテストは下記のようになる。
+
+
+##### フォルダ構成
+
+    app
+    |
+    |.....
+    |
+    |-- Model
+        |
+        |-- Example.php
+    |
+    |.....
+    |
+    |-- Test
+        |
+        |-- Case
+            |
+            |-- Model
+                 |
+                 |-- ExampleTest.php
+        |
+        |-- Fixture
+            |
+            |.....
+            |-- ExampleFixture.php
+            |
+
+
+##### Exampleモデル
+
+    // Model/Example.php
+    <?php
+    App::uses( 'AppModel', 'Model' );
+    
+    /**
+     * Example Model
+     *
+     */
+    class Example extends AppModel {
+    
+        /**
+         * name
+         *
+         * @var
+         */
+        public $name = 'Example';
+    
+       ..... 
+       .....
+       
+        /**
+         * some
+         */
+        public function some() {
+            ..... 
+            return $value
+        }
+    }
+
+
+##### Exampleモデルのテスト(ExampleTest.php)
+
+    // Test/Case/Model/ExampleTest.php
+	<?php
+	App::uses( 'Example', 'Model' );
+	
+	/**
+	 * Example Test Case
+	 *
+	 */
+	class ExampleTest extends CakeTestCase {
+	
+		/**
+		 * Fixtures
+		 *
+		 * @var array
+		 */
+		public $fixtures = array(
+			'app.example' // --- (1)
+		);
+	
+		/**
+		 * setUp method
+		 *
+		 * @return void
+		 */
+		public function setUp() {
+			parent::setUp();
+			$this->Example = ClassRegistry::init( 'Example' );
+		}
+	
+		public function testメソッドsomeの何らかのテスト() {
+			$this->assertEquals( 'expect value', $this->Example->some() );
+		}
+	
+		/**
+		 * tearDown method
+		 *
+		 * @return void
+		 */
+		public function tearDown() {
+			unset( $this->Example );
+	
+			parent::tearDown();
+		}
+	
+	}
+
+フィクスチャの指定(1)はTest/Fixture/ExampleFixture.phpを参照する。
+ExampleFixture.phpはテストで使うためのテーブル定義とレコード(テストデータ)が定義されている。
+
+
+##### フィクスチャ ExampleFixture.php
+
+database.phpの$defaultで指定したデータベースのデータを使う場合の例。
+
+	<?php
+	/**
+	 * ExampleFixture
+	 *
+	 */
+	class ExampleFixture extends CakeTestFixture {
+	
+		/**
+		 * Import
+		 *
+		 * @var array
+		 */
+		public $import = array('model' => 'Example', 'records' => true);
+	
+	}
+
+Fixtureはbakeコマンドで作成できる。
+
+    $ Console/cake bake
 
 
 

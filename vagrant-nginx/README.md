@@ -2467,6 +2467,8 @@ Model/AppModelで切り替える。
 Modelクラスをnewを使わずClassRegistry::initでインスタンスを作成すると自動的にテスト用のDBを参照する。
 
 
+CakePHPのユニットテストのメモ。
+
 #### テスト実行
 
 * ブラウザ
@@ -2474,7 +2476,7 @@ Modelクラスをnewを使わずClassRegistry::initでインスタンスを作�
 
 ##### ブラウザ
 
-IPを192.168.33.10に設定している場合の例。
+ホストのIPを192.168.33.10に設定している場合の例。
 
     http://192.168.33.10/test.php
 
@@ -2486,7 +2488,7 @@ IPを192.168.33.10に設定している場合の例。
 
     $ Console/cake test app
 
-下記のようなアプリケーションの作成済みテスト一覧が表示されるので選択して実行する。
+アプリケーションの作成済みテスト一覧が下記のように表示されるので選択して実行する。
 
     App Test Cases:
     [1] AllTests
@@ -2497,6 +2499,7 @@ IPを192.168.33.10に設定している場合の例。
 (例2) Test/Model/ExampleTest.phpの実行
 
     $ Console/cake test app Model/Example
+
 
 #### Modelのテスト例
 
@@ -2611,12 +2614,12 @@ Exampleモデルのsomeメソッドをテストは下記のようになる。
 	}
 
 フィクスチャの指定(1)はTest/Fixture/ExampleFixture.phpを参照する。
-ExampleFixture.phpはテストで使うためのテーブル定義とレコード(テストデータ)が定義されている。
+ExampleFixture.phpはテストで使うテーブル定義とレコード(テストデータ)を定義している。
 
 
 ##### フィクスチャ ExampleFixture.php
 
-database.phpの$defaultで指定したデータベースのデータを使う場合の例。
+database.phpの$defaultで指定したデータベースのデータを使う場合のフィクスチャの例。
 
 	<?php
 	/**
@@ -2634,7 +2637,7 @@ database.phpの$defaultで指定したデータベースのデータを使う場
 	
 	}
 
-Fixtureはbakeコマンドで作成できる。
+Fixtureはbakeコマンドでインタラクティブに作成できる。
 
     $ Console/cake bake
     

@@ -2330,9 +2330,9 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 ## <a name="env_cakephp">CakePHP開発環境</a>
 
 
-* DBマイグレーション - CakeDC Migration Plugin
-* ユニットテスト - PHPUnit 
-  CakePHPはユニットテストをPHPUnitで行う。
+* データベースマイグレーション - CakeDC Migration Plugin
+* ユニットテスト - PHPUnit  
+  CakePHPのユニットテストはPHPUnitで行う。
 * BDDテストフレームワーク - Behat  
   > Behat is an open source behavior-driven development framework for PHP
   [Behat Documentation &mdash; Behat 2.5.3 documentation](http://docs.behat.org/en/v2.5/)
@@ -2346,7 +2346,7 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 
 [テスト &mdash; CakePHP Cookbook 2.x ドキュメント](http://book.cakephp.org/2.0/ja/development/testing.html)
 
-以下、CakePHPはIPアドレス192.168.33.10が振られたホストへインストールしNginxのドキュメントルート(root)はwebrootであることを前提とする。
+以下、本番環境は192.168.33.200、テスト環境は192.168.33.10のIPアドレスが振られたホストとする。Nginxのドキュメントルート(root)はwebrootとする。
 
 [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 
@@ -2404,7 +2404,7 @@ Config/database.phpで本番用に加えテスト用のデータベース設定�
 
 設定アフィル(今回は/etc/nginx/sites-available/defaul)のlocationディレクティブfastcgi_paramを指定する。
 
-192.168.33.100(本番環境)
+192.168.33.200(本番環境)
 
     location {
 		fastcgi_param WEB_APP_ENV  production;
@@ -2423,7 +2423,7 @@ Apacheは環境変数を定義できる。
 (例) .htaccessのsetEnvディレクティブでWEB_APP_ENVを定義する例
 
 
-192.168.33.100(本番環境)
+192.168.33.200(本番環境)
 
 	Alias /foo /var/www/foo/app/webroot
 	
@@ -2433,13 +2433,13 @@ Apacheは環境変数を定義できる。
 		.....
 	</Location>
 
-192.168.33.100(テスト環境)
+192.168.33.10(テスト環境)
 
 	Alias /foo /var/www/foo/app/webroot
 	
 	<Location /foo>
 		.....
-		SetEnv WEB_APP_ENV production
+		SetEnv WEB_APP_ENV development
 		.....
 	</Location>
 
@@ -2464,7 +2464,7 @@ Model/AppModelで切り替える。
 
 2. ClassRegistry::initを使ったきりかえ
 
-ModelクラスをnewせずClassRegistry::initを使いロードすると自動的にテスト用のDBを参照する。
+Modelクラスをnewせず８ClassRegistry::initを使いロードすると自動的にテスト用のDBを参照する。
 
 
 #### テスト実行

@@ -2402,11 +2402,12 @@ Config/database.phpで本番用に加えテスト用のデータベース設定�
 
 ##### Nginx
 
-設定アフィル(今回は/etc/nginx/sites-available/defaul)のlocationディレクティブfastcgi_paramを指定する。
+設定アフィル(今回は/etc/nginx/sites-available/defaulで指定)のlocationディレクティブでfastcgi_paramを指定する。
 
 192.168.33.200(本番環境)
 
     location {
+        .....
 		fastcgi_param WEB_APP_ENV  production;
     }
 
@@ -2421,7 +2422,6 @@ Config/database.phpで本番用に加えテスト用のデータベース設定�
 Apacheは環境変数を定義できる。
 
 (例) .htaccessのsetEnvディレクティブでWEB_APP_ENVを定義する例
-
 
 192.168.33.200(本番環境)
 
@@ -2464,7 +2464,7 @@ Model/AppModelで切り替える。
 
 ##### ClassRegistry::initで切替
 
-Modelクラスはnewを使わずClassRegistry::initでインスタンスが作成されると自動的にテスト用のDBを参照する。
+Modelクラスをnewを使わずClassRegistry::initでインスタンスを作成すると自動的にテスト用のDBを参照する。
 
 
 #### テスト実行
@@ -2637,6 +2637,9 @@ database.phpの$defaultで指定したデータベースのデータを使う場
 Fixtureはbakeコマンドで作成できる。
 
     $ Console/cake bake
+    
+
+テストの度にテスト用のテーブルとレコードが作成されテストが終わると破棄される。
 
 
 

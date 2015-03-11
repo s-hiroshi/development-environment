@@ -2329,8 +2329,6 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 
 ## <a name="env_cakephp">CakePHP開発環境</a>
 
-
-* データベースマイグレーション - CakeDC Migration Plugin
 * ユニットテスト - PHPUnit  
   CakePHPのユニットテストはPHPUnitで行う。
 * BDDテストフレームワーク - Behat  
@@ -2340,19 +2338,18 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
     CakePHP2用のプラグイン。
 	+ behat/mink-goutte-driver  
     JavaScriptを使わずBehatを利用するプラグイン。
+* データベースマイグレーション - CakeDC Migration Plugin
+
 
 
 ### CakePHP テスト環境
 
-[テスト &mdash; CakePHP Cookbook 2.x ドキュメント](http://book.cakephp.org/2.0/ja/development/testing.html)
+以下、本番環境のIPアドレスは192.168.33.200、テスト環境のIPアドレスは192.168.33.10とする。
+またNginxのドキュメントルート(root)はwebroot設定済みとする。
 
-以下、本番環境は192.168.33.200、テスト環境は192.168.33.10のIPアドレスが振られNginxのドキュメントルート(root)はwebrootとする。
+* [テスト &mdash; CakePHP Cookbook 2.x ドキュメント](http://book.cakephp.org/2.0/ja/development/testing.html)
+* [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 
-[「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
-
-(例)
-
-    /var/www/application/current/app/webroot
 
 #### デバッグレベル設定
 
@@ -2363,9 +2360,9 @@ app/Config/core.php
 
 #### テスト用データベース設定
 
-Config/database.phpで本番用に加えテスト用のデータベース設定を記載する。
+Config/database.phpで本番用とテスト用データベースを設定する。
 
-(記載例)
+(設定例)
 
 	class DATABASE_CONFIG {
 	
@@ -2392,17 +2389,21 @@ Config/database.phpで本番用に加えテスト用のデータベース設定�
 		);
 	}
 
+#### 本番用/テスト用のデータベース切替方法
 
-#### 本番用/テスト用のデータベース切替処理
+1. サーバーの環境変数で切替
+2. ClassRegistry::initで切替
 
-サーバーの環境変数を利用する方法を記載する。  
-環境変数WEB_APP_ENVを設定しその値に応じてテスト用DBと本番環境用DBを切り替える。
 
-192.168.33.10をテスト用ホスト、192.168.33.200を本番環境のホストと仮定する。
+#### 環境変数の設定
+
+環境変数WEB_APP_ENVを設定しその値に応じてテスト用DBと本番環境用DBを切り替える。  
+(192.168.33.10をテスト用ホスト、192.168.33.200を本番環境のホストと仮定する。)
 
 ##### Nginx
 
-設定アフィル(今回は/etc/nginx/sites-available/defaulで指定)のlocationディレクティブでfastcgi_paramを指定する。
+Nginxは後述するApacheのようにサーバー変数としてではなくFastCGIの変数として設定する。  
+FastCGI設定アフィル(今回は/etc/nginx/sites-available/defaulで指定)のlocationディレクティブでfastcgi_paramを指定する。
 
 192.168.33.200(本番環境)
 
@@ -2419,7 +2420,7 @@ Config/database.phpで本番用に加えテスト用のデータベース設定�
 
 ##### Apache
 
-Apacheは環境変数を定義できる。
+Apacheはサーバー環境変数を定義できる。
 
 (例) .htaccessのsetEnvディレクティブでWEB_APP_ENVを定義する例
 
@@ -2444,7 +2445,7 @@ Apacheは環境変数を定義できる。
 	</Location>
 
 
-#### 切換
+#### データベースの切替処理
 
 ##### 環境変数で切替
 
@@ -2466,10 +2467,13 @@ Model/AppModelで切り替える。
 
 Modelクラスをnewを使わずClassRegistry::initでインスタンスを作成すると自動的にテスト用のDBを参照する。
 
+#### ユニットテストに必要なファイル(Modelの例)
 
-CakePHPのユニットテストのメモ。
+* テスト対象 Model/Example.php
+* テストケース Test/Case/Model/ExmpleTest.php
+* フィクスチャ Test/Fixture/ExampleFixture.php
 
-#### テスト実行
+#### ユニットテスト実行
 
 * ブラウザ
 * コマンド
@@ -2644,6 +2648,15 @@ Fixtureはbakeコマンドでインタラクティブに作成できる。
 
 テストの度にフィクスチャで指定したテーブルとレコードがdatabase.phpの$testで指定したデータベースに作成されテストが終わると破棄される。
 
+
+
+### データベースマイグレーション
+
+#### スキーマファイルの作成
+
+    $ Console/cake schema generate
+    
+ 現在のデータベースからスキーマファイルを作成する。
 
 
 

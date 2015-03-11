@@ -2657,6 +2657,8 @@ Fixtureはbakeコマンドでインタラクティブに作成できる。
     $ Console/cake schema generate
     
  現在のデータベースからスキーマファイルを作成する。
+ 
+ [cakePHP2.3 Schema - Logicky Blog](http://endoyuta.com/2013/08/17/cakephp2-3-schema/)
 
 
 

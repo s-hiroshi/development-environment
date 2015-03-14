@@ -2087,26 +2087,28 @@ stderr: Host key verification failed.が出たら、git ls-remoteを叩く！
 # <a name="ci_ci">CI(継続的インテグレーション)</a>
 
 
-主に下記書籍の読書メモ
+下記書籍の読書メモを記載している。
 
 [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 
-__引用でページ番号のあるものは本書から引用したもの。__
+__引用のページ番号は上記書籍の該当ページを指す。__
 
 ### 本記事サーバー構成
 
-サーバー 3台
+標準的なCIは3台のサーバーを使う。
 
-* 開発サーバー
+* 開発サーバー   
   192.168.33.10
-* CIサーバー
+* CIサーバー  
   192.168.33.100
-* 公開サーバー
+* 公開サーバー  
   192.168.33.200
+
 
 ### ディレクトリ構造
 
-develop.vm.synced_folder "application", "/var/www/application/current"
+    // Vagrantfile
+    develop.vm.synced_folder "application", "/var/www/application/current"
 
     current
       |--app  // Cakeアプリケーション
@@ -2123,14 +2125,13 @@ develop.vm.synced_folder "application", "/var/www/application/current"
       |-- build.xml
 
 
-
 ### CIの流れ
 
-1. 開発サーバーのソースをGitHubへPushする。
-2. CIサーバーはGitHubからソースをPullしテストを行う(自動処理)。
-  本記事ではCIサーバーの自動処理をJenkinsで管理する。
-3. 開発サーバーでデプロイ処理を行う。デプロイは自動処理される。
-  本記事ではCapistranoでデプロイサーバーへ自動でプロイする。
+1. 開発サーバーのソースをGitHubへpushする。
+2. CIサーバーはGitHubからソースをpullしテストを行う(自動処理)。  
+  本記事はCIサーバーの自動処理をJenkinsで管理する。
+3. 開発サーバーでデプロイ処理を行う。デプロイは自動処理される。  
+  本記事ではCapistranoでデプロイサーバー(公開サーバー)へ自動デプロイする。
 
 [Welcome to Jenkins CI! | Jenkins CI](http://jenkins-ci.org/)
 [capistrano/capistrano](https://github.com/capistrano/capistrano)
@@ -3064,7 +3065,10 @@ Aレコードにexample.comを設定している。
 * ポートの確認  
   $ netstat -tlnp
 * インストール済みパッケージの確認  
-  $ dpkg -l
+  $ dpkg -l  
+  インストールされているDebian系パッケージ一覧を表示する。
+  $ dpkg -L <package>  
+  <package>のパスを表示する。
   $ aptitude search "~i"
 * プロセス  
   ps -ef|grep postfix

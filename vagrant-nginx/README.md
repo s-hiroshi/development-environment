@@ -3083,22 +3083,49 @@ Aレコードにexample.comを設定している。
 
 ## <a name="cmd">Linuxコマンド(Ubuntu)</a> 
 
-* ポートの確認  
-  $ netstat -tlnp
-* インストール済みパッケージの確認  
-  $ dpkg -l  
-  インストールされているDebian系パッケージ一覧を表示する。
-  $ dpkg -L <package>  
-  <package>のパスを表示する。
-  $ aptitude search "~i"
-* プロセス  
-  ps -ef|grep postfix
-* DNS確認  
-  $ nslookup ndsname domain  
-  $ host domain
-* cat
-  標準出力へ出力
-* find . -name target
+### デーモンの起動・停止
+
+    $ sudo service <daemon> start|stop|status|restart|force-reload
+
+### ポート番号確認
+
+    $ netstat -tlnp
+
+
+### パッケージ確認
+
+#### Debian系のインストール済みパッケージ確認  
+
+    $ dpkg -l  
+    // または
+    $ aptitude search "~i"
+
+
+### Debian系パッケージのインストールパス確認
+
+    $ dpkg -L <package>  
+    $ aptitude search <package>
+
+
+### プロセス  
+
+    $ ps -ef|grep postfix
+  
+
+### DNS確認  
+
+    $ nslookup ndsname domain  
+    $ host domain
+
+
+### cat
+
+標準出力へ出力する。
+
+
+### find . -name target
+ 
+    $ find . -name target
 
 
 ## <a name="terms">用語</a>

@@ -39,6 +39,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 * [継続的インテグレーション](#ci)
 	+ [VirtualBox + Vagrant + Chef Soloを使ったCI環境](#virtualbox_vagrant_chef)
 	+ [CI(継続的インテグレーション)](#ci_ci)
+		- [Jenkins](#jenkins)
 	+ [アジャイル](#agile)
 	+ [BDD:振舞駆動開発 (開発手法)](#bdd)
 	+ [CakePHP開発環境](#env_cakephp)
@@ -1915,6 +1916,7 @@ Postfixを再起動する。
 
 * [VirtualBox + Vagrant + Chef Soloを使ったCI環境](#virtualbox_vagrant_chef)
 * [CI(継続的インテグレーション)](#ci_ci)
+	+ [Jenkins](#jenkins)
 * [アジャイル](#agile)
 * [BDD:振舞駆動開発 (開発手法)](#bdd)
 * [CakePHP開発環境](#env_cakephp)
@@ -2108,7 +2110,13 @@ stderr: Host key verification failed.が出たら、git ls-remoteを叩く！
 # <a name="ci_ci">CI(継続的インテグレーション)</a>
 
 
-下記書籍の読書メモを記載している。
+継続的インテグレーションは、開発、CI、デプロイ(公開)サーバーを使い開発を行う。    
+バージョン管理システム(Git)を使い開発、CI、デプロイで同じコードを共有する。
+
+CIサーバーは主にユニットテスト、ビルドを自動化する。
+
+
+以下、次の書籍の読書メモを記載している。
 
 [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 
@@ -2122,7 +2130,7 @@ __引用のページ番号は上記書籍の該当ページを指す。__
   192.168.33.10
 * CIサーバー  
   192.168.33.100
-* 公開サーバー  
+* デプロイサーバー  
   192.168.33.200
 
 
@@ -2141,28 +2149,26 @@ __引用のページ番号は上記書籍の該当ページを指す。__
           |-- Vendor // Composerパッケージ用ディレクトリ
           |-- composer.json
           |-- phpunit.xml
-      |--deploy // デプロイ Capistorano
-      |--features // BDD
+      |-- deploy // デプロイ Capistorano
+      |-- features // BDD
       |-- build.xml
 
 
 ### CIの流れ
 
 1. 開発サーバーのソースをGitHubへpushする。
-2. CIサーバーはGitHubからソースをpullしテストを行う(自動処理)。  
-  本記事はCIサーバーの自動処理をJenkinsで管理する。
-3. 開発サーバーでデプロイ処理を行う。デプロイは自動処理される。  
-  本記事ではCapistranoでデプロイサーバー(公開サーバー)へ自動デプロイする。
-
-[Welcome to Jenkins CI! | Jenkins CI](http://jenkins-ci.org/)
-[capistrano/capistrano](https://github.com/capistrano/capistrano)
+2. CIサーバーはGitHubからソースをpullしテストを行う。  
+  CIサーバーではJenkinsを使いテストなどの自動化を行う。
+3. 開発サーバーでデプロイ処理を行う。  
+  デプロイは自動処理される。  
+  デプロイサーバー(公開サーバー)へ自動デプロイはCapistranoで行う。
 
 
 ### CIツール
 
 * 継続的インテグレーションツール
     + Jenkins
-* (JavaScript/HTML/CSS)自動化ツール
+* JavaScript/HTML/CSS自動化ツール
     + Grunt
 * テストツール
     + Behat(BDD駆動開発用テストツール)
@@ -2171,6 +2177,34 @@ __引用のページ番号は上記書籍の該当ページを指す。__
     + PHP_CodeSniffer
 * ドキュメンテーションツール
     + phpDocumentor
+    
+
+### <a name="jenkins">Jenkins</a>
+
+[Welcome to Jenkins CI! | Jenkins CI](http://jenkins-ci.org/)
+[capistrano/capistrano](https://github.com/capistrano/capistrano)
+
+#### インストール
+
+[Installing Jenkins on Ubuntu - Jenkins - Jenkins Wiki](https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu)
+
+# インストール
+
+> wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+> sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+> sudo apt-get update
+> sudo apt-get install jenkins
+
+最初は[Debian Repository for Jenkins](http://pkg.jenkins-ci.org/debian/)ページに記載してある方法でインストールしたが下記エラーがでた。
+
+    Reading package lists... Done
+    Building dependency tree       
+    Reading state information... Done
+    Package jenkins is not available, but is referred to by another package.
+    This may mean that the package is missing, has been obsoleted, or
+    is only available from another source
+
+ページ内のリンク「See Wiki for more information, including notes regarding upgrade from Hudson.」から[Installing Jenkins on Ubuntu - Jenkins - Jenkins Wiki](https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu)を開き、記載してある方法を実行したら正常にインストールできた。
 
 ### 開発手法
 

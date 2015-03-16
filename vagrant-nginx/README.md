@@ -1995,6 +1995,7 @@ Wikipedia
     $ vagrant up                 // 起動
     $ vagrant halt               // シャットダウン
     $ vagrant destroy            // 削除
+    $ vagrant reload             // 再起動
 
 #### SSH接続
 

@@ -2199,6 +2199,7 @@ Jenkinsをインストールするとjenkinsユーザーが作成される。
     $ sudo su - jenkins
     $ ssh-keygen
 
+    Enter file in which to save the key (/var/lib/jenkins/.ssh/id_rsa): 
 
 
 ### Jenkins設定画面でエラー

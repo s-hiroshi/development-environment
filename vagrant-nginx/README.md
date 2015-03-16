@@ -2251,7 +2251,7 @@ Jenkinsの設定 > プラグイン
 ### Jenkinsで単体テストを行う
 
 1. Phingで設定ファイルbuild.xmlにテストの自動化を記載
-2. Jenkinsの
+2. Jenkinsのビルド設定
 
 ### Phing
 
@@ -2261,6 +2261,17 @@ JenkinsでPHPの自動テストなどのビルドを行うツール。
     $ composer require --dev "phing/phing:~2.8"
     
 ビルドの設定は/application/build.xmlに記載する。
+
+### Jenkinsの設定
+
+プロジェクト > 設定 > ビルド > シェルの実行
+
+	cd ${WORKSPACE}/application/app
+	composer install --dev
+	cd ${WORKSPACE}/application
+	app/Vendor/bin/phing -logger phing.listener.DefaultLogger
+
+
 
 
 ## <a name="ci_deploy">Capistrano3 デプロイの自動化</a>

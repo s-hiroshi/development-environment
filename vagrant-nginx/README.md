@@ -2072,6 +2072,7 @@ Bundlerでエラーが発生した下記処理もChefDKで解決した。
 2. berks vendor cookbooksでrecipeのパッケージをcookbooksへ配置する。
 3. vagrant provisionでプロビジョニングする(プロビジョニングは仮想サーバー起動時にも行われる。
 
+
     |— site-cookbooks
             |— recipe
                     |— default.rb
@@ -2094,7 +2095,7 @@ Bundlerでエラーが発生した下記処理もChefDKで解決した。
 ## <a name="ci_ci">CI(継続的インテグレーション)</a>
 
 
-継続的インテグレーションは、開発、CI、デプロイ(公開)サーバーを使い開発を行う。    
+継続的インテグレーションでは開発、CI、デプロイ(公開)サーバーを使う。    
 バージョン管理システム(Git)を使い開発、CI、デプロイで同じコードを共有する。
 
 CIサーバーは主にユニットテスト、ビルドを自動化する。
@@ -2132,14 +2133,14 @@ CIサーバーは主にユニットテスト、ビルドを自動化する。
       |-- build.xml
 
 
+
 ### CIの流れ
 
-1. 開発サーバーのソースをGitHubへpushする。
-2. CIサーバーはGitHubからソースをpullしテストを行う。  
-  CIサーバーではJenkinsを使いテストなどの自動化を行う。
+1. 開発サーバーのソースコードをGitHubで管理する。
+2. CIサーバーはGitHubからソースコードを定期的にPULLし自動テストを行う。  
+  自動化処理はJenkinsを使う。
 3. 開発サーバーでデプロイ処理を行う。  
-  デプロイは自動処理される。  
-  デプロイサーバー(公開サーバー)へ自動デプロイはCapistranoで行う。
+  デプロイ処理はCapistranoを使い自動化する。  
 
 
 ### CIツール
@@ -2149,12 +2150,13 @@ CIサーバーは主にユニットテスト、ビルドを自動化する。
 * JavaScript/HTML/CSS自動化ツール
     + Grunt
 * テストツール
-    + Behat(BDD駆動開発用テストツール)
     + PHPUnit(単体テストツール)
+    + Behat(BDD駆動開発用テストツール)
 * コードインスペクション(コード検査ツール)
     + PHP_CodeSniffer
 * ドキュメンテーションツール
     + phpDocumentor
+
 
 
 
@@ -2186,8 +2188,7 @@ CIサーバーは主にユニットテスト、ビルドを自動化する。
 
 ### Linuxユーザー jenkins
 
-Jenkinsをインストールするとjenkinsユーザーが作成される。  
-下記でパスワードを設定する。
+Jenkinsをインストールするとjenkinsユーザーが作成される。パスワードを設定する。
 
     $ sudo passwd jenkins
     Enter new UNIX password: 
@@ -2200,6 +2201,32 @@ Jenkinsをインストールするとjenkinsユーザーが作成される。
     $ ssh-keygen
 
     Enter file in which to save the key (/var/lib/jenkins/.ssh/id_rsa): 
+    
+
+### GIT Pluginをインストール
+
+JenkinsのWEBインターフェース > Jenkinsの管理 > プラグインの管理からGIT Pluginをインストールする。
+
+
+### GitのPULL設定
+
+プロジェクト > 設定 > ソースコード管理でGitを選択しリポジトリの設定を行う。
+
+#### Add Credentials
+
+|設定項目|設定|
+|-----|-----|
+|kind|SSHユーザー名と秘密鍵を選択する|
+|スコープ|グローバル|
+|ユーザー|jenkins|
+|秘密鍵|Jenkinsマスター上の~/.sshから|
+
+
+### ソースコードがプルされる場所
+
+プロジェクト名がexampleの場合、デフォルトではソースコードは下記ディレクトリにcloneされる。
+
+	/var/lib/jenkins/jobs/example/workspac
 
 
 ### Jenkins設定画面でエラー

@@ -2200,7 +2200,8 @@ Jenkinsをインストールするとjenkinsユーザーが作成される。パ
     $ sudo su - jenkins
     $ ssh-keygen
 
-    Enter file in which to save the key (/var/lib/jenkins/.ssh/id_rsa): 
+
+/var/lib/jenkins/.ssh/にid_rsa、id_rsa.pubが作成される。公開鍵であるid_rsa.pubをGitHubへ設定する: 
     
 
 ### GIT Pluginをインストール

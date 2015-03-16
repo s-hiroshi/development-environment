@@ -1996,6 +1996,7 @@ Wikipedia
     $ vagrant halt               // シャットダウン
     $ vagrant destroy            // 削除
     $ vagrant reload             // 再起動
+    $ vagrant provision          // プロビジョンのみ行う
 
 #### SSH接続
 

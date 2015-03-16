@@ -2184,6 +2184,23 @@ CIサーバーは主にユニットテスト、ビルドを自動化する。
 ページ内のリンク「See Wiki for more information, including notes regarding upgrade from Hudson.」から[Installing Jenkins on Ubuntu - Jenkins - Jenkins Wiki](https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu)を開き、記載してある方法を実行したら正常にインストールできた。
 
 
+### Linuxユーザー jenkins
+
+Jenkinsをインストールするとjenkinsユーザーが作成される。  
+下記でパスワードを設定する。
+
+    $ sudo passwd jenkins
+    Enter new UNIX password: 
+    Retype new UNIX password
+
+
+### CI用の秘密鍵、公開鍵を作成し公開鍵をGitHubへ設置
+
+    $ sudo su - jenkins
+    $ ssh-keygen
+
+
+
 ### Jenkins設定画面でエラー
 
 #### エラー
@@ -2199,6 +2216,9 @@ CIサーバーは主にユニットテスト、ビルドを自動化する。
 [Google グループjenkinsからgithubへのssh接続](https://groups.google.com/forum/#!topic/jenkinsci-ja/JkjRAyQyOKE)
 
 
+### Git Pluginの導入
+
+Jenkinsの設定 > プラグイン
 
 
 ## <a name="ci_deploy">Capistrano3 デプロイの自動化</a>
@@ -2773,7 +2793,7 @@ AWSではrootではログインできずubuntuユーザーでログインする�
     /etc/ssh/sshd_config
 
     PermitRootLogin no
-　　Port 22222
+    Port 22222
 
 #### SSHサーバー再起動
 

@@ -2162,7 +2162,7 @@ CIサーバーは主にユニットテスト、ビルドを自動化する。
 
 ## <a name="ci_jenkins">Jenkins CIサーバー</a>
 
-[Welcome to Jenkins CI! | Jenkins CI](http://jenkins-ci.org/)
+[Welcome to Jenkins CI! | Jenkins CI](http://jenkins-ci.org/)  
 [capistrano/capistrano](https://github.com/capistrano/capistrano)
 
 ### インストール

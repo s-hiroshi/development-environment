@@ -2169,10 +2169,10 @@ CIサーバーは主にユニットテスト、ビルドを自動化する。
 
 [Installing Jenkins on Ubuntu - Jenkins - Jenkins Wiki](https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu)
 
-> wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
-> sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
-> sudo apt-get update
-> sudo apt-get install jenkins
+    $ wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+    $ sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+    $ sudo apt-get update
+    $ sudo apt-get install jenkins
 
 最初は[Debian Repository for Jenkins](http://pkg.jenkins-ci.org/debian/)ページに記載してある方法でインストールしたが下記エラーがでた。
 

@@ -58,6 +58,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
     + [書籍「CakePHP 継続的インテグレーション」のNginx設定ファイルsite-available/default](#appendix_nginx_default_book)
     + [php.iniの設定を反映されないときの対処](#appendix_php_ini)
     + [zipインストール](#appendix_zip)
+    + [参考書籍 CakePHPで学ぶ継続的インテグレーションのChefでMySQLをインストールした場合のパスワード](#appendix_chef_mysql)
     + [FileZillaを使ったAWS EC2へのSFTP接続](#appendix_aws_sftp)
     + [Ubuntu + Apache + MySQL + PHP](#appendix_ubuntu_apache_mysql_php)
     + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
@@ -3387,6 +3388,28 @@ targetを圧縮するサンプル
 
     $ cd /path/to/example
     $ zip -r target.zip ./target/
+    
+
+### <a name="appendix_chef_mysql">参考書籍 CakePHPで学ぶ継続的インテグレーションのChefでMySQLをインストールした場合のパスワード</a>
+
+
+#### site-cookbooks/phpenv/recipes/default.rb
+
+下記でパスワードが設定されている。
+
+	# MySQLのrootアカウントのパスワードをセットする
+	execute "set_mysql_root_password" do
+	  command "/usr/bin/mysqladmin -u root password \"#{node['mysql']['root_password']}\""
+	  action :run
+	  only_if "/usr/bin/mysql -u root -e 'show databases;'"
+	end
+	
+	
+#### root_passwordの指定
+
+site-cookbook/phpenv/attribute/default.rb
+
+    default['mysql']['root_password'] = 'password'
 
 
 ### <a name="appendix_aws_sftp">Appendix FileZillaを使ったAWS EC2へのSFTP接続</a>

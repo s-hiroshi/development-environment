@@ -1912,11 +1912,14 @@ Postfixを再起動する。
 
 
 
+
 # <a name="ci">継続的インテグレーション</a>
 
-* [VirtualBox + Vagrant + Chef Soloを使ったCI環境](#virtualbox_vagrant_chef)
-	+ 仮想化ソフト(Vagrant)
-	+ プロビジョニング(Chef)
+* [環境構築](#ci_dev)
+	+ [Virtualbox 仮想化ソフト](#ci_virtualbox)
+	+ [Vagrant 仮想開発環境構築ソフトウェア](#ci_vagrant)
+	+ [Chef プロビジョニングツール](#ci_chef)
+	+ [Vagrant, Chefを使ったプロビジョニング手順](#ci_vagrant_chef)
 * [CI(継続的インテグレーション)](#ci_ci)
 	+ [Jenkins](#jenkins)
 * [アジャイル](#agile)
@@ -1924,11 +1927,21 @@ Postfixを再起動する。
 * [CakePHP開発環境](#env_cakephp)
 
 
-# <a name="virtualbox_vagrant_chef">VirtualBox + Vagrant + Chef Soloをで継続的CI環境構築(開発環境構築/プロビジョニング/デプロイ)</a>
-
 [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
 
-## 仮想化ソフトウェア
+
+## <a name="ci_dev">環境構築</a>
+
+下記ソフトを使いCIのための環境を構築する。
+
+* VirtualBox
+* Vagrant
+* Chef
+
+
+### <a name="ci_virtualbox">VirtualBox 仮想化ソフトウェア</a>
+
+代表的な仮想化ソフトウェア。
 
 * VirtualBox
 * VMware
@@ -1936,17 +1949,14 @@ Postfixを再起動する。
 仮想化ソフトのゲストOSを開発環境として利用する。
 
 
-## 仮想開発環境構築ソフトウェア
+### <a name="ci_vagrant">Vagrant 仮想開発環境構築ソフトウェア</a>
 
 仮想化ソフトウェアの制御やゲストOSのプロビジョニングを行う。  
-代表的な仮想開発環境構築ソフトウェアであるVagrantの説明を記載する。
-
-### Vagrant(仮想開発環境構築ソフトウェア)
+代表的な仮想開発環境構築ソフトウェアであるVagrantについて記載する。
 
 > Vagrant（ベイグラント）は、FLOSSの仮想開発環境構築ソフトウェア[1]。VirtualBoxをはじめとする仮想化ソフトウェアやChef（英語版）やSalt（英語版）、Puppetといった構成管理ソフトウェアのラッパーとみなすこともできる。
 
 Wikipedia
-
 
 #### Vagrantの役割
 
@@ -1966,18 +1976,17 @@ Wikipedia
 
     $ vagrant box add opscode-ubuntu-14.0.4 http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-14.04_chef-provisionerless.box
 
-#### 初期化
+#### Vagrant初期化
 
     $ vagrant init
 
-#### 起動・休止・シャットダウン・削除
+#### Vagrant 起動・休止・シャットダウン・削除
 
     $ vagrant up                 // 起動
     $ vagrant halt               // シャットダウン
     $ vagrant destroy            // 削除
 
-
-#### SSHで接続
+#### SSH接続
 
     $ vagrant ssh
 
@@ -2010,45 +2019,32 @@ Wikipedia
 Vagrantは仮想サーバーを起動したときや指定したタイミングでプロビジョニングを行うことができる。
 
 
+### <a name="ci_chef">Chef プロビジョニングツール</a>
 
-## プロビジョニング
-
-構成管理ツール /プロビジョニングツール
+Chefは構成管理ツール/プロビジョニングツール。
 
 > プロビジョニング（英: Provisioning）は、本来は「準備、提供、設備」などの意味であり、現在では通常、音声通信やコンピュータなどの分野における、ユーザーや顧客へのサービス提供の仕組みを指す。
 
 Wikipedia
 
-代表的なプロビジョニングツールにChefがある。
-
-Chef Client, Chef SoloはVagrantプラグインvagrant-omnibusで導入する。  
+今回、Chef Client, Chef SoloをVagrantプラグインvagrant-omnibusを使って導入する。  
 設定はVagrantfileに記載する。
 
-### プロビジョニングツール
+#### プロビジョニングツール
 
-Chef(Chef Solo, Chef Server)
-[Chef | IT automation for speed and awesomeness | Chef](https://www.chef.io/chef/)
-
-### knife-solo
-
-Chef Soloのリポジトリを作成する。
-
-[knife-solo](http://matschaffer.github.io/knife-solo/)
-
-### Berkshelf
-
-Chefのクックブックとその依存関係を管理する。
-
-BerkshelfをBundlerを使いインストールしたとき下記コマンドでエラーが発生した。
-Bundlerを使わずChefDKを利用することで解決した。
-
-    $ bundle exec berks vendor ./cookbooks
-
-### ChefDk
-
-Chef関連のツール集(Berkshelf, Knife-soloなど)
-
-[Chef Development Kit | Chef Downloads | Chef](https://downloads.chef.io/chef-dk/)
+* Chef(Chef Solo, Chef Server)  
+  [Chef | IT automation for speed and awesomeness | Chef](https://www.chef.io/chef/)
+* knife-solo  
+  Chef Soloのリポジトリを作成する。  
+  [knife-solo](http://matschaffer.github.io/knife-solo/)
+* Berkshelf  
+  Chefのクックブックとその依存関係を管理する。  
+  BerkshelfをBundlerを使いインストールしたとき下記コマンドでエラーが発生した。  
+  Bundlerを使わずChefDKを利用することで解決した。  
+  $ bundle exec berks vendor ./cookbooks
+* ChefDk  
+  Chef関連のツール集(Berkshelf, Knife-soloなど)。  
+  [Chef Development Kit | Chef Downloads | Chef](https://downloads.chef.io/chef-dk/)
  
 
 Bundlerでエラーが発生した下記処理もChefDKで解決した。
@@ -2059,7 +2055,8 @@ Bundlerでエラーが発生した下記処理もChefDKで解決した。
 
     $ knife cookbook create name -o site-cookbooks
 
-## Vagrant, Chefを使ったプロビジョニング手順
+
+### <a name="ci_vagrant_chef">Vagrant, Chefを使ったプロビジョニング手順</a>
 
 1. site-cookbooks/recipeでプロビジョニングの内容を記述したrubyファイル(rb)作成する。
 2. berks vendor cookbooksでrecipeのパッケージをcookbooksへ配置する。

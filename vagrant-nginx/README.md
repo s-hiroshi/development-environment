@@ -42,7 +42,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 	+ [Chef プロビジョニングツール](#ci_chef)
 	+ [Vagrant, Chefを使ったプロビジョニング手順](#ci_vagrant_chef)
 * [CI(継続的インテグレーション)](#ci_ci)
-* [Jenkins CIサーバー](#ci_server)
+* [Jenkins CIサーバー](#ci_jenkins)
 * [Capistrano3 デプロイの自動化](#ci_deploy)
 * [CakePHP開発環境](#env_cakephp)
 * [アジャイル](#agile)
@@ -1925,7 +1925,7 @@ Postfixを再起動する。
 	+ [Chef プロビジョニングツール](#ci_chef)
 	+ [Vagrant, Chefを使ったプロビジョニング手順](#ci_vagrant_chef)
 * [CI(継続的インテグレーション)](#ci_ci)
-* [Jenkins CIサーバー](#ci_server)
+* [Jenkins CIサーバー](#ci_jenkins)
 * [Capistrano3 デプロイの自動化](#ci_deploy)
 * [CakePHP開発環境](#env_cakephp)
 * [アジャイル](#agile)
@@ -2158,7 +2158,7 @@ CIサーバーは主にユニットテスト、ビルドを自動化する。
 
 
 
-## <a name="jenkins">Jenkins CIサーバー</a>
+## <a name="ci_jenkins">Jenkins CIサーバー</a>
 
 [Welcome to Jenkins CI! | Jenkins CI](http://jenkins-ci.org/)
 [capistrano/capistrano](https://github.com/capistrano/capistrano)

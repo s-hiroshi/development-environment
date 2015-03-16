@@ -61,6 +61,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
     + [Ubuntu + Apache + MySQL + PHP](#appendix_ubuntu_apache_mysql_php)
     + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
     + [behatインストールで発生したエラーへの対応](#appendix_behat)
+    + [Jenkins設定画面でエラー](#appendix_jenkins_display)
     + [JenkinsのビルドでAPCの書き込みエラーが発生する問題](#appendix_jenkins)
     + [soファイル](#appendix_so)
     + [Ruby](#appendix_ruby)
@@ -2233,31 +2234,33 @@ SCMをポーリングを選択しスケジュールに下記を記載する(15�
 
 
 
-### ソースコードがプルされる場所
+### ソースコードがPULLされる場所
 
 プロジェクト名がexampleの場合、デフォルトではソースコードは下記ディレクトリにcloneされる。
 
 	/var/lib/jenkins/jobs/example/workspac
 
 
-### Jenkins設定画面でエラー
 
-#### エラー
-
-    stderr: Host key verification failed.が出たら、git ls-remoteを叩く！
-
-[Jenkinsを導入してGithub, Bitbucketから自動ビルドを可能にするまで](http://tsukaby.com/tech_blog/archives/250)
-
-#### 対処
-
-パスフレーズなしでキーを作成した。こちらで解決した可能性が高い。
-
-[Google グループjenkinsからgithubへのssh接続](https://groups.google.com/forum/#!topic/jenkinsci-ja/JkjRAyQyOKE)
 
 
 ### Git Pluginの導入
 
 Jenkinsの設定 > プラグイン
+
+### Jenkinsで単体テストを行う
+
+1. Phingで設定ファイルbuild.xmlにテストの自動化を記載
+2. Jenkinsの
+
+### Phing
+
+JenkinsでPHPの自動テストなどのビルドを行うツール。
+
+    $ cd /var/www/application/current/app
+    $ composer require --dev "phing/phing:~2.8"
+    
+ビルドの設定は/application/build.xmlに記載する。
 
 
 ## <a name="ci_deploy">Capistrano3 デプロイの自動化</a>
@@ -3457,6 +3460,21 @@ composer.json
         …..
     }
 
+
+
+### <a name="appendix_jenkins_display">Jenkins設定画面でエラー</a>
+
+#### エラー
+
+    stderr: Host key verification failed.が出たら、git ls-remoteを叩く！
+
+[Jenkinsを導入してGithub, Bitbucketから自動ビルドを可能にするまで](http://tsukaby.com/tech_blog/archives/250)
+
+#### 対処
+
+パスフレーズなしでキーを作成した。こちらで解決した可能性が高い。
+
+[Google グループjenkinsからgithubへのssh接続](https://groups.google.com/forum/#!topic/jenkinsci-ja/JkjRAyQyOKE)
 
 ### <a name="appendix_jenkins">Appendix JenkinsのビルドでAPCの書き込みエラーが発生する問題</a>
 

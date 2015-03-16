@@ -1921,13 +1921,19 @@ Postfixを再起動する。
 	+ [Chef プロビジョニングツール](#ci_chef)
 	+ [Vagrant, Chefを使ったプロビジョニング手順](#ci_vagrant_chef)
 * [CI(継続的インテグレーション)](#ci_ci)
-	+ [Jenkins](#jenkins)
+* [Jenkins CIサーバー](#ci_server)
+* [Capistrano3 デプロイの自動化](#ci_deploy)
+* [CakePHP開発環境](#env_cakephp)
 * [アジャイル](#agile)
 * [BDD:振舞駆動開発 (開発手法)](#bdd)
-* [CakePHP開発環境](#env_cakephp)
 
+
+以下、次の書籍の読書メモを記載している。
 
 [「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
+
+__引用のページ番号は上記書籍の該当ページを指す。__
+
 
 
 ## <a name="ci_dev">環境構築</a>
@@ -2080,7 +2086,8 @@ Bundlerでエラーが発生した下記処理もChefDKで解決した。
 3. $ vagrant provision
 
 
-# <a name="ci_ci">CI(継続的インテグレーション)</a>
+
+## <a name="ci_ci">CI(継続的インテグレーション)</a>
 
 
 継続的インテグレーションは、開発、CI、デプロイ(公開)サーバーを使い開発を行う。    
@@ -2089,13 +2096,7 @@ Bundlerでエラーが発生した下記処理もChefDKで解決した。
 CIサーバーは主にユニットテスト、ビルドを自動化する。
 
 
-以下、次の書籍の読書メモを記載している。
-
-[「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)](http://www.amazon.co.jp/CakePHP%E3%81%A7%E5%AD%A6%E3%81%B6%E7%B6%99%E7%B6%9A%E7%9A%84%E3%82%A4%E3%83%B3%E3%83%86%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3-%E6%B8%A1%E8%BE%BA-%E4%B8%80%E5%AE%8F/dp/4844336789/ref=tmm_pap_title_0?ie=UTF8&qid=1421710653&sr=8-1)
-
-__引用のページ番号は上記書籍の該当ページを指す。__
-
-### 本記事サーバー構成
+### <a name="ci_ci_server">本記事サーバー構成</a>
 
 標準的なCIは3台のサーバーを使う。
 
@@ -2150,14 +2151,15 @@ __引用のページ番号は上記書籍の該当ページを指す。__
     + PHP_CodeSniffer
 * ドキュメンテーションツール
     + phpDocumentor
-    
 
-### <a name="jenkins">Jenkins</a>
+
+
+## <a name="jenkins">Jenkins CIサーバー</a>
 
 [Welcome to Jenkins CI! | Jenkins CI](http://jenkins-ci.org/)
 [capistrano/capistrano](https://github.com/capistrano/capistrano)
 
-#### インストール
+### インストール
 
 [Installing Jenkins on Ubuntu - Jenkins - Jenkins Wiki](https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu)
 
@@ -2177,208 +2179,27 @@ __引用のページ番号は上記書籍の該当ページを指す。__
 
 ページ内のリンク「See Wiki for more information, including notes regarding upgrade from Hudson.」から[Installing Jenkins on Ubuntu - Jenkins - Jenkins Wiki](https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu)を開き、記載してある方法を実行したら正常にインストールできた。
 
-#### Jenkins設定画面でエラー
 
-##### エラー
+### Jenkins設定画面でエラー
+
+#### エラー
 
     stderr: Host key verification failed.が出たら、git ls-remoteを叩く！
 
 [Jenkinsを導入してGithub, Bitbucketから自動ビルドを可能にするまで](http://tsukaby.com/tech_blog/archives/250)
 
-##### 対策
+#### 対処
 
 パスフレーズなしでキーを作成した。こちらで解決した可能性が高い。
 
 [Google グループjenkinsからgithubへのssh接続](https://groups.google.com/forum/#!topic/jenkinsci-ja/JkjRAyQyOKE)
 
 
-## デプロイの自動化 Capistrano3
+
+
+## <a name="ci_deploy">Capistrano3 デプロイの自動化</a>
 
 開発環境からデプロイ環境にデプロイするツール。
-
-
-
-
-### 開発手法
-
-* アジャイル
-* BDD:振舞駆動開発 (開発手法)
-
-
-
-## <a name="agile">アジャイル</a>
-
-> 短い期間でリリース可能なソフトウェアを繰り返し提供することに重きを置きます
-(p.007)
-
-* アジャイル
-    + Scrum(スクラム)
-      アジャイル開発手法の１つ。
-        - スプリント
-          設計-開発-テスト-レビューの単位。
- 
- 
-#### Scrum(スクラム)
-
-> 2週間から1か月程度の短時間で、設計から開発、テストなどの一連の作業を繰り返し、ソフトウェアを仕上げます。
-(p.007)
- 
-#### スプリント
-
-> 各スプリントでは最終的に実際に動作するソフトウェアの提供が求められます。
-(p.007)
-
-
-
-## <a name="bdd">BDD:振舞駆動開発 (開発手法)</a>
-
-振舞駆動開発(BDD: Behavior Driven Develop)。
-
-> BDDはユーザーストーリーと、そこから導きだされるビジネスロジックをテストすることに注目しています。
-(p.178)
-
-> ユーザーストーリーから具体的な利用シーンを抽出します。これを「シナリオ」と呼びます。
-> BDDのフレームワークを使う場合は、ドメイン特化型言語(DSL domain-specific language)と呼ばれる記法で記述します。
-> 代表的なDSLは「Gherkin」と呼ばれ、記述したシナリオは、受け入れテストとして「Cucumber 」や「Behat」などのテスティングフレー> > ムワークによって自動実行できます。
-(p.181)
-
-
-### BDDの流れ
-
-->失敗する受け入れテスト -> __| 失敗する単体テスト-> 実装してテスト成功させる->
-リファクタリング |__ -> ステップの定義 -> 「ステップを実行してシナリオを成功させ
-る」(p.180) -> リファクタリング ->
-
-#### ユーザーストーリー
-
-> ユーザーストーリーとは、時間軸に沿ってユーザーが得られる体験や価値、出来事を、筋書きとして記述します。ユーザーストーリーはそれ単独でリリース可能であり、ビジネス要件やスケジュール、見積などが含まれています。
-
-##### ユーザーストーリーの例
-
-> 会員として、新しい記事を投稿できる、なぜなら会員は自分の言葉で発信したいからだ
-(p.178)
-
-#### シナリオ
-
-シナリオはユーザーストーリーから定義される。
-
-> シナリオは連続する出来事を表現するもので、よりアプリケーションが実現することに注目していると言えます。
-(p.181)
-
-
-#### フィーチャ
-
-
->フィーチャとは、顧客の視点から「アプリケーションに必要となる機能や特徴」のことで、
-> 最初の2行目に書かれている通り、ユーザーストーリー記法で記述する事を推奨しています。
-(p.182)
-
-* フィーチャの記法
-Gerkin記法
-* フィーチャの拡張子
-.feature
-
-
-#### フィーチャの例
-
-「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)
-
-##### ディレクトリ構造
-
-
-    current
-       |— app
-            |— Config
-                |— bootstrap
-                    |— environments
-                         |— ci.php
-                         |— development.php
-                         |— test.php
-                    |— environments.php
-                |— …
-            |
-            |— Console
-            |— Controller
-            |— …
-            |— composer.json
-            |— index.php
-            |— phpunit.xml
-        |
-        |— feature
-                |— boostrap
-                |— …
-                |— blog_new_post.feature
-
-
-##### フィーチャファイル(.feature)
-
-「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)
-
-
-    # language: ja
-    フィーチャ: 会員として新しい記事を投稿できる、なぜなら会員は自分の言葉で発信したいからだ
-    背景:
-    前提 "会員" としてログインしている
-    シナリオ: 新しい記事を投稿できる
-    もし 以下の内容で記事を投稿する
-    | タイトル | はじめてのブログ |
-    | 本文 | はじめまして |
-    ならば 新しい記事が登録されていること
-    シナリオ: タイトルなしでは新しい記事は投稿できない
-    もし 以下の内容で記事を投稿する
-    | タイトル | |
-    | 本文 | はじめまして |
-    ならば 新しい記事が登録できないこと
-
-
-#### フィーチャの実行
-
- __フィーチャファイル(.feature)はBehatを使って実行する。__
-
-
-### Behat/Mink (BDD用テスティングフレームワーク)
-
-BDDのためのPHPで作成した(ユーザー)ストーリーベースのテスティングフレームワーク。
-
-### Bddプラグイン BehatのCakePHP2用プラグイン (プラグイン)
-
-> BDD(Behavior Driven Development) integration plugin for CakePHP2
-
-[sizuhiko/Bdd](https://github.com/sizuhiko/Bdd)
-
- Bddプラグインはフィーチャファイルを実行する。
- BddプラグインはCake標準テストケースとPHPUnitを使い実行される。
-
-#### インストール
-
-* Composerを使いインストール
-* composer.jsonにプラグインのリポジトリを登録[^composer_repo]
-
-[^composer_repo]:>Packagistから所得できないパッケージがある場合は、
-composer.jsonの[repositories]に記述する事で利用できます。(p.187)
-
-composer.json
-
-    "repositories": [
-      {
-        "type": "vcs",
-        "urrl: "git://github.com/sizuhiko/Bdd.git
-      }
-    ],
-
-#### フィーチャーファイルのテスト
-
-    $ Console/cake Bdd.story
-
-### BDDと単体テスト
-
-__フィーチャは最終的に単体テストの集まりを実行する。__
-
-
-## Jenkins
-
-継続的インテグレーション用
-
 
 
 ## <a name="env_cakephp">CakePHP開発環境</a>
@@ -2713,6 +2534,190 @@ Fixtureはbakeコマンドでインタラクティブに作成できる。
  現在のデータベースからスキーマファイルを作成する。
  
  [cakePHP2.3 Schema - Logicky Blog](http://endoyuta.com/2013/08/17/cakephp2-3-schema/)
+
+## <a name="dev_process">開発手法</a>
+
+* アジャイル
+* BDD:振舞駆動開発 (開発手法)
+
+
+
+## <a name="agile">アジャイル</a>
+
+> 短い期間でリリース可能なソフトウェアを繰り返し提供することに重きを置きます
+(p.007)
+
+* アジャイル
+    + Scrum(スクラム)
+      アジャイル開発手法の１つ。
+        - スプリント
+          設計-開発-テスト-レビューの単位。
+ 
+ 
+#### Scrum(スクラム)
+
+> 2週間から1か月程度の短時間で、設計から開発、テストなどの一連の作業を繰り返し、ソフトウェアを仕上げます。
+(p.007)
+ 
+#### スプリント
+
+> 各スプリントでは最終的に実際に動作するソフトウェアの提供が求められます。
+(p.007)
+
+
+
+## <a name="bdd">BDD:振舞駆動開発 (開発手法)</a>
+
+振舞駆動開発(BDD: Behavior Driven Develop)。
+
+> BDDはユーザーストーリーと、そこから導きだされるビジネスロジックをテストすることに注目しています。
+(p.178)
+
+> ユーザーストーリーから具体的な利用シーンを抽出します。これを「シナリオ」と呼びます。
+> BDDのフレームワークを使う場合は、ドメイン特化型言語(DSL domain-specific language)と呼ばれる記法で記述します。
+> 代表的なDSLは「Gherkin」と呼ばれ、記述したシナリオは、受け入れテストとして「Cucumber 」や「Behat」などのテスティングフレー> > ムワークによって自動実行できます。
+(p.181)
+
+
+### BDDの流れ
+
+->失敗する受け入れテスト -> __| 失敗する単体テスト-> 実装してテスト成功させる->
+リファクタリング |__ -> ステップの定義 -> 「ステップを実行してシナリオを成功させ
+る」(p.180) -> リファクタリング ->
+
+#### ユーザーストーリー
+
+> ユーザーストーリーとは、時間軸に沿ってユーザーが得られる体験や価値、出来事を、筋書きとして記述します。ユーザーストーリーはそれ単独でリリース可能であり、ビジネス要件やスケジュール、見積などが含まれています。
+
+##### ユーザーストーリーの例
+
+> 会員として、新しい記事を投稿できる、なぜなら会員は自分の言葉で発信したいからだ
+(p.178)
+
+#### シナリオ
+
+シナリオはユーザーストーリーから定義される。
+
+> シナリオは連続する出来事を表現するもので、よりアプリケーションが実現することに注目していると言えます。
+(p.181)
+
+
+#### フィーチャ
+
+
+>フィーチャとは、顧客の視点から「アプリケーションに必要となる機能や特徴」のことで、
+> 最初の2行目に書かれている通り、ユーザーストーリー記法で記述する事を推奨しています。
+(p.182)
+
+* フィーチャの記法
+Gerkin記法
+* フィーチャの拡張子
+.feature
+
+
+#### フィーチャの例
+
+「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)
+
+##### ディレクトリ構造
+
+
+    current
+       |— app
+            |— Config
+                |— bootstrap
+                    |— environments
+                         |— ci.php
+                         |— development.php
+                         |— test.php
+                    |— environments.php
+                |— …
+            |
+            |— Console
+            |— Controller
+            |— …
+            |— composer.json
+            |— index.php
+            |— phpunit.xml
+        |
+        |— feature
+                |— boostrap
+                |— …
+                |— blog_new_post.feature
+
+
+##### フィーチャファイル(.feature)
+
+「CakePHPで学ぶ継続的インテグレーション」 渡辺 一宏, 吉羽 龍太郎, 岸田 健一郎, 穴澤 康裕, 丸山 弘詩  (編集)
+
+
+    # language: ja
+    フィーチャ: 会員として新しい記事を投稿できる、なぜなら会員は自分の言葉で発信したいからだ
+    背景:
+    前提 "会員" としてログインしている
+    シナリオ: 新しい記事を投稿できる
+    もし 以下の内容で記事を投稿する
+    | タイトル | はじめてのブログ |
+    | 本文 | はじめまして |
+    ならば 新しい記事が登録されていること
+    シナリオ: タイトルなしでは新しい記事は投稿できない
+    もし 以下の内容で記事を投稿する
+    | タイトル | |
+    | 本文 | はじめまして |
+    ならば 新しい記事が登録できないこと
+
+
+#### フィーチャの実行
+
+ __フィーチャファイル(.feature)はBehatを使って実行する。__
+
+
+### Behat/Mink (BDD用テスティングフレームワーク)
+
+BDDのためのPHPで作成した(ユーザー)ストーリーベースのテスティングフレームワーク。
+
+### Bddプラグイン BehatのCakePHP2用プラグイン (プラグイン)
+
+> BDD(Behavior Driven Development) integration plugin for CakePHP2
+
+[sizuhiko/Bdd](https://github.com/sizuhiko/Bdd)
+
+ Bddプラグインはフィーチャファイルを実行する。
+ BddプラグインはCake標準テストケースとPHPUnitを使い実行される。
+
+#### インストール
+
+* Composerを使いインストール
+* composer.jsonにプラグインのリポジトリを登録[^composer_repo]
+
+[^composer_repo]:>Packagistから所得できないパッケージがある場合は、
+composer.jsonの[repositories]に記述する事で利用できます。(p.187)
+
+composer.json
+
+    "repositories": [
+      {
+        "type": "vcs",
+        "urrl: "git://github.com/sizuhiko/Bdd.git
+      }
+    ],
+
+#### フィーチャーファイルのテスト
+
+    $ Console/cake Bdd.story
+
+### BDDと単体テスト
+
+__フィーチャは最終的に単体テストの集まりを実行する。__
+
+
+## Jenkins
+
+継続的インテグレーション用
+
+
+
+
 
 
 

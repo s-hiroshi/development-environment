@@ -1915,6 +1915,8 @@ Postfixを再起動する。
 # <a name="ci">継続的インテグレーション</a>
 
 * [VirtualBox + Vagrant + Chef Soloを使ったCI環境](#virtualbox_vagrant_chef)
+	+ 仮想化ソフト(Vagrant)
+	+ プロビジョニング(Chef)
 * [CI(継続的インテグレーション)](#ci_ci)
 	+ [Jenkins](#jenkins)
 * [アジャイル](#agile)
@@ -1936,30 +1938,17 @@ Postfixを再起動する。
 
 ## 仮想開発環境構築ソフトウェア
 
-仮想化ソフトウェアの制御やゲストOSのプロビジョニングを行う。
+仮想化ソフトウェアの制御やゲストOSのプロビジョニングを行う。  
+代表的な仮想開発環境構築ソフトウェアであるVagrantの説明を記載する。
 
-## Vagrant(仮想開発環境構築ソフトウェア)
+### Vagrant(仮想開発環境構築ソフトウェア)
 
 > Vagrant（ベイグラント）は、FLOSSの仮想開発環境構築ソフトウェア[1]。VirtualBoxをはじめとする仮想化ソフトウェアやChef（英語版）やSalt（英語版）、Puppetといった構成管理ソフトウェアのラッパーとみなすこともできる。
 
 Wikipedia
 
 
-### Chef
-
-構成管理ツール /プロビジョニングツール
-
-
-> プロビジョニング（英: Provisioning）は、本来は「準備、提供、設備」などの意味であり、現在では通常、音声通信やコンピュータなどの分野における、ユーザーや顧客へのサービス提供の仕組みを指す。
-
-Wikipedia
-
-
-### VirtualBox + Vagrant + Chef
-
-プロビジョニングツールChef Client, Chef SoloはVagrantプラグインvagrant-omnibusで導入する。設定はVagrantfileに記載する。
-
-### Vagrantの役割
+#### Vagrantの役割
 
 1. 仮想サーバの起動・終了
 2. ホストOSとゲストOSでディレクトリ共有  
@@ -1969,7 +1958,7 @@ Wikipedia
 
 [Command-Line Interface - Vagrant Documentation](http://docs.vagrantup.com/v2/cli/)
 
-### Vagrantのボックス追加
+#### Vagrantのボックス追加
 
     $ vagrant box add [options] <name, url, or path>
  
@@ -1977,30 +1966,30 @@ Wikipedia
 
     $ vagrant box add opscode-ubuntu-14.0.4 http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-14.04_chef-provisionerless.box
 
-### 初期化
+#### 初期化
 
     $ vagrant init
 
-### 起動・休止・シャットダウン・削除
+#### 起動・休止・シャットダウン・削除
 
     $ vagrant up                 // 起動
     $ vagrant halt               // シャットダウン
     $ vagrant destroy            // 削除
 
 
-### SSHで接続
+#### SSHで接続
 
     $ vagrant ssh
 
-### vagrant プラグインの導入
+#### vagrant プラグインの導入
 
     $ vagrant plugin install sahara
     $ vagrant plugin install vagrant-omnibus
     $ vagrant plugin install vagrant-cachier
 
-### vagrant plugin installで発生したエラーへの対応
+#### vagrant plugin installで発生したエラーへの対応
 
-#### エラーメッセージ
+##### エラーメッセージ
 
 > Bundler, the underlying system Vagrant uses to install plugins,
 > reported an error. The error is shown below. These errors are usually
@@ -2010,17 +1999,30 @@ Wikipedia
 > An error occurred while installing nokogiri (1.6.5), and Bundler cannot continue.
 > Make sure that `gem install nokogiri -v 1.6.5 succeeds before bundling.
 
-#### 解決策
+##### 解決策
 
     $ gem install --install-dir ~/.vagrant.d/gems nokogiri -v '1.6.5'
 
 [vagrant pluginをインストールしようとするとnokogiriエラーがでてインストールできない時の対策 | hypermkt blog](http://blog.hypermkt.jp/can-not-install-vagant-plugin-by-nokogiri/)
 
-
-## プロビジョニング
+#### Vagrantでプロビジョニングが実行されるタイミング
 
 Vagrantは仮想サーバーを起動したときや指定したタイミングでプロビジョニングを行うことができる。
 
+
+
+## プロビジョニング
+
+構成管理ツール /プロビジョニングツール
+
+> プロビジョニング（英: Provisioning）は、本来は「準備、提供、設備」などの意味であり、現在では通常、音声通信やコンピュータなどの分野における、ユーザーや顧客へのサービス提供の仕組みを指す。
+
+Wikipedia
+
+代表的なプロビジョニングツールにChefがある。
+
+Chef Client, Chef SoloはVagrantプラグインvagrant-omnibusで導入する。  
+設定はVagrantfileに記載する。
 
 ### プロビジョニングツール
 
@@ -2079,32 +2081,6 @@ Bundlerでエラーが発生した下記処理もChefDKで解決した。
 1. $ berks vendor cookbooks
 2. $ vagrant up
 3. $ vagrant provision
-
-
-### Capistrano3
-
-開発環境からデプロイ環境にデプロイするツール。
-
-
-## 継続的インテグレーションサーバー
-
-### Jenkins
-
-GitHubリポジトリ
-
-Jenkinsの設定画面でエラーがでる。下記を行う
-
-
-stderr: Host key verification failed.が出たら、git ls-remoteを叩く！
-
-[Jenkinsを導入してGithub, Bitbucketから自動ビルドを可能にするまで](http://tsukaby.com/tech_blog/archives/250)
-
-
-パスフレーズなしでキーを作成した。こちらで解決した可能性が高い。
-
-[Google グループjenkinsからgithubへのssh接続](https://groups.google.com/forum/#!topic/jenkinsci-ja/JkjRAyQyOKE)
-
-
 
 
 # <a name="ci_ci">CI(継続的インテグレーション)</a>
@@ -2188,8 +2164,6 @@ __引用のページ番号は上記書籍の該当ページを指す。__
 
 [Installing Jenkins on Ubuntu - Jenkins - Jenkins Wiki](https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu)
 
-# インストール
-
 > wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 > sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
 > sudo apt-get update
@@ -2205,6 +2179,28 @@ __引用のページ番号は上記書籍の該当ページを指す。__
     is only available from another source
 
 ページ内のリンク「See Wiki for more information, including notes regarding upgrade from Hudson.」から[Installing Jenkins on Ubuntu - Jenkins - Jenkins Wiki](https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu)を開き、記載してある方法を実行したら正常にインストールできた。
+
+#### Jenkins設定画面でエラー
+
+##### エラー
+
+    stderr: Host key verification failed.が出たら、git ls-remoteを叩く！
+
+[Jenkinsを導入してGithub, Bitbucketから自動ビルドを可能にするまで](http://tsukaby.com/tech_blog/archives/250)
+
+##### 対策
+
+パスフレーズなしでキーを作成した。こちらで解決した可能性が高い。
+
+[Google グループjenkinsからgithubへのssh接続](https://groups.google.com/forum/#!topic/jenkinsci-ja/JkjRAyQyOKE)
+
+
+## デプロイの自動化 Capistrano3
+
+開発環境からデプロイ環境にデプロイするツール。
+
+
+
 
 ### 開発手法
 

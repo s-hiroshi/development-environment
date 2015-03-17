@@ -2285,13 +2285,7 @@ JenkinsでPHPの自動テストなどのビルドを行うツール。
 * ユニットテスト - PHPUnit  
   CakePHPのユニットテストはPHPUnitで行う。
 * データベースマイグレーション - CakeDC Migration Plugin
-* BDDテストフレームワーク - Behat  
-  > Behat is an open source behavior-driven development framework for PHP
-  [Behat Documentation &mdash; Behat 2.5.3 documentation](http://docs.behat.org/en/v2.5/)
-	+ sizuhiko/Bdd  
-    CakePHP2用のプラグイン。
-	+ behat/mink-goutte-driver  
-    JavaScriptを使わずBehatを利用するプラグイン。
+
 
 
 
@@ -2713,6 +2707,14 @@ CIサーバーでテストするときのようにフィクスチャにテーブ
 
 
 #### BDDの流れ
+
+* BDDテストフレームワーク - Behat  
+  > Behat is an open source behavior-driven development framework for PHP
+  [Behat Documentation &mdash; Behat 2.5.3 documentation](http://docs.behat.org/en/v2.5/)
+	+ sizuhiko/Bdd  
+    CakePHP2用のプラグイン。
+	+ behat/mink-goutte-driver  
+    JavaScriptを使わずBehatを利用するプラグイン。
 
 ->失敗する受け入れテスト -> __| 失敗する単体テスト-> 実装してテスト成功させる->
 リファクタリング |__ -> ステップの定義 -> 「ステップを実行してシナリオを成功させ

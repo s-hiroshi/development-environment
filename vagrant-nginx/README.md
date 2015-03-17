@@ -2284,6 +2284,7 @@ JenkinsでPHPの自動テストなどのビルドを行うツール。
 
 * ユニットテスト - PHPUnit  
   CakePHPのユニットテストはPHPUnitで行う。
+* データベースマイグレーション - CakeDC Migration Plugin
 * BDDテストフレームワーク - Behat  
   > Behat is an open source behavior-driven development framework for PHP
   [Behat Documentation &mdash; Behat 2.5.3 documentation](http://docs.behat.org/en/v2.5/)
@@ -2291,7 +2292,6 @@ JenkinsでPHPの自動テストなどのビルドを行うツール。
     CakePHP2用のプラグイン。
 	+ behat/mink-goutte-driver  
     JavaScriptを使わずBehatを利用するプラグイン。
-* データベースマイグレーション - CakeDC Migration Plugin
 
 
 
@@ -2344,18 +2344,18 @@ Config/database.phpで本番用とテスト用データベースを設定する�
 
 #### 本番用/テスト用のデータベース切替方法
 
-1. サーバーの環境変数で切替
+1. サーバー環境変数で切替
 2. ClassRegistry::initで切替
 
 
-#### 環境変数の設定
+#### 環境変数の定義
 
-環境変数WEB_APP_ENVを設定しその値に応じてテスト用DBと本番環境用DBを切り替える。  
+環境変数WEB_APP_ENVを定義しその値に応じてテスト用DBと本番環境用DBを切り替える。  
 (192.168.33.10をテスト用ホスト、192.168.33.200を本番環境のホストと仮定する。)
 
 ##### Nginx
 
-Nginxは後述するApacheのようにサーバー変数としてではなくFastCGIの変数として設定する。  
+Nginxは後述するApacheのようにサーバー変数ではなくFastCGIの変数として定義する。  
 FastCGI設定アフィル(今回は/etc/nginx/sites-available/defaulで指定)のlocationディレクティブでfastcgi_paramを指定する。
 
 192.168.33.200(本番環境)
@@ -2373,7 +2373,7 @@ FastCGI設定アフィル(今回は/etc/nginx/sites-available/defaulで指定)�
 
 ##### Apache
 
-Apacheはサーバー環境変数を定義できる。
+Apacheはサーバー環境変数として定義する。
 
 (例) .htaccessのsetEnvディレクティブでWEB_APP_ENVを定義する例
 
@@ -2398,7 +2398,7 @@ Apacheはサーバー環境変数を定義できる。
 	</Location>
 
 
-#### データベースの切替処理
+#### データベース切替処理
 
 ##### 環境変数で切替
 
@@ -2418,7 +2418,7 @@ Model/AppModelで切り替える。
 
 ##### ClassRegistry::initで切替
 
-Modelクラスをnewを使わずClassRegistry::initでインスタンスを作成すると自動的にテスト用のDBを参照する。
+newを使わずClassRegistry::initでModelのインスタンスを作成すると自動的にテスト用のDBを参照する。
 
 #### ユニットテストに必要なファイル(Modelの例)
 
@@ -2433,7 +2433,7 @@ Modelクラスをnewを使わずClassRegistry::initでインスタンスを作�
 
 ##### ブラウザ
 
-ホストのIPを192.168.33.10に設定している場合の例。
+ホストIPが192.168.33.10の例。
 
     http://192.168.33.10/test.php
 
@@ -2445,7 +2445,7 @@ Modelクラスをnewを使わずClassRegistry::initでインスタンスを作�
 
     $ Console/cake test app
 
-アプリケーションの作成済みテスト一覧が下記のように表示されるので選択して実行する。
+アプリケーションの作成済みテストの一覧が表示されるので選択して実行する。
 
     App Test Cases:
     [1] AllTests
@@ -2458,7 +2458,7 @@ Modelクラスをnewを使わずClassRegistry::initでインスタンスを作�
     $ Console/cake test app Model/Example
 
 
-#### Modelのテスト例
+#### Modelテスト例
 
 Exampleモデルのsomeメソッドをテストは下記のようになる。
 
@@ -2570,13 +2570,12 @@ Exampleモデルのsomeメソッドをテストは下記のようになる。
 	
 	}
 
-フィクスチャの指定(1)はTest/Fixture/ExampleFixture.phpを参照する。
-ExampleFixture.phpはテストで使うテーブル定義とレコード(テストデータ)を定義している。
+フィクスチャはテストで使うテーブル定義とレコード(テストデータ)を定義したファイル。  
+例では(1)でフィクスチャを指定している。(1)はTest/Fixture/ExampleFixture.phpを参照する。  
 
+##### フィクスチャ例1 ExampleFixture.php
 
-##### フィクスチャ ExampleFixture.php
-
-database.phpの$defaultで指定したデータベースのデータを使う場合のフィクスチャの例。
+下記はテストでもdatabase.phpの$defaultで定義された接続先のテーブル定義・データを使うフィクスチャの例。
 
 	<?php
 	/**
@@ -2600,6 +2599,61 @@ Fixtureはbakeコマンドでインタラクティブに作成できる。
     
 
 テストの度にフィクスチャで指定したテーブルとレコードがdatabase.phpの$testで指定したデータベースに作成されテストが終わると破棄される。
+
+
+##### フィクスチャ例2
+
+CIサーバーでテストするときのようにフィクスチャにテーブル定義、レコードが必要なときはConsole/cake bakeコマンドでフィクスチャファイルにテーブル定義・データを含める。
+
+	$ Console/Cake bake
+ 
+	Welcome to CakePHP v2.6.1 Console
+	---------------------------------------------------------------
+	App : app
+	Path: /var/www/application/current/app/
+	---------------------------------------------------------------
+	Interactive Bake Shell
+	---------------------------------------------------------------
+	[D]atabase Configuration
+	[M]odel
+	[V]iew
+	[C]ontroller
+	[P]roject
+	[F]ixture
+	[T]est case
+	[Q]uit
+	What would you like to Bake? (D/M/V/C/P/F/T/Q) 
+	> F
+	---------------------------------------------------------------
+	Bake Fixture
+	Path: /var/www/application/current/app/Test/Fixture/
+	---------------------------------------------------------------
+	Use Database Config: (default/test) 
+	default
+	Possible Models based on your current database:
+	1. Account
+	2. Item
+	3. Part
+	4. Product
+	5. SchemaMigration
+	6. User
+	Enter a number from the list above,
+	type in the name of another model, or 'q' to exit  
+	[q] > 2
+	Would you like to import schema for this fixture? (y/n) 
+	[n] > n
+	Would you like to use record importing for this fixture? (y/n) 
+	[n] > n
+	Would you like to build this fixture with data from Item's table? (y/n) 
+	y
+	Please provide a SQL fragment to use as conditions
+	Example: WHERE 1=1  
+	[WHERE 1=1] > 
+	How many records do you want to import?  
+	[10] > 10
+	
+	Baking test fixture for Item...
+
 
 
 

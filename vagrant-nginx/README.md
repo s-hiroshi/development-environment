@@ -43,6 +43,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 		- [Chef プロビジョニングツール](#ci_chef)
 		- [Vagrant, Chefを使ったプロビジョニング手順](#ci_vagrant_chef)
 	* [Jenkins CIサーバー](#ci_jenkins)
+	* [CircleCi クラウド型CIサーバー](#ci_circleci)
 	* [Capistrano3 デプロイの自動化](#ci_deploy)
 	* [CakePHP開発環境](#env_cakephp)
 	* [開発手法](#ci_process)
@@ -1929,6 +1930,7 @@ Postfixを再起動する。
 	+ [Vagrant, Chefを使ったプロビジョニング手順](#ci_vagrant_chef)
 * [CI(継続的インテグレーション)](#ci_ci)
 * [Jenkins CIサーバー](#ci_jenkins)
+* [CircleCi クラウド型CIサーバー](#ci_circleci)
 * [Capistrano3 デプロイの自動化](#ci_deploy)
 * [CakePHP開発環境](#env_cakephp)
 * [開発手法](#ci_process)
@@ -2271,6 +2273,52 @@ JenkinsでPHPの自動テストなどのビルドを行うツール。
 	composer install --dev
 	cd ${WORKSPACE}/application
 	app/Vendor/bin/phing -logger phing.listener.DefaultLogger
+
+
+
+## <a name="ci_circleci">CircleCI クラウド型CIサーバー</a>
+
+### 躓いた点1 ComposerのインストールでGitHubのトークンが必要になった点
+
+	A token will be created and stored in "/home/ubuntu/.composer/auth.json", your password will never be stored
+	To revoke access to this token you can visit https://github.com/settings/applications
+	Username:
+
+GitHubのSettings > Applications > Personal access tokensでトークンを取得し、
+下記内容を記載したauth.jsonをcomposer.jsonと同じディレクトリ作成した。
+
+	{
+	  "github-oauth": {
+		"github.com": "<token>"
+	  }
+	}
+
+### 躓いた点2. Console/cake testでDBへ接続できなかった点
+
+    Database connection "Mysql" is missing, or could not be created.
+    
+Config/database.phpのhostをlocalhostから127.0.0.1へ変更。
+
+### 躓いた点3 テスト用テーブル
+
+    Table products for model <modelname> was not found in datasource default.
+
+<Model>Fixture.phpファイルを下記のような記載からテーブルおよびレコードが定義されたファイルへ変更。
+
+    // 変更前
+    public $import = array('model' => '<modelname>', 'records' => true);
+    
+    // 変更後
+    public $fields = array(
+    		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
+    		'title' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+    		'context' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
+    		.....
+	    
+    public $records = array(
+    		array(
+    			'id' => '2',
+    			.....
 
 
 

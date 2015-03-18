@@ -2303,7 +2303,7 @@ Config/database.phpのhostをlocalhostから127.0.0.1へ変更した。
 
     Table products for model <modelname> was not found in datasource default.
 
-<Model>Fixture.phpファイルを下記のような記載からテーブルおよびレコードが定義されたファイルへ変更した。
+<Model>Fixture.phpファイルを下記のような記載からテーブルおよびレコードが定義されたファイルへ変更した８。
 
     // 変更前
     public $import = array('model' => '<modelname>', 'records' => true);

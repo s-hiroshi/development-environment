@@ -2902,7 +2902,7 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 * [Route 53](#aws_route53)
     + 独自ドメイン運用
 * [S3](#aws_s3)
-* [Ubuntu + Postfixでメールを運用](#aws_postfix) 
+* [Ubuntu + Postfix](#aws_postfix) 
 * [課金](#aws_bills)
 * [Linuxコマンド(Ubuntu)](#aws_cmd_ubuntu)
 * [AWS 用語](#aws_aws_terms)
@@ -2915,19 +2915,19 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 
 AWSでUbuntuを安全に運用する。
 
-1. サーバーOSへのログイン    
-  AWSはSSHを使いログインする。初期設定はrootのログインを禁止している。
-2. サービスへの不正アクセス  
+1. サーバーOSへの安全なログイン   
+  AWSはSSHを使いログインする。rootログインは初期設定で禁止されている。
+2. サービスへの不正アクセス対策  
   各サービスはiptableを使いポート番号を開閉を制御しパケット通信をコントロールする。
 
 
 ### Ubuntuへログイン
 
 rootログインを禁止する。  
-AWSではrootではログインできずubuntuユーザーでログインする。
+__AWSはデフォルトでrootユーザーのログインを禁止している。ubuntuユーザーでログインする。__
 
 
-### コンソールからrootのログイン禁止
+### rootユーザーのログイン禁止処理
 
     $ su root
     $ echo > /etc/securetty
@@ -2946,7 +2946,7 @@ AWSではrootではログインできずubuntuユーザーでログインする�
 
 SSHサーバー再起動
 
-　　/etc/init.d/ssh restart
+    /etc/init.d/ssh restart
 
 __AWSではうまく行かなかった。上記の変更をしても22番でログインできた。__
 
@@ -3088,6 +3088,8 @@ Amazon Linux AMI 2014.09.1 (HVM) - ami-4985b048
 
     $ ssh -i private_key_file destination
 
+SSHで鍵を指定(iオプション)した接続で鍵が見つからなければデフォルトの鍵(~/.ssh/id_rsa)で接続を試みる。  
+iオプションでの鍵の指定は絶対パスまたは相対パスで指定する。
 
 ### <a name="aws_ec2_security">Security Groups</a>
 

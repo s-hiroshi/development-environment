@@ -2284,8 +2284,8 @@ JenkinsでPHPの自動テストなどのビルドを行うツール。
 	To revoke access to this token you can visit https://github.com/settings/applications
 	Username:
 
-GitHubのSettings > Applications > Personal access tokensでトークンを取得し、
-下記内容を記載したauth.jsonをcomposer.jsonと同じディレクトリ作成した。
+GitHubのSettings > Applications > Personal access tokensでトークンを取得し、  
+下記内容を記載したauth.jsonをcomposer.jsonと同じディレクトリに作成した。
 
 	{
 	  "github-oauth": {
@@ -2297,13 +2297,13 @@ GitHubのSettings > Applications > Personal access tokensでトークンを取�
 
     Database connection "Mysql" is missing, or could not be created.
     
-Config/database.phpのhostをlocalhostから127.0.0.1へ変更。
+Config/database.phpのhostをlocalhostから127.0.0.1へ変更した。
 
 ### 躓いた点3 テスト用テーブル
 
     Table products for model <modelname> was not found in datasource default.
 
-<Model>Fixture.phpファイルを下記のような記載からテーブルおよびレコードが定義されたファイルへ変更。
+<Model>Fixture.phpファイルを下記のような記載からテーブルおよびレコードが定義されたファイルへ変更した。
 
     // 変更前
     public $import = array('model' => '<modelname>', 'records' => true);

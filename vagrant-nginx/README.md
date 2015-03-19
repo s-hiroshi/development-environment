@@ -44,7 +44,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 		- [Vagrant, Chefを使ったプロビジョニング手順](#ci_vagrant_chef)
 	* [Jenkins CIサーバー](#ci_jenkins)
 	* [CircleCi クラウド型CIサーバー](#ci_circleci)
-	* [Capistrano3 デプロイの自動化](#ci_deploy)
+	* [デプロイの自動化](#ci_deploy)
 	* [CakePHP開発環境](#env_cakephp)
 	* [開発手法](#ci_process)
 		- [アジャイル](#agile)
@@ -1931,7 +1931,7 @@ Postfixを再起動する。
 * [CI(継続的インテグレーション)](#ci_ci)
 * [Jenkins CIサーバー](#ci_jenkins)
 * [CircleCi クラウド型CIサーバー](#ci_circleci)
-* [Capistrano3 デプロイの自動化](#ci_deploy)
+* [デプロイの自動化](#ci_deploy)
 * [CakePHP開発環境](#env_cakephp)
 * [開発手法](#ci_process)
 	* [アジャイル](#agile)
@@ -2148,7 +2148,7 @@ CIサーバーは主にユニットテスト、ビルドを自動化する。
 2. CIサーバーはGitHubからソースコードを定期的にPULLし自動テストを行う。  
   自動化処理はJenkinsを使う。
 3. CIサーバーでデプロイ処理を行う。  
-  デプロイ処理はCapistranoを使い自動化する。  
+  デプロイツールで有名なものにFabric/Capistranoがある。
 
 
 ### CIツール
@@ -2323,9 +2323,11 @@ Config/database.phpのhostをlocalhostから127.0.0.1へ変更した。
 
 
 
-## <a name="ci_deploy">Capistrano3 デプロイの自動化</a>
+## <a name="ci_deploy">デプロイの自動化</a>
 
-開発環境からデプロイ環境にデプロイするツール。
+* Fabric
+* Capistrano
+
 
 
 ## <a name="env_cakephp">CakePHP開発環境</a>

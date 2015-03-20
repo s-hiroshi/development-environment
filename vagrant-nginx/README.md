@@ -2278,14 +2278,33 @@ JenkinsでPHPの自動テストなどのビルドを行うツール。
 
 ## <a name="ci_circleci">CircleCI クラウド型CIサーバー</a>
 
-### 躓いた点1 ComposerのインストールでGitHubのトークンが必要になった点
+CircleCIは以下の機能を持つクラウド型CIサーバー。
+
+* 自動テスト  
+  デフォルトはmasterブランチへプッシュすると自動テストを実行する。
+* 自動デプロイ  
+  テスト成功をフックに自動デプロイを実行する。
+  
+
+### 設定ファイル
+
+masterブランチへのPushで実行される処理をYMLで記載したcircle.ymlをプロジェクト直下に作成する。  
+circle.ymlの記載は下記リンクを参考にする。
+
+[Continuous Integration and Deployment](https://circleci.com/docs/configuration)
+[CircleCI経由でRailsアプリをデプロイ - Qiita](http://qiita.com/ysk_1031/items/f584a0599791bdba132a)
+
+
+### 自動テスト
+
+#### 躓いた点1 ComposerのインストールでGitHubトークンが必要になった点
 
 	A token will be created and stored in "/home/ubuntu/.composer/auth.json", your password will never be stored
 	To revoke access to this token you can visit https://github.com/settings/applications
 	Username:
 
-GitHubのSettings > Applications > Personal access tokensでトークンを取得し、  
-下記内容を記載したauth.jsonをcomposer.jsonと同じディレクトリに作成した。
+GitHub > Settings > Applications > Personal access tokensでトークンを取得する。  
+取得トークンを記載したauth.jsonをcomposer.jsonと同じディレクトリに作成する。
 
 	{
 	  "github-oauth": {
@@ -2293,20 +2312,20 @@ GitHubのSettings > Applications > Personal access tokensでトークンを取�
 	  }
 	}
 
-### 躓いた点2. Console/cake testでDBへ接続できなかった点
+#### 躓いた点2. Console/cake testでDBへ接続できなかった点
 
     Database connection "Mysql" is missing, or could not be created.
     
 Config/database.phpのhostをlocalhostから127.0.0.1へ変更した。
 
-### 躓いた点3 テスト用テーブル
+#### 躓いた点3 テスト用テーブル
 
     Table products for model <modelname> was not found in datasource default.
 
-<Model>Fixture.phpファイルを下記のような記載からテーブルおよびレコードが定義されたファイルへ変更した８。
+ExampleFixture.phpファイルの記載をテーブル定義、レコードが記載されたファイルへ変更した。
 
     // 変更前
-    public $import = array('model' => '<modelname>', 'records' => true);
+    public $import = array('model' => 'Example', 'records' => true);
     
     // 変更後
     public $fields = array(
@@ -2320,10 +2339,49 @@ Config/database.phpのhostをlocalhostから127.0.0.1へ変更した。
     			'id' => '2',
     			.....
 
+#### テストまでのcircle.yml
 
 
+circle.yml
 
-## <a name="ci_deploy">デプロイの自動化</a>
+	machine:
+	  php:
+		version: 5.5.9
+	database:
+	  override:
+		- mysql -u ubuntu < circle-database-setup.sql
+	dependencies: 
+	  pre:
+		- sudo pip install awscli
+		- sudo pip install fabric
+		- sudo pip install boto
+	  override:
+		- bash ./circle-setup.sh
+	test:
+	  override:
+		- ./application/app/Console/cake test app Model/Example
+
+circle-setup.sh
+
+	#!/bin/bash
+	
+	# move to CakePHP app directory
+	cd ./application/app
+	
+	# Install composer
+	curl -sS https://getcomposer.org/installer | php
+	
+	# Install package
+	php composer.phar install
+
+circle-database-setup.sql
+
+	GRANT ALL PRIVILEGES ON *.* TO <user> IDENTIFIED BY '<passowrd>';
+	CREATE DATABASE <databasename> CHARACTER SET utf8;
+	CREATE DATABASE <databasename>_test CHARACTER SET utf8;
+
+
+### <a name="ci_deploy">デプロイの自動化</a>
 
 * Fabric
 * Capistrano

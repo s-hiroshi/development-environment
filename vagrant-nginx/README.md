@@ -2336,11 +2336,10 @@ ExampleFixture.phpファイルの記載をテーブル定義、レコードが�
 	    
     public $records = array(
     		array(
-    			'id' => '2',
+    			'id' => '1',
     			.....
 
 #### テストまでのcircle.yml
-
 
 circle.yml
 
@@ -2361,6 +2360,12 @@ circle.yml
 	  override:
 		- ./application/app/Console/cake test app Model/Example
 
+circle-database-setup.sql
+
+	GRANT ALL PRIVILEGES ON *.* TO <user> IDENTIFIED BY '<passowrd>';
+	CREATE DATABASE <databasename> CHARACTER SET utf8;
+	CREATE DATABASE <databasename>_test CHARACTER SET utf8;
+
 circle-setup.sh
 
 	#!/bin/bash
@@ -2374,18 +2379,39 @@ circle-setup.sh
 	# Install package
 	php composer.phar install
 
-circle-database-setup.sql
 
-	GRANT ALL PRIVILEGES ON *.* TO <user> IDENTIFIED BY '<passowrd>';
-	CREATE DATABASE <databasename> CHARACTER SET utf8;
-	CREATE DATABASE <databasename>_test CHARACTER SET utf8;
+### <a name="ci_deploy">自動デプロイ</a>
 
-
-### <a name="ci_deploy">デプロイの自動化</a>
+有名なデプロイツールとして下記がある。  
+今回はFabricを使う。
 
 * Fabric
 * Capistrano
 
+
+### <a name="ci_deploy_to_ec2">Amazon Web Services EC2へデプロイ</a>
+
+circle.yml
+
+	deployment:
+	  production:
+		branch: master
+		commands:
+		  - fab -f ./fabfile.py bootstrap ls
+
+
+	fabfile.py
+	
+	import boto
+	from fabric.api import env, run, sudo, parallel
+	 
+	def bootstrap():
+		env.hosts = ['<hostname>']
+		env.user = "ubuntu"
+		env.key_filename = "ssh_private_key.pem" 
+	
+	def ls():
+		run('ls -al')
 
 
 ## <a name="env_cakephp">CakePHP開発環境</a>

@@ -2363,7 +2363,7 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 	php composer.phar install
 
 
-### <a name="ci_deploy">自動デプロイ</a>
+### <a name="ci_deploy">自動デプロイ Fabric</a>
 
 有名なデプロイツールとして下記がある。  
 今回はFabricを使う。
@@ -2371,6 +2371,15 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 * Fabric
 * Capistrano
 
+### インストール
+
+    $ pip install fabric
+
+[Welcome to Fabric! &mdash; Fabric  documentation](http://www.fabfile.org/index.html)
+
+### ドキュメント
+
+[Welcome to Fabric’s documentation! &mdash; Fabric  documentation](http://docs.fabfile.org/en/1.10/index.html)
 
 ### <a name="ci_deploy_to_ec2">Amazon Web Services EC2へデプロイ</a>
 

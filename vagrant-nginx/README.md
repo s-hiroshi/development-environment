@@ -865,11 +865,14 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 以下PHP実行ユーザーはwww-dataと仮定する。
 
 
-### currentディレクトリ以下の所有者とパーミション変更
+### currentディレクトリ以下の所有者/グループ/パーミション変更
  
     $ cd /var/www/application
     $ sudo chown -R www-data current
+    $ sudo chgrp  -R www-data current
     $ sudo chmod -R 775 current
+    
+### currentディレクトリ以下のグループを変更
 
 
 ### ubuntuユーザーをwww-dataグループへ追加

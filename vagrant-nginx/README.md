@@ -29,7 +29,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 
 # 目次
 
-* [ファイル総受信コマンド](#get)
+* [ファイル取得コマンド](#get)
 * [パッケージ管理システム](#package)
 * [HTML/CSS/JavaScript開発環境](#html_css_javascript)
 * [Ubuntu+Nginx+MySQL+PHP開発環境](#ubuntu_nginx_mysql_php)

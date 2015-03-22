@@ -447,12 +447,12 @@ __npmのバージョン2.5.1で下記コマンドを実行するとsudo: npm: co
     $ sudo npm install npm@latest -g
 
 
+
 ## Grunt
 
 [Grunt: The JavaScript Task Runner](http://gruntjs.com/)
 
 gruntは一般的にgrunt-cliのみグローバルへインストールし、grunt本体も含めて各プラグインはプロジェクトごとのフォルダへインストールする。
-
 
 ### 1. node/npmのインストール
 
@@ -460,14 +460,12 @@ gruntは一般的にgrunt-cliのみグローバルへインストールし、gru
 
 Gruntはnode.js/npmを使う。
 
-node.jsはpkgファイルをダウンロードしインストールした。  
-npmはnode.jsと一緒にインストールされた。
-
+node.jsはサイトからpkgファイルをダウンロードしインストールする。  
+npmはnode.jsと一緒にインストールされる。
 
 ### 2. grunt command line interface(grunt-cli)をグローバルへインストール
 
     $ sudo npm install -g grunt-cli
-
 
 ### 3. プロジェクトフォルダにpackage.jsonを作成
 
@@ -475,7 +473,6 @@ npmはnode.jsと一緒にインストールされた。
       "name": "example",
       "version": "0.0.1"
     }
-
 
 ### 4. プロジェクトフォルダにGrunt本体とプラグインをインストール
 
@@ -487,7 +484,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
     $ npm install grunt --save-dev
 
 /path/to/projectは上記フォルダ構成の例でははdevのパス。  
-–save-devをつければpackage.jsonのdevDependenciesプラグイン情報が追記される。
+–save-devをつければpackage.jsonのdevDependenciesへプラグイン情報が追記される。
 
     {
       "name": "example",
@@ -631,7 +628,7 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
 
 
 
-## StyoeDocco
+## StyleDocco
 
 CSS スタイルガイド。
 

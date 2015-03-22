@@ -2425,24 +2425,24 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 
 #### ImportError: No module named cuisine
 
-最初 sudoを使いroot権限でcuisineをインストールしていた。
+最初、sudoを使いスーパーユーザーでcuisineをインストールしていた。
 
     post:
       - sudo pip install cuisine
       
-Pythonは権限の違いでインストールされるパスが異なる。
-ImportError: No module named cuisineが出たのでsudoなしでインストールし解決した。
+ImportError: No module named cuisineが出たのでsudoなしでインストールし解決した。  
+Pythonのモジュールはスーパーユーザーと一般ユーザーでインストールされるパスが異なる。
 
     post:
       - pip install cuisine
 
 #### モジュール一覧
 
-sudoでインストールされたもの
+スーパーユーザーでインストールされたモジュール一覧。
 
     $ sudo pip freeze
     
-通常のユーザーでインストールされたもの
+一般のユーザーでインストールされたモジュール一覧。
 
     $ pip freeze
 

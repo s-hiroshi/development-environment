@@ -1855,24 +1855,22 @@ Postfixを再起動する。
 
 ## <a name="git">Git</a>
 
-デプロイサーバからGitHubのソースを取得できるようにする。
+GitをインストールしGitHubのソースを取得する。
 
 1. UbuntuへGitをインストールする。
 2. 公開鍵/秘密鍵を作成する。
-3. GitHubへ公開鍵を設定する。
-4. GitHubのリポジトリからソースを取得する(デプロイ処理)。
-
+3. GitHubへ公開鍵を設置する。
+4. GitHubのリポジトリからソースを取得する。
 
 ### 1 Gitインストール
 
     $ sudo apt-get install git
 
-
 ### 2. 公開鍵/秘密鍵作成
 
-ホームディレクトリでssh-keygenコマンドを実行
+ホームディレクトリでssh-keygenコマンドを実行する。
 
-    $ cd
+    $ cd /path/to/home
     $ ssh-keygen
     // パスフレーズは入力しない。
 
@@ -1882,9 +1880,11 @@ Postfixを再起動する。
     id_rsa
     id_rsa.pub
 
-### 3. 公開鍵id_rsa.pubの内容をGitHubへ登録する。
+### 3. 公開鍵をGitHubへ設置
 
-### 4. リポジトリを取得するテスト
+GitHub > Settings > SSH keys > Add SSH key
+
+### 4. リポジトリ取得テスト
 
     $ mkdir gittest
     $ cd gittest
@@ -1895,6 +1895,7 @@ Postfixを再起動する。
     The authenticity of host 'github.com (xxx.xxx.xxx.xxx)' can't be established.
     RSA key fingerprint is xxx.xxx
     Are you sure you want to continue connecting (yes/no)? 
+    yes
 
 
 [目次へ戻る](#index)

@@ -2257,9 +2257,9 @@ JenkinsでPHPの自動テストなどのビルドを行うツール。
 
 
 
-## <a name="ci_circleci">CircleCI クラウド型CIサーバー</a>
+## <a name="ci_circleci">CircleCI CIサーバー(クラウド型)</a>
 
-CircleCIは以下の機能を持つクラウド型CIサーバー。
+CircleCIは下記機能を提供するクラウド型CIサーバー。
 
 * 自動テスト  
   デフォルトはmasterブランチへプッシュすると自動テストを実行する。
@@ -2269,7 +2269,7 @@ CircleCIは以下の機能を持つクラウド型CIサーバー。
 
 ### 設定ファイル
 
-masterブランチへのPushで実行される処理をYMLで記載したcircle.ymlをプロジェクト直下に作成する。  
+circle.ymlにPushしたとき実行する処理をYMLで記載しプロジェクト直下に設置する。  
 circle.ymlの記載は下記リンクを参考にする。
 
 [Continuous Integration and Deployment](https://circleci.com/docs/configuration)
@@ -2331,10 +2331,6 @@ circle.yml
 	  override:
 		- mysql -u ubuntu < circle-database-setup.sql
 	dependencies: 
-	  pre:
-		- sudo pip install awscli
-		- sudo pip install fabric
-		- sudo pip install boto
 	  override:
 		- bash ./circle-setup.sh
 	test:
@@ -2349,9 +2345,15 @@ circle-database-setup.sql
 
 circle-setup.sh
 
+composerパッケージ群をGitで管理していないとき(composer.jsonのみ管理)は毎回下記処理を行う
+
+1. composerをインストール
+2. パッケージをインストール
+
+
 	#!/bin/bash
 	
-	# move to CakePHP app directory
+	# Move to CakePHP app directory
 	cd ./application/app
 	
 	# Install composer
@@ -2372,7 +2374,7 @@ circle-setup.sh
 
 ### <a name="ci_deploy_to_ec2">Amazon Web Services EC2へデプロイ</a>
 
-circle.yml
+#### circle.yml
 
 	deployment:
 	  production:
@@ -2381,10 +2383,9 @@ circle.yml
 		  - fab -f ./fabfile.py bootstrap ls
 
 
-	fabfile.py
-	
-	import boto
-	from fabric.api import env, run, sudo, parallel
+#### fabfile.py
+
+	from fabric.api import env, run
 	 
 	def bootstrap():
 		env.hosts = ['<hostname>']

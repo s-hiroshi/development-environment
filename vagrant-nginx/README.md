@@ -2390,8 +2390,8 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 
     .....
     dependencies: 
-      pre:
-        - sudo pip install fabric
+      post:
+        - pip install cuisine
     .....
 	deployment:
 	  production:
@@ -2399,22 +2399,52 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 		commands:
 		  - fab -f ./fabfile.py bootstrap deploy
 
-
 #### fabfile.py
 
 	from __future__ import with_statement
-	from fabric.api import *
-	from fabric.contrib.console import confirm
+    from fabric.api import *
+    from fabric.contrib.console import confirm
+    import cuisine
 	 
-	def bootstrap():
-		env.hosts = ['<hostname>']
-		env.user = "ubuntu"
-		env.key_filename = "ssh_private_key.pem" 
-	
 	def deploy():
-    	code_dir = '/var/www/application/current'
-    	with cd(code_dir):
-        	run("git clone git@github.com:xxxxx/xxxxx.git %s" % code_dir)
+		deploy_dir = '/var/www/application'
+		clone_dir = deploy_dir + '/example'
+		if not cuisine.dir_exists(clone_dir):
+			with cd(deploy_dir):
+				run("git clone git@github.com:xxxxx/xxxxx.git example")
+				sudo("chown -R www-data example")
+				sudo("chgrp  -R www-data example")
+				sudo("chmod -R 775 example")
+					
+		with cd(clone_dir):
+			run("git pull")
+
+#### cuisineモジュール
+
+[sebastien/cuisine](https://github.com/sebastien/cuisine)
+
+#### ImportError: No module named cuisine
+
+最初 sudoを使いroot権限でcuisineをインストールしていた。
+
+    post:
+      - sudo pip install cuisine
+      
+Pythonは権限の違いでインストールされるパスが異なる。
+ImportError: No module named cuisineが出たのでsudoなしでインストールし解決した。
+
+    post:
+      - pip install cuisine
+
+#### モジュール一覧
+
+sudoでインストールされたもの
+
+    $ sudo pip freeze
+    
+通常のユーザーでインストールされたもの
+
+    $ pip freeze
 
 
 #### 現在のフロー
@@ -2427,7 +2457,8 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
   + CIサーバー CircleCI
   	- テスト
   	- デプロイ
-  		1. GitHubのリポジトリをclone
+  		1. 初回 GitHubのリポジトリをclone
+  		2. クローン済み git pull
   		
 ##### 残り
 

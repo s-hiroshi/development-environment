@@ -2394,7 +2394,7 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 	  production:
 		branch: master
 		commands:
-		  - fab -f ./fabfile.py bootstrap ls
+		  - fab -f ./fabfile.py bootstrap deploy
 
 
 #### fabfile.py

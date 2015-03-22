@@ -2385,6 +2385,11 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 
 #### circle.yml
 
+    .....
+    dependencies: 
+      pre:
+        - sudo pip install fabric
+    .....
 	deployment:
 	  production:
 		branch: master
@@ -2394,15 +2399,40 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 
 #### fabfile.py
 
-	from fabric.api import env, run
+	from __future__ import with_statement
+	from fabric.api import *
+	from fabric.contrib.console import confirm
 	 
 	def bootstrap():
 		env.hosts = ['<hostname>']
 		env.user = "ubuntu"
 		env.key_filename = "ssh_private_key.pem" 
 	
-	def ls():
-		run('ls -al')
+	def deploy():
+    	code_dir = '/var/www/application/current'
+    	with cd(code_dir):
+        	run("git clone git@github.com:xxxxx/xxxxx.git %s" % code_dir)
+
+
+#### 現在のフロー
+
+* デプロイ EC2
+  ソフトウェアを手動でインストール
+* アプリケーション
+  + リモートリポジトリ GitHub
+  + 開発マシン ローカル(Mac)
+  + CIサーバー CircleCI
+  	- テスト
+  	- デプロイ
+  		1. GitHubのリポジトリをclone
+  		
+##### 残り
+
+* Fabric 条件分岐
+* GitHubのブランチから特定ディレクトリのみ取得する
+* アプリケーション初期設定
+	- データベースマイグレーション
+    
 
 
 ## <a name="env_cakephp">CakePHP開発環境</a>

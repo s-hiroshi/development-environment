@@ -225,3 +225,19 @@ MTファイル形式でバックアップが作成される。
 
     パターン <a href="/nucleus/plugins/impexp/index.php\?imagepopup=([^&]+)[^>]+>
     置換文字列 <a href="http://example.net/wordpress/wp-content/uploads/media/$1">
+   
+   
+PHP5.2 => PHP5.4~
+
+PHP5.4以降はStrict Standardsを表示する。
+
+例 Only variables should be passed by reference
+
+変更前
+
+    $term = array_shift( get_the_terms( $post->ID, $taxonomy_name ) );
+    
+変更後
+
+	$term = get_the_terms( $post->ID, $taxonomy_name );
+	$term = array_shift( $term );

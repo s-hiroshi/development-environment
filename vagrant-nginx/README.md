@@ -357,7 +357,7 @@ style.scssをコンパイルし同フォルダにstyle.cssを作成する例。
 
 ### 変更を監視して自動コンパイル
 
-    $ sass –watch style.scss:style.css
+    $ sass --watch style.scss:style.css
 
 ctrl + Cで監視を停止する。
 

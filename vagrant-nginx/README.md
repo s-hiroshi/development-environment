@@ -2843,11 +2843,10 @@ CIサーバーでテストするときのようにフィクスチャにテーブ
 
 #### スキーマファイルの作成
 
-    $ Console/cake schema generate
-    
- 現在のデータベースからスキーマファイルを作成する。
+    $ Console/cake schema generate    // データベースからスキーマファイルを作成(Config/Schema/schema.php)
+    $ Console/cake schema dump --write filename.sql  // filename.sqlへダンプ(Config/Schema/dump.sql)
  
- [cakePHP2.3 Schema - Logicky Blog](http://endoyuta.com/2013/08/17/cakephp2-3-schema/)
+[cakePHP2.3 Schema - Logicky Blog](http://endoyuta.com/2013/08/17/cakephp2-3-schema/)
 
 
 

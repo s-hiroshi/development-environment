@@ -2839,11 +2839,29 @@ CIサーバーでテストするときのようにフィクスチャにテーブ
 
 
 
-### データベースマイグレーション
+### データベースバージョン管理(マイグレーション)
 
-#### スキーマファイルの作成
+> 1. MySQLAdminなどを使ってテーブルの作成
+> 2. Migrationバージョンの生成
+> 3. 次に差分を自動するためのSchemaファイルの生成
 
-    $ Console/cake schema generate    // データベースからスキーマファイルを作成(Config/Schema/schema.php)
+[Migrationsプラグインの実践的運用 - ２４時間CakePHP](http://d.hatena.ne.jp/hiromi2424/20111220/1324387254)
+
+
+#### 2. Migrationバージョンの生成
+
+    $ Console/cake Migrations.migration generate -f
+
+オプジョンfはモデルのないテーブルもマイグレーションの対象に含める。
+    
+#### 3 スキーマファイルの作成
+
+    $ Console/cake schema generate -f   // データベースからスキーマファイルを作成(Config/Schema/schema.php)
+    
+オプジョンfはモデルのないテーブルものスキーマに含める。
+
+またshemaシェルはテーブル定義のダンプすることもできる。   
+    
     $ Console/cake schema dump --write filename.sql  // filename.sqlへダンプ(Config/Schema/dump.sql)
  
 [cakePHP2.3 Schema - Logicky Blog](http://endoyuta.com/2013/08/17/cakephp2-3-schema/)

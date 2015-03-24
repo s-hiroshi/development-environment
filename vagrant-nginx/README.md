@@ -1679,9 +1679,9 @@ myuserはホスト名を指定せずに作成した。
 ### UTF8でデータベース作成
 
     // 新規
-    CREATE DATABASE databasename CHARACTER SET utf8
+    CREATE DATABASE <database name> CHARACTER SET utf8
     // 変更
-    ALTER DATABASE databasename CHARACTER SET utf8
+    ALTER DATABASE <database name> CHARACTER SET utf8
     
 ### データベースの文字コード確認
 

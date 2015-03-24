@@ -2848,26 +2848,36 @@ CIサーバーでテストするときのようにフィクスチャにテーブ
 [Migrationsプラグインの実践的運用 - ２４時間CakePHP](http://d.hatena.ne.jp/hiromi2424/20111220/1324387254)
 
 
-#### 2. Migrationバージョンの生成
+#### Migrationのバージョン生成
 
     $ Console/cake Migrations.migration generate -f
 
-オプジョンfはモデルのないテーブルもマイグレーションの対象に含める。
+オプジョンfをつけてモデルのないテーブルもマイグレーションの対象に含める。
     
-#### 3 スキーマファイルの作成
+#### スキーマファイル作成
 
     $ Console/cake schema generate -f   // データベースからスキーマファイルを作成(Config/Schema/schema.php)
     
-オプジョンfはモデルのないテーブルものスキーマに含める。
+オプジョンfをつけてモデルのないテーブルものスキーマに含める。
 
-またshemaシェルはテーブル定義のダンプすることもできる。   
+
+### 本番環境でのスキーマ管理
+
+本番環境のスキーマ管理はマイグレーション適用で行う。
+
+	$ ./Console/cake Migrations.migration run
+
+CircleCIで自動化の対象。
+
+[CakePHP2系でマイグレーションを利用する方法 | Ryuzee.com](http://www.ryuzee.com/contents/blog/6108)
+
+#### スキーマダンプ
+
+shemaシェルはテーブル定義のダンプすることもできる。   
     
     $ Console/cake schema dump --write filename.sql  // filename.sqlへダンプ(Config/Schema/dump.sql)
  
 [cakePHP2.3 Schema - Logicky Blog](http://endoyuta.com/2013/08/17/cakephp2-3-schema/)
-
-
-
 
 ## <a name="dev_process">開発手法</a>
 

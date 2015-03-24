@@ -1672,8 +1672,12 @@ myuserはホスト名を指定せずに作成した。
 | character_set_system     | utf8                                       |
    
 
-上記設定でブラウザの確認では文字化けは起こらないがmysqlクライアントで確認すると文字化けが発生している。  
-原因はわからない。
+
+以上の設定にすると個別のデータベースの作成で CHARACTER SET utf8を付けなくてもデフォルトでUTF8になる。
+
+
+__上記設定でブラウザの確認では文字化けは起こらないがmysqlクライアントで確認すると文字化けが発生している。  
+原因はわからない。__
 
 my.cnfの[mysqld]部分を下記のように記載しても変わらなかった。
 
@@ -1688,6 +1692,10 @@ my.cnfの[mysqld]部分を下記のように記載しても変わらなかった
     CREATE DATABASE databasename CHARACTER SET utf8
     // 変更
     ALTER DATABASE databasename CHARACTER SET utf8
+    
+### データベースの文字コード確認
+
+    mysql> show create database <database name>;
 
 ### テーブル作成情報
 

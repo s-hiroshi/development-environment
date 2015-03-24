@@ -1718,8 +1718,35 @@ tablenameの定義が表示される。ALTER TABLEで変更した内容も反省
     
 ### 問題点
 
-__上記のようにデータベース、テーブルをUTF8で作成したがブラウザの確認では文字化けは起こらないがmysqlクライアントで確認すると文字化けが発生している。  
+__上記のようにデータベース、テーブルをUTF8で作成したが８ブラウザの確認では文字化けは起こらないがmysqlクライアントで確認すると文字化けが発生している。  
 原因はわからない。__
+
+解決 CakePHPのデータベース設定の問題だった。
+
+class DATABASE_CONFIG {
+
+	public $default = array(
+		'datasource' => 'Database/Mysql',
+		'persistent' => false,
+		'host' => '127.0.0.1',
+		'login' => 'example',
+		'password' => 'passw0rd',
+		'database' => 'example',
+		'prefix' => '',
+		'encoding' => 'utf8',       // この記載を追加したらUTF8で保存できるようになった。
+	);
+
+	public $test = array(
+		'datasource' => 'Database/Mysql',
+		'persistent' => false,
+		'host' => '127.0.0.1',
+		'login' => 'example',
+		'password' => 'passw0rd',
+		'database' => 'example_test',
+		'prefix' => '',
+		'encoding' => 'utf8',      // この記載を追加したらUTF8で保存できるようになった。
+	);
+}
 
 my.cnfの[mysqld]部分を下記のように記載しても変わらなかった。
 

@@ -1675,17 +1675,6 @@ myuserはホスト名を指定せずに作成した。
 
 以上の設定にすると個別のデータベースの作成で CHARACTER SET utf8を付けなくてもデフォルトでUTF8になる。
 
-
-__上記設定でブラウザの確認では文字化けは起こらないがmysqlクライアントで確認すると文字化けが発生している。  
-原因はわからない。__
-
-my.cnfの[mysqld]部分を下記のように記載しても変わらなかった。
-
-    skip-character-set-client-handshake
-    character-set-server = utf8
-    collation-server = utf8_general_ci
-
-
 ### UTF8でデータベース作成
 
     // 新規
@@ -1726,6 +1715,17 @@ tablenameの定義が表示される。ALTER TABLEで変更した内容も反省
 ### インポート
 
     $ mysql -u username -p --database=databasename --host=hostname < /path/to/dumpfile.sql
+    
+### 問題点
+
+__上記のようにデータベース、テーブルをUTF8で作成したがブラウザの確認では文字化けは起こらないがmysqlクライアントで確認すると文字化けが発生している。  
+原因はわからない。__
+
+my.cnfの[mysqld]部分を下記のように記載しても変わらなかった。
+
+    skip-character-set-client-handshake
+    character-set-server = utf8
+    collation-server = utf8_general_ci
 
 ### AWS RDS
 

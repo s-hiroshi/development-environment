@@ -1689,7 +1689,7 @@ myuserはホスト名を指定せずに作成した。
 
 ### テーブル作成情報
 
-    mysql> SHOW CREATE TABLE tablename;
+    mysql> SHOW CREATE TABLE <table name>;
 
 ### 文字コード(UTF8)を指定してテーブルを作成
 
@@ -1699,23 +1699,23 @@ myuserはホスト名を指定せずに作成した。
 
 ### テーブル定義表示
 
-    SHOW CREATE TABLE tablename;
+    SHOW CREATE TABLE <table name>;
 
 tablenameの定義が表示される。ALTER TABLEで変更した内容も反省されている。
 
 ### テーブル情報
 
-    DESC tablename        // またはSELECTなのど文
-    EXPLAIN tablename     // 
+    DESC <table name>        // またはSELECTなのど文
+    EXPLAIN <table name>     // 
 
 
 ### ダンプ
 
-    $ mysqldump -u username -p databasename > /path/to/dumpfile.sql
+    $ mysqldump -u username -p <database name > /path/to/dumpfile.sql
 
 ### インポート
 
-    $ mysql -u username -p --database=databasename --host=hostname < /path/to/dumpfile.sql
+    $ mysql -u username -p --database=<database name> --host=<host name> < /path/to/dumpfile.sql
     
 ### 問題点と解決
 

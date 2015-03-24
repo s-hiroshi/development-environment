@@ -1695,7 +1695,7 @@ my.cnfの[mysqld]部分を下記のように記載しても変わらなかった
     
 ### データベースの文字コード確認
 
-    mysql> show create database <database name>;
+    mysql> SHOW CREATE DATABASE <database name>;
 
 ### テーブル作成情報
 

@@ -2361,7 +2361,7 @@ ExampleFixture.phpファイルの記載をテーブル定義、レコードが�
 
 #### テストまでのcircle.yml
 
-circle.yml
+##### circle.yml
 
 	machine:
 	  php:
@@ -2371,25 +2371,27 @@ circle.yml
 		- mysql -u ubuntu < circle-database-setup.sql
 	dependencies: 
 	  override:
-		- bash ./circle-setup.sh
+		- bash ./circle-composer-setup.sh
 	test:
 	  override:
 		- ./application/app/Console/cake test app Model/Example
 
-circle-database-setup.sql
+##### circle-database-setup.sql
 
 	GRANT ALL PRIVILEGES ON *.* TO <user> IDENTIFIED BY '<passowrd>';
 	CREATE DATABASE <databasename> CHARACTER SET utf8;
 	CREATE DATABASE <databasename>_test CHARACTER SET utf8;
 
-circle-setup.sh
+##### circle-composer-setup.sh
 
-composerパッケージ群をGitで管理していないとき(composer.jsonのみ管理)は毎回下記処理を行う
+composer.jsonでパッケージ管理をしパッケージの実態はGitでトラッキングしていないときは、  
+毎回composer本体とomposer.jsonに従いパッケージをインストールする。
 
 1. composerをインストール
 2. パッケージをインストール
 
-		# !/bin/bash
+
+		#!/bin/bash
 		
 		# Move to CakePHP app directory
 		cd ./application/app

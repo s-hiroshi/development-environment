@@ -2389,20 +2389,16 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 1. composerをインストール
 2. パッケージをインストール
 
-
-
-<pre><code>
-# !/bin/bash
-
-# Move to CakePHP app directory
-cd ./application/app
-
-# Install composer
-curl -sS https://getcomposer.org/installer | php
-
-# Install package
-php composer.phar install
-</code></pre>
+	# !/bin/bash
+	
+	# Move to CakePHP app directory
+	cd ./application/app
+	
+	# Install composer
+	curl -sS https://getcomposer.org/installer | php
+	
+	# Install package
+	php composer.phar install
 
 
 ### <a name="ci_deploy">自動デプロイ Fabric</a>

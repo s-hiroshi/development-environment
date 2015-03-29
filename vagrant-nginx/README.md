@@ -2298,7 +2298,7 @@ JenkinsでPHPの自動テストなどのビルドを行うツール。
 
 ## <a name="ci_circleci">CircleCI CIサーバー(クラウド型)</a>
 
-CircleCIは下記機能を提供するクラウド型CIサーバー。
+CircleCIは下記機能を提供するクラウド型CI・デプロイサーバー。
 
 * 自動テスト  
   デフォルトはmasterブランチへプッシュすると自動テストを実行する。

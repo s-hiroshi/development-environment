@@ -2311,7 +2311,7 @@ CircleCIは下記機能を提供するクラウド型CIサーバー。
 circle.ymlにPushしたとき実行する処理をYMLで記載しプロジェクト直下に設置する。  
 circle.ymlの記載は下記リンクを参考にする。
 
-[Continuous Integration and Deployment](https://circleci.com/docs/configuration)
+[Continuous Integration and Deployment](https://circleci.com/docs/configuration)  
 [CircleCI経由でRailsアプリをデプロイ - Qiita](http://qiita.com/ysk_1031/items/f584a0599791bdba132a)
 
 

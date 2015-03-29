@@ -2392,7 +2392,7 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 
 
 
-    #!/bin/bash
+    # !/bin/bash
 	
 	# Move to CakePHP app directory
 	cd ./application/app

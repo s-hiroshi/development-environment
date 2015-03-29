@@ -2390,7 +2390,9 @@ composerパッケージ群をGitで管理していないとき(composer.jsonの�
 2. パッケージをインストール
 
 
-	#!/bin/bash
+
+
+    #!/bin/bash
 	
 	# Move to CakePHP app directory
 	cd ./application/app

@@ -68,6 +68,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
     + [Berkshelfはbundleで管理して使うとエラーがでるのでChefDKを使う](#appendix_berkshelf)
     + [behatインストールで発生したエラーへの対応](#appendix_behat)
     + [Jenkins設定画面でエラー](#appendix_jenkins_display)
+    + [Appendix cuisineモジュール](appendix_cuisine)
     + [JenkinsのビルドでAPCの書き込みエラーが発生する問題](#appendix_jenkins)
     + [soファイル](#appendix_so)
     + [Ruby](#appendix_ruby)
@@ -2403,33 +2404,44 @@ composer.jsonでパッケージ管理をしパッケージの実態はGitでト�
 		php composer.phar install
 
 
-### <a name="ci_deploy">自動デプロイ Fabric</a>
+### 自動ドキュメンテーション作成
+
+* PhpDocumentor
+* YUIDoc
+
+
+## <a name="ci_deploy">デプロイ処理</a>
 
 有名なデプロイツールとして下記がある。  
-今回はFabricを使う。
 
 * Fabric
 * Capistrano
 
-### インストール
+今回はFabricを使う(CircleCIはFabricがデフォルトでインストール済み)。
+
+### Fabricインストール
 
     $ pip install fabric
 
 [Welcome to Fabric! &mdash; Fabric  documentation](http://www.fabfile.org/index.html)
 
-### ドキュメント
+### Fabricドキュメント
 
 [Welcome to Fabric’s documentation! &mdash; Fabric  documentation](http://docs.fabfile.org/en/1.10/index.html)
 
-### <a name="ci_deploy_to_ec2">Amazon Web Services EC2へデプロイ</a>
+### <a name="ci_deploy_to_ec2">AWS EC2へデプロイ</a>
 
 #### circle.yml
 
-    .....
-    dependencies: 
-      post:
-        - pip install cuisine
-    .....
+* cuisineモジュールインストール
+* fabfile.pyでデプロイ処理定義
+
+
+	.....
+	dependencies: 
+	  post:
+		- pip install cuisine
+	.....
 	deployment:
 	  production:
 		branch: master
@@ -2439,49 +2451,29 @@ composer.jsonでパッケージ管理をしパッケージの実態はGitでト�
 #### fabfile.py
 
 	from __future__ import with_statement
-    from fabric.api import *
-    from fabric.contrib.console import confirm
-    import cuisine
+	from fabric.api import *
+	from fabric.contrib.console import confirm
+	import cuisine
 	 
+	def bootstrap():
+		env.hosts = ['xxx.xxx.xxx.xxx']
+		env.user = "ubuntu"
+		env.key_filename = "aws_ssh_key.pem" 
+		
 	def deploy():
-		deploy_dir = '/var/www/application'
-		clone_dir = deploy_dir + '/example'
-		if not cuisine.dir_exists(clone_dir):
+		deploy_dir = '/var'
+		www_dir = '/var/www'
+		application_dir  = '/var/www/application'
+		if not cuisine.dir_exists(application_dir):
 			with cd(deploy_dir):
-				run("git clone git@github.com:xxxxx/xxxxx.git example")
-				sudo("chown -R www-data example")
-				sudo("chgrp  -R www-data example")
-				sudo("chmod -R 775 example")
-					
-		with cd(clone_dir):
+				run("git clone git@github.com:s-hiroshi/minker.git www")
+				sudo("chown -R www-data www")
+				sudo("chgrp  -R www-data www")
+				sudo("chmod -R 775 www")
+				
+		with cd(www_dir):
 			run("git pull")
 
-#### cuisineモジュール
-
-[sebastien/cuisine](https://github.com/sebastien/cuisine)
-
-#### ImportError: No module named cuisine
-
-最初、sudoを使いスーパーユーザーでcuisineをインストールしていた。
-
-    post:
-      - sudo pip install cuisine
-      
-ImportError: No module named cuisineが出たのでsudoなしでインストールし解決した。  
-Pythonのモジュールはスーパーユーザーと一般ユーザーでインストールされるパスが異なる。
-
-    post:
-      - pip install cuisine
-
-#### モジュール一覧
-
-スーパーユーザーでインストールされたモジュール一覧。
-
-    $ sudo pip freeze
-    
-一般のユーザーでインストールされたモジュール一覧。
-
-    $ pip freeze
 
 
 #### 現在のフロー
@@ -3889,6 +3881,35 @@ PHPUnitでの単体テストがうまく行っていない
 4. php-develをインストールするためにyumをインストールした。
   sudo apt-get install yum
 5. yum install php-develではエラー
+
+
+### <a name="appendix_cuisine">Appendix cuisineモジュール</a>
+
+[sebastien/cuisine](https://github.com/sebastien/cuisine)
+
+#### ImportError: No module named cuisine
+
+最初、sudoを使いスーパーユーザーでcuisineをインストールしていた。
+
+    post:
+      - sudo pip install cuisine
+      
+ImportError: No module named cuisineが出たのでsudoなしでインストールし解決した。  
+Pythonのモジュールはスーパーユーザーと一般ユーザーでインストールされるパスが異なる。
+
+    post:
+      - pip install cuisine
+
+#### モジュール一覧
+
+スーパーユーザーでインストールされたモジュール一覧。
+
+    $ sudo pip freeze
+    
+一般のユーザーでインストールされたモジュール一覧。
+
+    $ pip freeze
+
 
 
 ### <a name="appendix_so">Appendix soファイル</a>

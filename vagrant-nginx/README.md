@@ -47,7 +47,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 		- [Vagrant, Chefを使ったプロビジョニング手順](#ci_vagrant_chef)
 	* [Jenkins CIサーバー](#ci_jenkins)
 	* [CircleCi クラウド型CIサーバー](#ci_circleci)
-	* [デプロイの自動化](#ci_deploy)
+	* [デプロイ処理](#ci_deploy)
 	* [CakePHP開発環境](#env_cakephp)
 	* [開発手法](#ci_process)
 		- [アジャイル](#agile)
@@ -945,7 +945,7 @@ Nginx設定ファイルはディレクティブで設定を行う。
             index index.php index.html index.htm;
  
             # Make site accessible from http://localhost/
-            server_name localhost;
+            server_name example.com;
  
             location / {
                     # First attempt to serve request as file, then
@@ -1951,7 +1951,7 @@ GitHub > Settings > SSH keys > Add SSH key
 * [CI(継続的インテグレーション)](#ci_ci)
 * [Jenkins CIサーバー](#ci_jenkins)
 * [CircleCi クラウド型CIサーバー](#ci_circleci)
-* [デプロイの自動化](#ci_deploy)
+* [デプロイ処理](#ci_deploy)
 * [CakePHP開発環境](#env_cakephp)
 * [開発手法](#ci_process)
 	* [アジャイル](#agile)
@@ -2547,7 +2547,7 @@ Config/database.phpで本番用とテスト用データベースを設定する�
 			'password' => 'passw0rd!',
 			'database' => 'example',
 			'prefix' => '',
-			//'encoding' => 'utf8',
+			'encoding' => 'utf8',
 		);
 	
 		public $test = array(
@@ -2558,8 +2558,20 @@ Config/database.phpで本番用とテスト用データベースを設定する�
 			'password' => 'passw0rd!',
 			'database' => 'example_test',
 			'prefix' => '',
-			//'encoding' => 'utf8',
+			'encoding' => 'utf8',
 		);
+		
+		public $production = array(
+		'datasource' => 'Database/Mysql',
+			'persistent' => false,
+			'host' => 'localhost',
+			'login' => 'example',
+			'password' => 'passw0rd!',
+			'database' => 'example',
+			'prefix' => '',
+        	'encoding' => 'utf8',
+		);
+		
 	}
 
 #### 本番用/テスト用のデータベース切替方法
@@ -2624,17 +2636,20 @@ Apacheはサーバー環境変数として定義する。
 
 Model/AppModelで切り替える。
 
-    <?php
-    // app/Model/AppModel.php
-    class AppModel extends Model {
-		.....
-		if ($env === 'production') {
-			$this->useDbConfig = 'production';
-		} else {
-			$this->useDbConfig = 'test';
+	<?php
+	// app/Model/AppModel.php
+	class AppModel extends Model {
+		
+		function __construct($id = false, $table = null, $ds = null) {
+			.....
+			if ($env === 'production') {
+				$this->useDbConfig = 'production';
+			} else {
+				$this->useDbConfig = 'test';
+			}
+			....
 		}
-		....
-    }
+	}
 
 ##### ClassRegistry::initで切替
 
@@ -3609,7 +3624,7 @@ Wikipedia
             index index.php index.html index.htm;
 
             # Make site accessible from http://localhost/
-            server_name localhost;
+            server_name example.com;
 
             location / {
                     try_files $uri $uri?$args $uri/ /index.php?$uri&$args /index.php?$args;

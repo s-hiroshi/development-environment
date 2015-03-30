@@ -2653,14 +2653,13 @@ Model/AppModelで切り替える。
 	// app/Model/AppModel.php
 	class AppModel extends Model {
 		
-		function __construct($id = false, $table = null, $ds = null) {
-			.....
-			if ($_SERVER['WEB_APP_ENV'] === 'production') {
+		function __construct( $id = false, $table = null, $ds = null ) {
+			parent::__construct(); /* 親クラスのコンストラクタを呼ばないとエラーになる */
+			if ( isset( $_SERVER[ 'WEB_APP_ENV' ] ) && $_SERVER[ 'WEB_APP_ENV' ] === 'production' ) {
 				$this->useDbConfig = 'production';
-			} else {
+			} elseif ( isset( $_SERVER[ 'WEB_APP_ENV' ] ) && $_SERVER[ 'WEB_APP_ENV' ] === 'test' ) {
 				$this->useDbConfig = 'test';
 			}
-			....
 		}
 	}
 

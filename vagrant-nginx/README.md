@@ -2498,7 +2498,7 @@ composer.jsonでパッケージ管理をしパッケージの実態はGitでト�
     
 ### デプロイサーバーのDebugレベル
 
-Config/bootstrap.php
+Config/core.php
 
 	if (isset($_SERVER['WEB_APP_ENV']) && $_SERVER['WEB_APP_ENV'] == 'production') {
 	  // 本番サーバー
@@ -2601,16 +2601,20 @@ FastCGI設定アフィル(今回は/etc/nginx/sites-available/defaulで指定)�
 
 192.168.33.200(本番環境)
 
-    location {
+	location ~ \.php$ {
         .....
 		fastcgi_param WEB_APP_ENV  production;
+		.....
     }
 
 192.168.33.10(テスト環境)
 
-	location {
-		fastcgi_param WEB_APP_ENV  development;
+	location ~ \.php$ {
+		.....
+    	fastcgi_param WEB_APP_ENV development;
+		.....
     }
+
 
 ##### Apache
 
@@ -2651,7 +2655,7 @@ Model/AppModelで切り替える。
 		
 		function __construct($id = false, $table = null, $ds = null) {
 			.....
-			if ($env === 'production') {
+			if ($_SERVER['WEB_APP_ENV'] === 'production') {
 				$this->useDbConfig = 'production';
 			} else {
 				$this->useDbConfig = 'test';

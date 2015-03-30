@@ -2496,6 +2496,23 @@ composer.jsonでパッケージ管理をしパッケージの実態はGitでト�
 * アプリケーション初期設定
 	- データベースマイグレーション
     
+### デプロイサーバーのDebugレベル
+
+Config/bootstrap.php
+
+	if (isset($_SERVER['WEB_APP_ENV']) && $_SERVER['WEB_APP_ENV'] == 'production') {
+	  // 本番サーバー
+	  Configure::write('debug', 0);
+	} elseif (isset($_SERVER['WEB_APP_ENV']) && $_SERVER['WEB_APP_ENV'] == 'test') {
+	  // テストサーバー
+	  Configure::write('debug', 2);
+	} else {
+	  // ローカル
+	  Configure::write('debug', 2);
+	}
+	Configure::write('cake_env', $cake_env);
+
+[\[cakephp\]環境変数で本番環境と開発環境を設定する | WEBPAPRIKA](http://webpaprika.com/1636.html)
 
 
 ## <a name="env_cakephp">CakePHP開発環境</a>

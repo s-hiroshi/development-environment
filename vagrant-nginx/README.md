@@ -2522,7 +2522,14 @@ Config/core.php
 * データベースマイグレーション - CakeDC Migration Plugin
 
 
+## PHP実行ユーザー確認
 
+	<?php
+    echo `whoami`;
+    
+## app/tmpディレクトリ
+
+CakePHPが作成するキャッシュ等やセッションの一時ファイルなどapp/tmpディレクトリに作成されるファイル/ディレクトリは全てPHP実行ユーザーで作成される。
 
 ### CakePHP テスト環境
 

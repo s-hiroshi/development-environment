@@ -2591,15 +2591,24 @@ Config/database.phpで本番用とテスト用データベースを設定する�
 
 #### 環境変数の定義
 
-環境変数WEB_APP_ENVを定義しその値に応じてテスト用DBと本番環境用DBを切り替える。  
+環境変数WEB_APP_ENVを定義しその値に応じて開発用DB、テスト用DB、本番用DBを切り替える。  
 (192.168.33.10をテスト用ホスト、192.168.33.200を本番環境のホストと仮定する。)
 
 ##### Nginx
 
 Nginxは後述するApacheのようにサーバー変数ではなくFastCGIの変数として定義する。  
-FastCGI設定アフィル(今回は/etc/nginx/sites-available/defaulで指定)のlocationディレクティブでfastcgi_paramを指定する。
+FastCGIの設定はnginx設定ファイル(今回は/etc/nginx/sites-available/defaulで指定)のlocationディレクティブでfastcgi_paramを指定する。
 
-192.168.33.200(本番環境)
+
+テスト環境
+
+	location ~ \.php$ {
+		.....
+    	fastcgi_param WEB_APP_ENV test;
+		.....
+    }
+
+本番環境
 
 	location ~ \.php$ {
         .....
@@ -2607,7 +2616,7 @@ FastCGI設定アフィル(今回は/etc/nginx/sites-available/defaulで指定)�
 		.....
     }
 
-192.168.33.10(テスト環境)
+開発環境
 
 	location ~ \.php$ {
 		.....
@@ -2615,24 +2624,13 @@ FastCGI設定アフィル(今回は/etc/nginx/sites-available/defaulで指定)�
 		.....
     }
 
-
 ##### Apache
 
 Apacheはサーバー環境変数として定義する。
 
 (例) .htaccessのsetEnvディレクティブでWEB_APP_ENVを定義する例
 
-192.168.33.200(本番環境)
-
-	Alias /foo /var/www/foo/app/webroot
-	
-	<Location /foo>
-		.....
-		SetEnv WEB_APP_ENV production
-		.....
-	</Location>
-
-192.168.33.10(テスト環境)
+開発環境
 
 	Alias /foo /var/www/foo/app/webroot
 	
@@ -2643,11 +2641,78 @@ Apacheはサーバー環境変数として定義する。
 	</Location>
 
 
+テスト環境
+
+	Alias /foo /var/www/foo/app/webroot
+	
+	<Location /foo>
+		.....
+		SetEnv WEB_APP_ENV test
+		.....
+	</Location>
+
+本番環境
+
+	Alias /foo /var/www/foo/app/webroot
+	
+	<Location /foo>
+		.....
+		SetEnv WEB_APP_ENV production
+		.....
+	</Location>
+
 #### データベース切替処理
 
-##### 環境変数で切替
+##### Config/core.phpとConfig/database.phpで切替
 
-Model/AppModelで切り替える。
+Config/core.php
+
+	if ( isset( $_SERVER[ 'WEB_APP_ENV' ] ) && $_SERVER[ 'WEB_APP_ENV' ] == 'production' ) {
+		// 本番
+		Configure::write( 'debug', 0 );
+		Configure::write( 'database', 'production' );
+	} elseif ( isset( $_SERVER[ 'WEB_APP_ENV' ] ) && $_SERVER[ 'WEB_APP_ENV' ] == 'test' ) {
+		// テスト
+		Configure::write( 'debug', 2 );
+		Configure::write( 'database', 'test' );
+	} else {
+		// 開発
+		Configure::write( 'debug', 2 );
+		Configure::write( 'database', 'default' );
+	}
+
+Config/database.php
+
+	class DATABASE_CONFIG {
+	
+		public $default = [
+			.....
+		];
+	
+		public $test = [
+			.....
+		];
+	
+		public $production = [
+			.....
+		];
+	
+		function __construct() {
+			$connection = Configure::read('database');
+			if (!empty($this->{$connection})) {
+				$this->default = $this->{$connection};
+			}
+		}
+	}
+
+[CakePHPのデータベースを開発環境と本番環境で切り分ける方法  &raquo;  INSPIRE TECH](http://inspire-tech.jp/2011/04/cakephp_database_settings/)
+
+
+##### Model/AppModelで切り替
+
+__下記の方法で開発環境ではうまくいくがCircleCIではエラーが起きた。__
+
+	MissingTableException: Table examples for model Example was not found in datasource default.
 
 	<?php
 	// app/Model/AppModel.php

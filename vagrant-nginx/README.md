@@ -73,6 +73,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
     + [soファイル](#appendix_so)
     + [Ruby](#appendix_ruby)
     + [AWS構築手順](#appendix_recipe)
+    + [Appendix NginxでBasic認証](#appendix_basic)
 
 
 # <a name="get">ファイル取得コマンド</a>
@@ -4064,6 +4065,31 @@ rbenvはシェルによりrubyを切り替える。
     $ sudo chmod -R 775 current
     $ sudo vi /etc/nginx/sites-available/default
     $ sudo nginx -s reload
+    
+    
+### <a name="appendix_basic">Appendix NginxでBasic認証</a>
 
+ルートが/var/wwwのでサイト全体にBasic認証を設定する例。
+
+#### .htpasswd作成
+
+	// htpasswd作成ツールインストール
+	$ sudo apt-get install apache2-utils
+	
+	// apr1 (Apache MD5) 暗号化 
+	htpasswd -nbm <username> <password> > /var/www/.htpasswd
+
+Nginx設定ファイル編集
+
+今回は/etc/nginx/sites-available/defaultを編集した。
+
+	location / {
+		.....
+		auth_basic            'Auth Basic Sample';
+		auth_basic_user_file  '/var/www/.htpasswd';
+	}
+
+
+[Nginx でBasic認証(ユーザ名、パスワードを求める )するには | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/centos/apache-nginx-7-basic-auth.html)
 
 [目次へ戻る](#index)

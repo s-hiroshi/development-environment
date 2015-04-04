@@ -892,6 +892,12 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 
 ### 起動・停止・再起動
 
+    $ sudo service nginx start
+    $ sudo service nginx stop
+    $ sudo service nginx restart
+
+またserviceコマンドを使わない方法が下記で紹介されている。
+
 [ubuntuでnginxの起動と最低限のコマンド](http://joppot.info/2014/03/10/970)
 
 
@@ -907,9 +913,9 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 
 ### 設定ファイルの記載法
 
-Nginx設定ファイルはディレクティブで設定を行う。  
-ディレクティブは1行のもと数行にわたるブロックの2種種類に分けることができる。
-またディレクティブは入れ子にできる。
+Nginxはディレクティブで設定を行う。  
+ディレクティブは1行のものと数行にわたるブロックの2種種類に分けることができる。  
+ディレクティブは入れ子にできる。
 
     # 1行のディレクティブの例
     sendfile on;
@@ -1551,13 +1557,12 @@ Nginx再起動
 
 ## <a name="mysql">MySQL</a>
 
-以下の説明はUbuntuにMySQLをインストールしている前提で記載する。
+UbuntuにMySQLをインストールしている前提で記載する。
 
 MySQLでは識別子(テーブル名やカラム名)が予約語を含むときはバッククォートで囲む必要がある。
 
     EXPLAIN hoge    // hogeは予約語でないのでバッククォートは必要ない。
     EXPLAIN `table` // 仮にtableテーブルを作成しているときの例。
-
 
 ### 起動・停止・再起動
 
@@ -1571,7 +1576,9 @@ MySQLでは識別子(テーブル名やカラム名)が予約語を含むとき�
     $ sudo /etc/init.d/mysql restart
 
     // 起動確認
-    $ mysqladmin ping
+    $ mysqladmin -u <username> -p ping
+    Enter Password // パスワード入力
+    mysqld alive
 
 [MySQL サーバが起動中であるかを確認する - MySQL 逆引きリファレンス](http://mysql.javarou.com/dat/000409.html)
  
@@ -1582,11 +1589,23 @@ MySQLでは識別子(テーブル名やカラム名)が予約語を含むとき�
     mysql> SELECT version();
 
 
-### 設定ファイル
+### 設定ファイル(my.cnf)
+
+my.cnfのパスは通常/etc/mysql/my.cnfとなる。
 
     $ sudo find / -name my.cnf
     /etc/mysql/my.cnf
 
+my.cnyの確認
+
+   $ cat /etc/mysql/my.cnf
+
+### mysql.sock, mysql.pidファイル
+
+5.5.40-0ubuntu0.14.04.1では下記パスになる(my.cnfに記載されている)。
+
+	var/run/mysqld/mysqld.pid
+	var/run/mysqld/msyql.sock
 
 ### ユーザー管理
 
@@ -1675,7 +1694,6 @@ myuserはホスト名を指定せずに作成した。
 | character_set_system     | utf8                                       |
    
 
-
 以上の設定にすると個別のデータベースの作成で CHARACTER SET utf8を付けなくてもデフォルトでUTF8になる。
 
 ### UTF8でデータベース作成
@@ -1710,10 +1728,12 @@ tablenameの定義が表示される。ALTER TABLEで変更した内容も反省
     DESC <table name>        // またはSELECTなのど文
     EXPLAIN <table name>     // 
 
-
 ### ダンプ
 
-    $ mysqldump -u username -p <database name > /path/to/dumpfile.sql
+    $ mysqldump -u <user name> -p <database name> > /path/to/dumpfile.sql
+    // タイムスタンプを利用する場合
+    $ mysqldump -u <user name> -p <database name> > /path/to/$(date "+%Y%m%d%H%M%S").sql
+    // 20150101125959.sql 2015年1月1日12時59分59秒
 
 ### インポート
 
@@ -1723,7 +1743,7 @@ tablenameの定義が表示される。ALTER TABLEで変更した内容も反省
 
 #### 問題
 
-__以上のようにデータベース、テーブルをUTF8で作成したがブラウザ確認は文字化けはせずmysqlクライアントで確認すると文字化けが発生した。__  
+__CakePHPで上述のようにデータベース、テーブルをUTF8で作成したがブラウザ確認は文字化けはせずmysqlクライアントで確認すると文字化けが発生した。__  
 
 
 #### 解決 

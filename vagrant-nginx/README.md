@@ -1590,7 +1590,17 @@ MySQLでは識別子(テーブル名やカラム名)が予約語を含むとき�
 
     $ mysqld --version
     mysql> SELECT version();
+    
 
+### mysqlクライアントへログイン
+
+mysqlクライアントはオプションの指定が方法がいくつかある。  
+ユーザー名 foo, パスワードbarの場合を記載する。
+
+    $ mysql -u foo -p
+    // Enter Password    <-- barを入力
+    $ mysql -ufoo -pbar
+    $ mysql --user=foo --password=bar
 
 ### 設定ファイル(my.cnf)
 

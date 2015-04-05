@@ -1579,6 +1579,9 @@ MySQLでは識別子(テーブル名やカラム名)が予約語を含むとき�
     $ mysqladmin -u <username> -p ping
     Enter Password // パスワード入力
     mysqld alive
+    
+    // プロセス確認
+    $ ps aux | grep mysqld
 
 [MySQL サーバが起動中であるかを確認する - MySQL 逆引きリファレンス](http://mysql.javarou.com/dat/000409.html)
  
@@ -1779,7 +1782,7 @@ CakePHPのデータベース設定の問題だった。
 
 ### AWS RDS
 
-AWSではEC2インスタンスへMySQLをインストールし利用することができる。  
+AWSはEC2インスタンスへMySQLをインストールし利用することができる。  
 またAWS RDSを使いMySQLサーバーを独立して構築することもできる。
 
 ### 接続確認 mysql_test.php
@@ -3425,9 +3428,7 @@ iオプションでの鍵の指定は絶対パスまたは相対パスで指定�
         - Security Groups
 
 
-どのポートを空けるか(どのサービスをりようするか)を各インスタンスごとにセキュリティグループとして設定する。  
-どのポートをどこから許可するか？  
-
+どのポートを空けるか(どのサービスを利用可能にするか)を各インスタンスごとにセキュリティグループとして設定する。  
 
 ### <a name="aws_ec2_ip">Elastic IPs</a>
 
@@ -3437,9 +3438,8 @@ iオプションでの鍵の指定は絶対パスまたは相対パスで指定�
 
 __T2 instances are VPC-only. Your T2 instance will launch into your VPC. Learn more about T2 and VPC.__
 
-インスタンスの起動・再起動で固定IPは再度割り当てられ値が変わる。
-再起動ごも固定にするにはElastic IPが必要?。
-
+固定IPはインスタンスの起動・再起動で割り当てられる値が変わる。  
+IPアドレスを再起動後も固定にするにはElastic IPが必要?。
 
 ### <a name="aws_ec2_rpm_app">RPM系 Apache、MySQL, PHPインストー</a>
 
@@ -3451,7 +3451,6 @@ __T2 instances are VPC-only. Your T2 instance will launch into your VPC. Learn m
     $ sudo chkconfig httpd on
     // Apache起動
     $ sudo service httpd start
-
 
 ### <a name="aws_ec2_debian_app">Debian系Nginx, MySQL,PHP]<a>
 
@@ -3486,12 +3485,11 @@ Evernoteの「2015.01.16 AWS UbuntuでPHPを動作させる」を参照。
 AWSではパスワードなしでrootでログインすることはできない。
 
 
-
 ### 課金
 
 [よくある質問 - Amazon RDS（リレーショナルデータベースサービス Amazon Relational Database Service） | アマゾン ウェブ サービス（AWS 日本語）](http://aws.amazon.com/jp/rds/faqs/)
 
-上記ページの請求に記載。
+上記ページの請求に関する記載がある。
 
 
 ## <a name="aws_route53">Route 53</a>

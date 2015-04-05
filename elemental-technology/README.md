@@ -284,25 +284,25 @@ MySQLはMacへデフォルトで入っていない。
 
     set password for hoge@localhost = password('pass');
     
-__ 下記コマンドでパスワード設定したときはエラーが発生してログインできなかった。__
+__下記コマンドでパスワード設定したときはエラーが発生してログインできなかった。__
 
     UPDATE mysql.user SET Password=PASSWORD('pass') WHERE User='root' AND Host='localhost';
 
 ## ユーザーの確認
 
-   mysql> use mysql
-   Database changed
-   mysql> select user, host, password from user;
-   +------+-----------+-------------------------------------------+
-   | user | host      | password                                  |
-   +------+-----------+-------------------------------------------+
-   | root | localhost | *320947A24DF806709E4A32F86C9A97A8E56B3BF1 |
-   | root | linux     |                                           |
-   |      | localhost |                                           |
-   |      | linux     |                                           |
-   | pma  | localhost |                                           |
-   +------+-----------+-------------------------------------------+
-   5 rows in set (0.01 sec)
+	mysql> use mysql
+	Database changed
+	mysql> select user, host, password from user;
+	+------+-----------+-------------------------------------------+
+	| user | host      | password                                  |
+	+------+-----------+-------------------------------------------+
+	| root | localhost | *320947A24DF806709E4A32F86C9A97A8E56B3BF1 |
+	| root | linux     |                                           |
+	|      | localhost |                                           |
+	|      | linux     |                                           |
+	| pma  | localhost |                                           |
+	+------+-----------+-------------------------------------------+
+	5 rows in set (0.01 sec)
 
 ## プログラムフォルダー
 

@@ -320,7 +320,7 @@ __下記コマンドでパスワード設定したときはエラーが発生し
 
 #### 1. my.cnfに設定
 
-my.cnfの[mysqld]にskip-grant-tablesを追加
+my.cnfの\[mysqld\]にskip-grant-tablesを追加
 
     [mysqld]
     skip-grant-tables

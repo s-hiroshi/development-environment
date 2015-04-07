@@ -3275,7 +3275,7 @@ EC2でUbuntuを安全に運用する。
     $ su root
     # <command>
 
-rootはプロンプトが$から#へ変更される。
+rootはプロンプトが$から\#へ変更される。
 
 ### OSへのログイン
 
@@ -3287,6 +3287,10 @@ rootはプロンプトが$から#へ変更される。
 __EC2はでフォルトでrootログインを禁止している。デフォルトのログインユーザーははubuntu。__
 
 #### SSHでのみ接続
+
+/etc/ssh/sshd_config
+    
+    PasswordAuthentication no // yesをnoに変更 
 
 #### SSH接続でrootのログイン禁止
 
@@ -3305,6 +3309,14 @@ __EC2はでフォルトでrootログインを禁止している。デフォル�
     /etc/init.d/ssh restart
 
 __EC2は上記の変更をしても22番でログインできた。__
+
+#### sudo
+
+sudoユーザーは一時的にroot権限でコマンドを実行できる。  
+ユーザーやグループごとのsudoの制御はvisudoを使い行う。  
+sudoグループはデフォルトで作成されそのメンバーはsudoできる。
+
+    $ sudo visudo
 
 ### ユーザー
 
@@ -3586,6 +3598,8 @@ Aレコードはexample.comを設定している。
     $ /usr/sbin/postconf | grep mail_version
     mail_version = 2.11.0
 
+[Postfixのバージョンを確認する | CoDE4U](http://blog.code4u.org/archives/1135)
+
 ### 設定ファイル
 
     /etc/postfix/main.cf
@@ -3596,10 +3610,16 @@ Aレコードはexample.comを設定している。
 
 ## mailコマンドで送信確認
 
-### インストール
+### mailインストール
 
     $ sudo apt-get install mailutils
 
+### 送信
+
+info@example.comへ送信テスト。
+
+    $ mail <info@example.com>
+    
 
 試した環境ではmailコマンドの終了は.ではなくエンター + Ctrl + D。
 
@@ -3612,7 +3632,6 @@ Aレコードはexample.comを設定している。
 
 [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
 [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
-[Postfixのバージョンを確認する | CoDE4U](http://blog.code4u.org/archives/1135)
 [Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
 
 
@@ -3625,7 +3644,7 @@ Aレコードはexample.comを設定している。
 
 
 
-## <a name="cmd">Linuxコマンド(Ubuntu)</a> 
+## <a name="cmd">Linux(Ubuntu)コマンド</a> 
 
 ### デーモンの起動・停止
 
@@ -3634,7 +3653,6 @@ Aレコードはexample.comを設定している。
 ### ポート番号確認
 
     $ netstat -tlnp
-
 
 ### パッケージ確認
 
@@ -3655,17 +3673,10 @@ Aレコードはexample.comを設定している。
 
     $ ps -ef|grep postfix
   
-
 ### DNS確認  
 
     $ nslookup ndsname domain  
     $ host domain
-
-
-### cat
-
-標準出力へ出力する。
-
 
 ### find . -name target
  

@@ -3254,61 +3254,108 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 
 ### 目的
 
-AWSでUbuntuを安全に運用する。
+EC2でUbuntuを安全に運用する。
 
-1. サーバーOSへの安全なログイン   
-  AWSはSSHを使いログインする。rootログインは初期設定で禁止されている。
-2. サービスへの不正アクセス対策  
-  各サービスはiptableを使いポート番号を開閉を制御しパケット通信をコントロールする。
+1. サーバーOSへ安全にログイン
+	+ EC2はSSHでログインする(パスワード認証は無効)。
+	+ rootのログインを禁止する。
+	+ EC2はでフォルトでrootのログインを禁止している。
+2. サービスの不正アクセス対策  
+  	+ サービスへのアクセス制御ははiptableでポート番号の開閉で制限する。
+  	+ EC2はSecurity Groupsでポート番号の開閉を行う。
 
+### root権限取得
 
-### Ubuntuへログイン
+(1) コマンド実行時に一時的にroot権限を取得する。
 
-rootログインを禁止する。  
-__AWSはデフォルトでrootユーザーのログインを禁止している。ubuntuユーザーでログインする。__
+    $ sudo <command>
 
+(2) rootへ変更する。
 
-### rootユーザーのログイン禁止処理
+    $ su root
+    # <command>
+
+rootはプロンプトが$から#へ変更される。
+
+### OSへのログイン
+
+#### rootのログイン禁止
 
     $ su root
     $ echo > /etc/securetty
 
+__EC2はでフォルトでrootログインを禁止している。デフォルトのログインユーザーははubuntu。__
 
-### SSHでrootでログイン禁止 およびSSHポートの変更
+#### SSHでのみ接続
 
-#### 設定ファイル変更
+#### SSH接続でrootのログイン禁止
 
-    /etc/ssh/sshd_config
+/etc/ssh/sshd_config
 
     PermitRootLogin no
+
+#### SSHポート番号変更
+
+/etc/ssh/sshd_config
+
     Port 22222
 
 #### SSHサーバー再起動
 
-SSHサーバー再起動
-
     /etc/init.d/ssh restart
 
-__AWSではうまく行かなかった。上記の変更をしても22番でログインできた。__
+__EC2は上記の変更をしても22番でログインできた。__
 
 ### ユーザー
 
-適切にユーザーを管理する。
+#### 
 
+	id <user>
+
+#### ユーザー情報
+
+    // パスワードやホームディレクトリなど
+    $ cat /etc/passwd | grep <user>
+
+    // ユーザー名･グループ名、ユーザーID、グループID
+    $ id <user
+
+#### グループ確認
+
+	groups <user>
+
+#### ユーザー一覧
+
+    // ユーザー情報表示
+    $ cat /etc/passwd
+    // ユーザー一覧表示
+    $ cut -d: -f1 /etc/passwd
+
+#### グループ一覧
+
+   $ cut -d: -f1 /etc/group
+
+#### ユーザーをグループへ追加/削除
+
+    $ sudo gpasswd -a <user> <group>
+
+__aオプションを指定しないと既存グループが削除される。__
+
+	$ sudo gpasswd -d <user> <group>
+   
 #### rootユーザーにパスワード設定
 
     $ sudo passwd root
-    nter new UNIX password: 
+    Enter new UNIX password: 
     Retype new UNIX password: 
     passwd: password updated successfully
 
 #### suの利用制限
 
-デフォルトではすべてのユーザーがsuを使いroot権限を利用できる。  
-下記設定を行いsuコマンドを実行できるユーザーをwheelグループのユーザーに制限する。
+デフォルトはすべてのユーザーがsuでrootへ変更できる。
+suコマンドを実行できるユーザーをwheelグループのユーザーに制限する。
 
-/etc/pad.d/suファイルを編集
-
+/etc/pam.d/su
 
     // コメントアウトを解除
     # auth       required   pam_wheel.so
@@ -3326,42 +3373,14 @@ Ubuntuはwheelユーザーがないので作成しubuntuをwheelグループへ�
     Adding group `wheel' (GID 11) ...
     Done.
 
-    // wheelグループへubuntuを追加
+    // wheelグループへubuntu追加
     ubuntu@xxx:~$ sudo usermod -G wheel ubuntu
     
-
 su rootができる。
 
     ubuntu@xxx:~$ su root
     Password: 
     root@xxx: #
-
-#### ユーザー一覧
-
-    // ユーザー情報表示
-    $ cat /etc/passwd
-    // ユーザー一覧表示
-    $ cut -d: -f1 /etc/passwd
-
-#### 個別のユーザー情報
-
-    // パスワードやホームディレクトリなど
-    $ cat /etc/passwd | grep username
-
-    // 所属グループなどの情報
-    $ id username
-
-#### グループ一覧
-
-   $ cut -d: -f1 /etc/group
-
-#### ユーザーをグループに追加/削除
-
-    $ sudo gpasswd -a username groupname
-
-__aオプションを指定しないと既存グループが削除される。__
-
-   $ sudo gpasswd -d username groupname
 
 
 ### サービス

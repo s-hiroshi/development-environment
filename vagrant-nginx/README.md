@@ -3612,6 +3612,9 @@ Aレコードはexample.comを設定している。
 	# バナー情報 できるだけ情報を少なく
 	smtpd_banner = $myhostname ESMTP
 
+	# SMTP接続を許可するインターフェース
+	inet_interfaces = all
+
 	# 中継を許可するIPアドレス指定
     mynetworks = 127.0.0.0/8 192.168.11.0/24
     
@@ -3630,6 +3633,20 @@ Aレコードはexample.comを設定している。
             reject_unknown_sender_domain,
             reject_non_fqdn_sender
     
+    # メールボックスをMaildir形式へ
+    home_mailbox = Maildir/
+
+ > プライベートネットワークについて補足
+> 「192.168.0.0/24」は「プライベートネットワーク」と呼ばれサーバ内部での通信に使われます。「192.168.0.0～192.168.0.255」の範囲を示しています。
+> 「127.0.0.0/8」は「localhost」を表すIPで、「127.0.0.0～127.255.255.255」の範囲を示しています。（実際には127.0.0.1＝localhostだけの利用が多い）
+
+[Postfixによる、セキュリティに配慮したメールサーバの構築方法 | OXY NOTES](http://oxynotes.com/?p=4646)
+ 
+Maildirディレクトリをホームへ作成
+
+    $ mkdir -p Maildir/{new,cur,tmp}
+
+
 [「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)  
 [PostfixのセキュリティーとSpam対策 | UNIXLife](http://unixlife.jp/linux/centos-5/postfix-secure.html)
 
@@ -3658,6 +3675,9 @@ info@example.comへ送信テスト。
     /var/log/mail.err
 
 ### 参考リンク
+
+[Postfixによる、セキュリティに配慮したメールサーバの構築方法 | OXY NOTES](http://oxynotes.com/?p=4646)
+[Postfixのぺーじ－ホーム](http://www.postfix-jp.info/)
 
 [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
 [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)

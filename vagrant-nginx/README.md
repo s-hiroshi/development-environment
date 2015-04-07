@@ -3326,7 +3326,7 @@ sudoグループはデフォルトで作成されそのメンバーはsudoでき
     $ cat /etc/passwd | grep <user>
 
     // ユーザー名･グループ名、ユーザーID、グループID
-    $ id <user
+    $ id <user>
 
 #### ユーザー一覧
 

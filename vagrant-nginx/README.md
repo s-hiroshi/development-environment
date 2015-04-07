@@ -3392,7 +3392,7 @@ su rootができる。
 
 ### サービス
 
-不要なサービスは停止する。
+不要なサービスを停止する。
 
 #### サービス一覧
 
@@ -3411,9 +3411,7 @@ su rootができる。
 
     $ netstat -atun
 
-
 ### OSの更新
-
 
 ### パッケージの更新
 
@@ -3422,18 +3420,16 @@ su rootができる。
     // インストール済みパッケージをすべて更新
     $ sudo apt-get upgrade
 
-特定のパッケージのみ更新する場合は下記の記事が参考になった。
-
+特定のパッケージのみ更新する場合は下記の記事が参考になった。   
 [apt / aptitude で特定のパッケージのみアップグレードする方法 - Devslog](http://devslog.com/article/20120216085533.html)
-
 
 ### ポートの制御(iptables)
 
-利用するポートInbound/Outboundを設定。最小限にする。
-yumやapt-getはポート番号80を使う。
+利用するポートのInbound/Outboundを設定する。  
+開けるポートは最小限にする。  
+__yumやapt-getはポート番号80を使う。__
 
 [そうかyumってhttpポート（80番）を使うのか・・・](http://app.m-cocolog.jp/t/typecast/691311/578213/73514519)
-
 
 
 ## <a name="aws_ec2">EC2</a>
@@ -3453,7 +3449,8 @@ Amazon Linux AMI 2014.09.1 (HVM) - ami-4985b048
     + NETWORK & SECURITY
         - Key Pairs
 
-    $ ssh -i private_key_file destination
+
+    $ ssh -i <private_key_file> <destination>
 
 SSHで鍵を指定(iオプション)した接続で鍵が見つからなければデフォルトの鍵(~/.ssh/id_rsa)で接続を試みる。  
 iオプションでの鍵の指定は絶対パスまたは相対パスで指定する。
@@ -3463,7 +3460,6 @@ iオプションでの鍵の指定は絶対パスまたは相対パスで指定�
 * EC2
     + NETWORK & SECURITY
         - Security Groups
-
 
 どのポートを空けるか(どのサービスを利用可能にするか)を各インスタンスごとにセキュリティグループとして設定する。  
 
@@ -3500,15 +3496,8 @@ IPアドレスを再起動後も固定にするにはElastic IPが必要?。
 
 [PHP: Debian GNU/Linux へのインストール - Manual](http://php.net/manual/ja/install.unix.debian.php)
 
-#### PHP動作確認
-
-Evernoteの「2015.01.16 AWS UbuntuでPHPを動作させる」を参照。
-
 
 ## <a name="aws_rds">RDS</a>
-
-* MySQL
-* 課金
 
 ### MySQL
 
@@ -3517,10 +3506,9 @@ Evernoteの「2015.01.16 AWS UbuntuでPHPを動作させる」を参照。
 
 [Amazon RDS ～EC2インスタンスからDBインスタンスへの接続～　|ec2 db インスタンス　接続　方法 | ナレコムAWSレシピ](http://recipe.kc-cloud.jp/archives/397)
 
-    $ mysql -h endpoint -u username -p
+    $ mysql -h <endpoint> -u <user> -p
 
 AWSではパスワードなしでrootでログインすることはできない。
-
 
 ### 課金
 
@@ -3542,11 +3530,9 @@ AWSではパスワードなしでrootでログインすることはできない�
 * Route 53
      独自ドメインと固定IPを結びつける
 
-DNSサーバー正しく設定されているかを確認する。
+DNSサーバーが正しく設定されているかを確認する。
 
     $ nslookup dns domain
-
-
 
 ### 確認
 
@@ -3557,8 +3543,6 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 
 
 [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
-
-
 
 
 ## <a name="aws_postfix">Ubuntu + Postfixでメールを運用</a>

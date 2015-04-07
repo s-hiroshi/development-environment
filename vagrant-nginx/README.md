@@ -3547,35 +3547,35 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 
 ## <a name="aws_postfix">Ubuntu + Postfixでメールを運用</a>
 
+## メール送信
 
-* [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
-* [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
+* EC2へメールサーバーインストール
+* 外部メールサーバー利用
 
-## 送信環境構築
+EC2へPostfixをインストールする前はヘ外部サーバー経由で送信していた(SMTPポートは587)。  
+そのときはAWS側では何も設定せず利用できた。  
+外部SMTPメールサーバーをポート587で利用していたので送信上限解除設定はしていなかったがしておいた方がよい。
+
+## 送信環境構築手順
 
 1. AWS EC2 > Security Groupで送信用ポート設定。
-2. AWS Route 53でMXレコード設定
-3. Postfixをインストール
-4. Postfix設定(/etc/postfix/main.cf)
-5. 送信テスト mailコマンド
+2. 送信上限解除申請  
+  [AWS EC2 Eメール上限緩和 / 逆引き(rDNS)設定 申請手順](http://www.slideshare.net/AmazonWebServicesJapan/aws-42885668)
+4. AWS Route 53でMXレコード設定
+5. Postfixをインストール
+6. Postfix設定(/etc/postfix/main.cf)
+7. 送信テスト mailコマンド
 
-## Route 53でMXレコード追加
+## Route 53でMX(Main exchange)レコード追加
 
-### 前提
+Aレコードはexample.comを設定している。
 
-Aレコードにexample.comを設定している。
-
-
-### MX Main exchangeレコード追加
-
-* Name
+* Name  
   mail.example.com
 * Type  
   Mail Exchange
 * Value  
   10 mail.example.com
-
-
 
 ## Postfix
 
@@ -3586,25 +3586,13 @@ Aレコードにexample.comを設定している。
     $ /usr/sbin/postconf | grep mail_version
     mail_version = 2.11.0
 
-[Postfixのバージョンを確認する | CoDE4U](http://blog.code4u.org/archives/1135)
-
-
 ### 設定ファイル
 
     /etc/postfix/main.cf
 
-下記ページを参考に設定。
-
-
-* [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
-* [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
-* [Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
-
 ## postfix 再起動
 
     $ sudo /etc/init.d/postfix restart
-
-
 
 ## mailコマンドで送信確認
 
@@ -3615,12 +3603,17 @@ Aレコードにexample.comを設定している。
 
 試した環境ではmailコマンドの終了は.ではなくエンター + Ctrl + D。
 
-
 ### メールのログ
 
     /var/log/mail.log
     /var/log/mail.err
 
+### 参考リンク
+
+[Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
+[AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
+[Postfixのバージョンを確認する | CoDE4U](http://blog.code4u.org/archives/1135)
+[Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
 
 
 ## <a name="aws_bills">課金</a>

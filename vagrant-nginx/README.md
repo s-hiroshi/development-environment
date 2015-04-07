@@ -3360,8 +3360,8 @@ __aオプションを指定しないと既存グループが削除される。__
 
 #### suの利用制限
 
-デフォルトはすべてのユーザーがsuでrootへ変更できる。
-suコマンドを実行できるユーザーをwheelグループのユーザーに制限する。
+デフォルトではすべてのユーザーがsuでrootへ変更できる。  
+suを実行可能ユーザーをwheelグループのユーザーに制限する。
 
 /etc/pam.d/su
 
@@ -3369,13 +3369,13 @@ suコマンドを実行できるユーザーをwheelグループのユーザー�
     # auth       required   pam_wheel.so
     auth       required   pam_wheel.so
 
-su rootができなくなる。
+wheelグループのユーザー以外はsu rootができなくなる。
 
     ubuntu@xxx:~$ su root
     Password: 
     su: Permission denied
 
-Ubuntuはwheelユーザーがないので作成しubuntuをwheelグループへ追加する。
+Ubuntuのデフォルトはwheelグループはないので作成しubuntuを追加する。
 
     ubuntu@xxx:~$ sudo addgroup --gid 11 wheel
     Adding group `wheel' (GID 11) ...
@@ -3389,7 +3389,6 @@ su rootができる。
     ubuntu@xxx:~$ su root
     Password: 
     root@xxx: #
-
 
 ### サービス
 

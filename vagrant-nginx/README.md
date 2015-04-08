@@ -54,7 +54,6 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 		- [アジャイル](#agile)
 		- [BDD:振舞駆動開発 (開発手法)](#bdd)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
-* [Linuxコマンド](#cmd)
 * [用語](#terms)
 * [Appendix](#appendix)
     + [ディレクトリ/ファイル所有者・グループ変更](#appendix_owner)
@@ -3240,20 +3239,16 @@ __フィーチャは最終的に単体テストの集まりを実行する。__
 
 ## 目次
 
-* [Linuxセキュリティ](#aws_security)
+* [Linux](#aws_linux)
 * [EC2](#aws_ec2)
 * [RDS](#aws_rds)
 * [Route 53](#aws_route53)
-    + 独自ドメイン運用
 * [S3](#aws_s3)
 * [Ubuntu + Postfix](#aws_postfix) 
 * [課金](#aws_bills)
-* [Linuxコマンド(Ubuntu)](#aws_cmd_ubuntu)
 * [AWS 用語](#aws_aws_terms)
 
-
-
-## <a name="#aws_security">Linuxセキュリティ</a>
+## <a name="#aws_linux">Linux</a>
 
 ### 目的
 
@@ -3266,6 +3261,12 @@ EC2でUbuntuを安全に運用する。
 2. サービスの不正アクセス対策  
   	+ サービスへのアクセス制御ははiptableでポート番号の開閉で制限する。
   	+ EC2はSecurity Groupsでポート番号の開閉を行う。
+
+### 日本時間へ変更
+
+	% sudo dpkg-reconfigure tzdata
+
+[サーバ無停止でlocaltimeを日本標準時間JSTに変更する - kmn23のコマンド備忘録](http://d.hatena.ne.jp/kmn23/20141012/1413114360)
 
 ### root権限取得
 
@@ -3451,43 +3452,40 @@ __yumやapt-getはポート番号80を使う。__
 
 [そうかyumってhttpポート（80番）を使うのか・・・](http://app.m-cocolog.jp/t/typecast/691311/578213/73514519)
 
+### コマンド
+
+	$ find . -name <target>      // targetを検索
+    $ ps aux | grep <keyword>    // keywordプロセスを表示
+
 
 ## <a name="aws_ec2">EC2</a>
 
 Amazon Linux AMI 2014.09.1 (HVM) - ami-4985b048
 
 * [SSH](#aws_ec2_ssh)
-* [Security Groups](#aws_ec2_secuity)
+* [Security Groups](#aws_ec2_security_group)
 * [Elastic IPs](#aws_ec2_ip)
 * [RPM系 Apache、MySQL, PHPインストール](#aws_ec2_rpm_app)
 * [Debian系Nginx, MySQL,PHP](#aws_ec2_debian_app)
-    + /var/www/application/current/app/webrootでPHPを動作
 
 ### <a name="aws_ec2_ssh">SSH</a>
 
-* EC2
-    + NETWORK & SECURITY
-        - Key Pairs
-
+EC2 > NETWORK & SECURITY > Key Pairs
 
     $ ssh -i <private_key_file> <destination>
 
 SSHで鍵を指定(iオプション)した接続で鍵が見つからなければデフォルトの鍵(~/.ssh/id_rsa)で接続を試みる。  
 iオプションでの鍵の指定は絶対パスまたは相対パスで指定する。
 
-### <a name="aws_ec2_security">Security Groups</a>
+### <a name="aws_ec2_security_group">Security Groups</a>
 
-* EC2
-    + NETWORK & SECURITY
-        - Security Groups
+EC2 > NETWORK & SECURITY > Security Groups
 
 どのポートを空けるか(どのサービスを利用可能にするか)を各インスタンスごとにセキュリティグループとして設定する。  
 
 ### <a name="aws_ec2_ip">Elastic IPs</a>
 
-* EC2
-    + NETWORK & SECURITY
-        - Elastic IPs
+EC2 > NETWORK & SECURITY > Elastic IPs
 
 __T2 instances are VPC-only. Your T2 instance will launch into your VPC. Learn more about T2 and VPC.__
 
@@ -3510,12 +3508,9 @@ IPアドレスを再起動後も固定にするにはElastic IPが必要?。
     // apt-getを利用する前に最新の状態へ
     $ sudo apt-get update
 
-#### パッケージインストール
-
-    apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx git
+    $ apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx git
 
 [PHP: Debian GNU/Linux へのインストール - Manual](http://php.net/manual/ja/install.unix.debian.php)
-
 
 ## <a name="aws_rds">RDS</a>
 
@@ -3698,20 +3693,6 @@ info@example.comへ送信テスト。
     + Preferences
         - Receive Billing Alerts
            Manage Billing Alerts
-
-
-
-## <a name="cmd">Linux(Ubuntu)コマンド</a> 
-
-   
-
-
-
-  
-
-### find . -name target
- 
-    $ find . -name target
 
 
 ## <a name="terms">用語</a>

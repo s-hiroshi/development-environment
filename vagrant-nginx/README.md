@@ -212,10 +212,13 @@ aptを利用したパッケージ管理ユーティリティー。
 
 ## dpkg
  
-    $ dpkg -l                  // Debian系インストール済パッケージ一覧を表示
-    $ dpkg -L <package name>   // 指定したパッケージがインストールされたパスを表示
+    $ dpkg -l             // Debian系インストール済パッケージ一覧を表示
+    $ dpkg -L <package>   // 指定したパッケージがインストールされたパスを表示
     
-## deb
+## aptitude
+    
+    $ aptitude search "~i" // dpkgの代わりにaptituteも使える
+    $ aptitude search <package>
 
 ## rpm
 
@@ -3417,11 +3420,16 @@ su rootができる。
 
     $ sudo sysv-rc-conf service Off
 
+### サービス起動・停止
+
+    $ sudo service <daemon> start|stop|status|restart|force-reload
+
 ### ネットワークセキュリティ
 
 #### ポートの確認
 
     $ netstat -atun
+    $ netstat -tlnp
 
 ### OSの更新
 
@@ -3695,37 +3703,11 @@ info@example.comへ送信テスト。
 
 ## <a name="cmd">Linux(Ubuntu)コマンド</a> 
 
-### デーモンの起動・停止
-
-    $ sudo service <daemon> start|stop|status|restart|force-reload
-
-### ポート番号確認
-
-    $ netstat -tlnp
-
-### パッケージ確認
-
-#### Debian系のインストール済みパッケージ確認  
-
-    $ dpkg -l  
-    // または
-    $ aptitude search "~i"
+   
 
 
-### Debian系パッケージのインストールパス確認
 
-    $ dpkg -L <package>  
-    $ aptitude search <package>
-
-
-### プロセス  
-
-    $ ps -ef|grep postfix
   
-### DNS確認  
-
-    $ nslookup ndsname domain  
-    $ host domain
 
 ### find . -name target
  

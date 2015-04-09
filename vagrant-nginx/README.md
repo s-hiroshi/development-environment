@@ -3594,6 +3594,8 @@ Aレコードはexample.comを設定している。
 
 ## Postfix
 
+[Postfixのぺーじ－ホーム](http://www.postfix-jp.info/)
+
 ### インストール
 
     $ sudo apt-get install postfix
@@ -3635,9 +3637,11 @@ main.cfを変更する。以下は主要な項目の抜粋。
 	# メールボックスをMaildir形式へ
 	home_mailbox = Maildir/
 	
-	# メール送信時のマッピング
+	# メール送信時のマッピング -- (1)
 	smtp_generic_maps = hash:/etc/postfix/generic
 
+(1) http://www.postfix-jp.info/trans-2.2/jhtml/STANDARD_CONFIGURATION_README.html#fantasy 
+ 
  
 Maildirディレクトリをホームへ作成
 

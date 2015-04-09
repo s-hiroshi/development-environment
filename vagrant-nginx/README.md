@@ -3677,8 +3677,7 @@ info@example.comへ送信テスト。
 
     $ mail <info@example.com>
     
-
-試した環境ではmailコマンドの終了は.ではなくエンター + Ctrl + D。
+Enter + Ctrl + Dで終了。
 
 ### メールのログ
 

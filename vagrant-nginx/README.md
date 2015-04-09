@@ -3657,6 +3657,10 @@ Maildirディレクトリをホームへ作成
 
     $ sudo /etc/init.d/postfix restart
 
+## SMTP 25番ポートが空いているか
+
+$ netstat -an | grep smtp 
+
 ## mailコマンドで送信確認
 
 ### mailインストール

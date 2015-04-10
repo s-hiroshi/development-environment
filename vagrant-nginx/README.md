@@ -780,7 +780,6 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
 
 ユーザーubuntuでログインしていると仮定して記載する。
 
-
 ### ログ
 
     /var/log
@@ -804,14 +803,12 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
     // 日本語環境に設定
     $ export LANG=ja_JP.UTF-8
 
-
 ## <a name="vi">Vi</a>
 
 ### 文字コード確認
 
     // 開いているファイルの文字コード確認
     :set enc?
-
 
 ### 文字コード設定
 
@@ -824,8 +821,6 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
 
 [gitのエディタをnanoから他へ変更する | J-Linuxer](http://jlinuxer.dip.jp/?p=645)
 
-
-
 ## <a name="install_nginx_mysql_php">Nginx + MySQL + PHPインストール</a>
 
 Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをインストールする。
@@ -834,7 +829,6 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
     $ sudo apt-get update
     // 必要パッケージインストール
     $ sudo apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx
-
 
 ## <a name="documentroot">ドキュメントルート作成</a>
 
@@ -858,7 +852,6 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 
 以下PHP実行ユーザーはwww-dataと仮定する。
 
-
 ### currentディレクトリ以下の所有者/グループ/パーミション変更
  
     $ cd /var/www/application
@@ -866,13 +859,9 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
     $ sudo chgrp  -R www-data current
     $ sudo chmod -R 775 current
     
-### currentディレクトリ以下のグループを変更
-
-
 ### ubuntuユーザーをwww-dataグループへ追加
 
     $ sudo usermod -G www-data ubuntu
-
 
 ## <a name="env_nginx">Nginx</a>
 
@@ -2952,6 +2941,7 @@ sudoグループはデフォルトで作成されそのメンバーはsudoでき
 #### ユーザー作成
 
     $ sudo useradd <user>
+    $ sudo useradd -s /sbin/nologin <user>     # ログインできないユーザー
 
 ### ユーザーパスワード
 
@@ -3267,9 +3257,14 @@ http://www.postfix-jp.info/trans-2.2/jhtml/STANDARD_CONFIGURATION_README.html#fa
  
 Maildirディレクトリをユーザーホームへ作成します。
 
-    $ mkdir -p Maildir/{new,cur,tmp}
+    $ mkdir -p Maildir/{new,cur,tmp,.Sent,.Trash}
+    
+ユーザー追加で自動的にMaildir/new,cur,tmpを作成する雛形作成します。
 
+	$ mkdir -p /etc/skel/Maildir/{new,cur,tmp,.Sent,.Trash}
+	$ chmod -R 700 /etc/skel/Maildir/
 
+[ Amazon EC2でpostfix+dovecotでメールサーバ構築(1) - viola&#039;s blog](http://blog.violasoftchannel.com/?p=57)
 
 ### 再起動
 

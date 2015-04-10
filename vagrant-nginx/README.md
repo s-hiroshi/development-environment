@@ -3300,7 +3300,7 @@ Enter + Ctrl + Dで終了(送信)します。
 
 ## Dovecotインストール
 
-    $ sudo apt-get install dovecot-common dovecot-imapd dovecot-pop3d
+    $ sudo apt-get install dovecot-common dovecot-imapd dovecot-pop3d sasl2-bin
 
 ### SMTP認証(SMTP-AUTH)
 

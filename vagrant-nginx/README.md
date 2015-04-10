@@ -3301,13 +3301,15 @@ Enter + Ctrl + Dで終了(送信)します。
 [PostfixのセキュリティーとSpam対策 | UNIXLife](http://unixlife.jp/linux/centos-5/postfix-secure.html)  
 [「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)  
 [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
-[AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
 [Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
 
-### SMTP認証
+### SMTP認証(SMTP-AUTH)
 
-下記記事を参考にして契約プロバイダーのSMTPを経由して送信する設定を行った。  
-[『Varying Vagrant Vagrants』から外部へのメール送信を設定したよ | 鉄王](http://www.tecking.org/archives/3663)
+SASL
+
+> Simple Authentication and Security Layer（SASL）は、インターネットプロトコルにおける認証とデータセキュリティのためのフレームワークである。
+
+[Simple Authentication and Security Layer - Wikipedia](http://ja.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer)
 
     relayhost = [mail.example.com]:587                         # リレー先
     smtp_sasl_auth_enable = yes                                # 追加

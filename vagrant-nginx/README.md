@@ -3170,35 +3170,32 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
 
 
-## <a name="aws_postfix">Ubuntu + Postfix</a>
+## <a name="aws_postfix">Ubuntu + Postfix + Dovecot</a>
 
-### 設定ファイル(/etc/postfix/main.cf)
-
-
-
-
-## メール送信
-
-* EC2へメールサーバーインストール
-* 外部メールサーバー利用
-
-EC2へPostfixをインストールする前はヘ外部サーバー経由で送信していた(SMTPポートは587)。  
-そのときはAWS側では何も設定せず利用できた。  
-外部SMTPメールサーバーをポート587で利用していたので送信上限解除設定はしていなかったがしておいた方がよい。
+* Postfix  
+  2.11.0
+* Dovecot  
+  2.2.9
 
 ## 送信環境構築手順
 
-1. AWS EC2 > Security Groupで送信用ポート設定。
-2. 送信上限解除申請  
+1. AWS > EC2 > Security Groupで送信用ポート設定を開けます。  
+   SMTP 25。
+2. 送信上限解除申請を行います。    
   [AWS EC2 Eメール上限緩和 / 逆引き(rDNS)設定 申請手順](http://www.slideshare.net/AmazonWebServicesJapan/aws-42885668)
-4. AWS Route 53でMXレコード設定
-5. Postfixをインストール
-6. Postfix設定(/etc/postfix/main.cf)
-7. 送信テスト mailコマンド
+4. AWS > Route 53でMXレコードします。
+5. Postfixをインストールします。
+6. Postfixの設定をします。
+7. mailコマンドで送信テストをします。
+8. Dovecotインストールをインストールします。
 
-## Route 53でMX(Main exchange)レコード追加
+## Security Groupで送信用ポート設定設定
 
-Aレコードはexample.comを設定している。
+設定後にポート番号が空いているか確認します。
+
+	$ netstat -a | grep smtp 
+
+## Route 53でMX(Mail exchanger)レコード追加例
 
 * Name  
   mail.example.com
@@ -3222,10 +3219,10 @@ Aレコードはexample.comを設定している。
 
 ### 設定ファイル
 
-    /etc/postfix/main.cf
-    /etc/postfix/master.cf
+	/etc/postfix/main.cf
+	/etc/postfix/master.cf
 
-main.cfを変更する。以下は主要な項目の抜粋。
+main.cfを編集します。主要な項目を掲載します。
 
 	# バナー情報 できるだけ情報を少なく
 	smtpd_banner = $myhostname ESMTP
@@ -3233,79 +3230,76 @@ main.cfを変更する。以下は主要な項目の抜粋。
 	# SMTP接続を許可するインターフェース
 	inet_interfaces = all
 	
-	# 自ホスト宛と判断もの
+	# 自ホスト宛と判断するもの
 	mydestination = $myhostname, $mydomain, localhost.$mydomain, localhost
 	
-	# 送信を許可するIPアドレス指定
+	# 送信許可するIPアドレス
 	mynetworks = 127.0.0.0/8 192.168.11.0/24
 	
 	# SMTPのVERFYコマンド禁止(追記)
 	disable_vrfy_command = yes
 	
-	# SMTP開始のHELO/EHLOコマンド必須化
+	# SMTP開始のHELO/EHLOコマンド必須化(追記)
 	smtpd_helo_required = yes
 	
 	# 中継制限
-    # permit_sasl_authenticated      SMTP認証を通過したもの
-    # permit_mynetworks              mynetworksで指定されたもの
-    # reject_unauth_destination      それ以前に記載した条件以外は拒否
-    smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination
-    smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
+	# permit_sasl_authenticated      SMTP認証を通過したもの
+	# permit_mynetworks              mynetworksで指定されたもの
+	# reject_unauth_destination      それ以前に記載した条件以外は拒否
 	
-	# メールボックスをMaildir形式へ
+	# ヘッダTOに対して
+	smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination
+	# ヘッダFROMに対して 
+	smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
+	
+	# メールボックスをMaildir形式へ変更(追記)
 	home_mailbox = Maildir/
 	
-	# メール送信時のマッピング -- (1)
+	# メール送信時のマッピング(追記)
 	smtp_generic_maps = hash:/etc/postfix/generic
 
-(1) http://www.postfix-jp.info/trans-2.2/jhtml/STANDARD_CONFIGURATION_README.html#fantasy 
+メール送信時のマッピングは下記の記事を参考にしました。  
+http://www.postfix-jp.info/trans-2.2/jhtml/STANDARD_CONFIGURATION_README.html#fantasy 
  
  
-Maildirディレクトリをホームへ作成
+Maildirディレクトリをユーザーホームへ作成します。
 
     $ mkdir -p Maildir/{new,cur,tmp}
 
 
-> プライベートネットワークについて補足
-> 「192.168.0.0/24」は「プライベートネットワーク」と呼ばれサーバ内部での通信に使われます。「192.168.0.0～192.168.0.255」の範囲を示しています。
-> 「127.0.0.0/8」は「localhost」を表すIPで、「127.0.0.0～127.255.255.255」の範囲を示しています。（実際には127.0.0.1＝localhostだけの利用が多い）
 
-[Postfixによる、セキュリティに配慮したメールサーバの構築方法 | OXY NOTES](http://oxynotes.com/?p=4646)
-
-[「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)  
-[PostfixのセキュリティーとSpam対策 | UNIXLife](http://unixlife.jp/linux/centos-5/postfix-secure.html)
-
-### postfix 再起動
+### 再起動
 
     $ sudo /etc/init.d/postfix restart
 
-### SMTP 25番ポートが空いているか
+## 送信テスト
 
-	$ netstat -a | grep smtp 
-
-## mailコマンドで送信確認
-
-### mailインストール
+### mailコマンドインストール
 
     $ sudo apt-get install mailutils
 
-### 送信
+### 送信テスト
 
 info@example.comへ送信テスト。
 
     $ mail <info@example.com>
     
-Enter + Ctrl + Dで終了。
+Enter + Ctrl + Dで終了(送信)します。
 
-### メールのログ
+## 受信テスト
+
+新着メールは~/Maildir/newに届くのでcatコマンドなどで確認します。
+
+## メールログ
 
     /var/log/mail.log
     /var/log/mail.err
 
-### 参考リンク
+## 参考リンク
 
-[Postfixによる、セキュリティに配慮したメールサーバの構築方法 | OXY NOTES](http://oxynotes.com/?p=4646)
-[Postfixのぺーじ－ホーム](http://www.postfix-jp.info/)
+[Postfixによる、セキュリティに配慮したメールサーバの構築方法 | OXY NOTES](http://oxynotes.com/?p=4646)  
+[PostfixのセキュリティーとSpam対策 | UNIXLife](http://unixlife.jp/linux/centos-5/postfix-secure.html)  
+[「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)  
 [Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
 [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
 [Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)

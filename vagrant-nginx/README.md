@@ -2940,8 +2940,19 @@ sudoグループはデフォルトで作成されそのメンバーはsudoでき
 
 #### ユーザー作成
 
+useraddはユーザー追加時にホームディレクトリを作成しない。
+
     $ sudo useradd <user>
     $ sudo useradd -s /sbin/nologin <user>     # ログインできないユーザー
+
+adduserはユーザー追加時にホームディレクトリを作成する。
+
+    $ sudo adduser <user>
+
+ユーザー作成後にOSへログインを禁止する。
+
+	usermod -s /bin/false
+
 
 ### ユーザーパスワード
 

@@ -42,17 +42,9 @@ WEBサービスをAWSで運用するために勉強していることを書き�
     + [Git](#git)
 * [継続的インテグレーション](#ci)
 	+ [環境構築](#ci_dev)
-		- [Virtualbox 仮想化ソフト](#ci_virtualbox)
-		- [Vagrant 仮想開発環境構築ソフトウェア](#ci_vagrant)
-		- [Chef プロビジョニングツール](#ci_chef)
-		- [Vagrant, Chefを使ったプロビジョニング手順](#ci_vagrant_chef)
-	* [Jenkins CIサーバー](#ci_jenkins)
-	* [CircleCi クラウド型CIサーバー](#ci_circleci)
-	* [デプロイ処理](#ci_deploy)
-	* [CakePHP開発環境](#env_cakephp)
-	* [開発手法](#ci_process)
-		- [アジャイル](#agile)
-		- [BDD:振舞駆動開発 (開発手法)](#bdd)
+	+ [CircleCi クラウド型CIサーバー](#ci_circleci)
+	+ [デプロイ処理](#ci_deploy)
+	+ [CakePHP開発環境](#env_cakephp)
 * [AWS(Amazon Web Services)でWEBサービス運用](#aws)
 * [用語](#terms)
 * [Appendix](#appendix)
@@ -74,6 +66,10 @@ WEBサービスをAWSで運用するために勉強していることを書き�
     + [Ruby](#appendix_ruby)
     + [AWS構築手順](#appendix_recipe)
     + [Appendix NginxでBasic認証](#appendix_basic)
+* [Jenkins CIサーバー](#ci_jenkins)
+* [開発手法](#ci_process)
+	+ [アジャイル](#agile)
+	+ [BDD:振舞駆動開発 (開発手法)](#bdd)
 
 
 # <a name="get">ファイル取得コマンド</a>
@@ -1918,13 +1914,9 @@ GitHub > Settings > SSH keys > Add SSH key
 	+ [Chef プロビジョニングツール](#ci_chef)
 	+ [Vagrant, Chefを使ったプロビジョニング手順](#ci_vagrant_chef)
 * [CI(継続的インテグレーション)](#ci_ci)
-* [Jenkins CIサーバー](#ci_jenkins)
 * [CircleCi クラウド型CIサーバー](#ci_circleci)
 * [デプロイ処理](#ci_deploy)
 * [CakePHP開発環境](#env_cakephp)
-* [開発手法](#ci_process)
-	* [アジャイル](#agile)
-	* [BDD:振舞駆動開発 (開発手法)](#bdd)
 
 
 以下、次の書籍の読書メモを記載している。

@@ -3172,10 +3172,13 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 
 ## <a name="aws_postfix">Ubuntu + Postfix + Dovecot</a>
 
-* Postfix  
-  2.11.0
-* Dovecot  
-  2.2.9
+* Ubuntu 14.04
+* Postfix 2.11.0  
+  SMTPサーバーです。
+* Dovecot 2.2.9  
+  POP3/IMAPサーバーです。
+* saslauthd 2.1.25
+  SMTP認証(SMTP-AUTH)サーバーです。
 
 ## 送信環境構築手順
 
@@ -3295,26 +3298,27 @@ Enter + Ctrl + Dで終了(送信)します。
     /var/log/mail.log
     /var/log/mail.err
 
-## 参考リンク
+## Dovecotインストール
 
-[Postfixによる、セキュリティに配慮したメールサーバの構築方法 | OXY NOTES](http://oxynotes.com/?p=4646)  
-[PostfixのセキュリティーとSpam対策 | UNIXLife](http://unixlife.jp/linux/centos-5/postfix-secure.html)  
-[「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)  
-[Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
-[Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
+    $ sudo apt-get install dovecot-common dovecot-imapd dovecot-pop3d
 
 ### SMTP認証(SMTP-AUTH)
 
-SASL
+[Postfix で Submissionポート（サブミッション・ポート）＆ SMTP-AUTH(認証)を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/postfix-submission-smtp-auth.html)
+
 
 > Simple Authentication and Security Layer（SASL）は、インターネットプロトコルにおける認証とデータセキュリティのためのフレームワークである。
 
 [Simple Authentication and Security Layer - Wikipedia](http://ja.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer)
 
-    relayhost = [mail.example.com]:587                         # リレー先
-    smtp_sasl_auth_enable = yes                                # 追加
-    smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd    # 追加
-    smtp_sasl_mechanism_filter = CRAM-MD5                      # 追加
+/etc/postfix/main.cf
+
+	# sasl
+	smtpd_sasl_auth_enable = yes
+	#smtpd_sasl_path = smtpd
+	smtpd_sasl_security_options = noanonymous
+	broken_sasl_auth_clients = yes
+	# smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 
 /etc/postfixにsasl_passwdを作成し下記内容を記載。
 
@@ -3330,6 +3334,14 @@ postmapコマンドでdbファイルを作成する。
 
 sasl_passwd.dbが作成される。Postfixを再起動する。
     
+## 参考リンク
+
+[Postfixによる、セキュリティに配慮したメールサーバの構築方法 | OXY NOTES](http://oxynotes.com/?p=4646)  
+[Debian(Ubuntu)でDovecotでメールを受信する ( POP3s,IMAPs ( STARTTLS or SSL/TLS ) にも対応 ) | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/dovecot-tls.html)  
+[PostfixのセキュリティーとSpam対策 | UNIXLife](http://unixlife.jp/linux/centos-5/postfix-secure.html)  
+[「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)  
+[Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
+[Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
 
 ## <a name="aws_bills">課金</a>
 

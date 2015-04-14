@@ -3181,6 +3181,47 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 * saslauthd 2.1.25
   SMTP認証(SMTP-AUTH)サーバーです。
 
+## メールクライアント
+  MUA
+
+## SMTPサーバー(Postfix)
+  MTA(Mail transfer agent) Postfix
+  MDA Postfix
+
+## POP, IMAPサーバー(Dovecot)
+  MRA POPやIMAPのメール受信
+
+##メール関連認証機構
+
+* SASL(Simple authentication and. Security Layer)
+    + saslauthd
+    + SMTP AUTH
+
+SASLの認証方式はPAMとsasldbを使う方法がある。
+
+### Sasldb
+
+#### ユーザー追加
+
+    $ saslpasswd2 -c -u <domain> <user>
+
+#### 保存ファイル
+
+/etc/saslpasswd
+
+#### 確認
+
+    $ testsaslauthd -u <user> -p <pass>
+
+## OP25B(Outbound port25 blocking
+
+Submission)
+
+
+重要
+postfix/main.cf
+Relay_domain = $mydestination
+
 ## 送信環境構築手順
 
 1. AWS > EC2 > Security Groupで送信用ポート設定を開けます。  
@@ -3339,7 +3380,33 @@ postmapコマンドでdbファイルを作成する。
     $ sudo postmap /etc/postfix/sasl_passwd
 
 sasl_passwd.dbが作成される。Postfixを再起動する。
+
+
+## Dovecot
+
+### ログ
+
+Dovecotはデフォルトログはシステムログのmail.log/mail.errに出力されます。  
+ログの設定は10-logging.confに記述します。ファイルを指定しより詳細なログを出力することができます。
+
+/etc/dovecot/conf.d/10-logging.conf
+
+	log_path = /var/log/dovecot.log
+
+### メールボックス設定
+
+/etc/dovecot/conf.d/10-mail.conf
+
+	mail_location = maildir:~/Maildir
     
+最初下記のように設定しエラーが発生していました。
+
+	#mail_location = maildir:~/Maildir:INBOX=/var/mail/%u
+	
+	エラー
+	imap(<user>): Error: Failed to autocreate mailbox INBOX: Permission denied
+
+
 ## 参考リンク
 
 [Postfixによる、セキュリティに配慮したメールサーバの構築方法 | OXY NOTES](http://oxynotes.com/?p=4646)  

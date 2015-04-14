@@ -3192,6 +3192,12 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 |SMTP-AUTH|Postfix|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf|
 |SMTP OP25B|Postfix| |/etc/postfix/master.cf|
 
+### インストール
+
+	sudo apt-get install dovecot-common dovecot-imapd dovecot-pop3d sasl2-bin
+
+sasl2-binをインストールするとSASLを利用できる。  
+Dovecotそれ自体がSASLデーモンの機能を持つためsaslauthdは停止しても良い。
 
 ## メールクライアント
 
@@ -3228,12 +3234,6 @@ SASLの認証方式はPAMとsasldbを使う方法がある。
 
     $ testsaslauthd -u <user> -p <pass>
 
-## OP25B(Outbound port25 blocking Submission)
-
-
-重要
-postfix/main.cf
-Relay_domain = $mydestination
 
 ## 送信環境構築手順
 

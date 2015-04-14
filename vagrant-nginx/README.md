@@ -3186,11 +3186,13 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 |機能|ソフト|認証機構|ファイル|
 |---|---|---|
 |SMTP|Postfix| |/etc/postfix/main.cf|
-|IMAP,POP3 基本設定|Dovecot| |/etc/dovecot/dovecot.conf|
-|IMAP,POP3 メールボックス|Dovecot| |/etc/dovecot/conf.d/10-mail.conf|
-|IMAP,POP3認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf|
-|SMTP-AUTH|Postfix|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf|
+|SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf, etc/postfix/sasl/smtpd.conf|
+|IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf|
+|IMAP,POP3 認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf|
 |SMTP OP25B|Postfix| |/etc/postfix/master.cf|
+
+EHLO
+Extended SMTP のHELO
 
 ### インストール
 
@@ -3201,12 +3203,12 @@ Dovecotそれ自体がSASLデーモンの機能を持つためsaslauthdは停止
 
 ## メールクライアント
 
-  MUA
+MUA
 
 ## SMTPサーバー(Postfix)
 
-  MTA(Mail transfer agent) Postfix
-  MDA Postfix
+* MTA(Mail transfer agent) Postfix
+* MDA Postfix
 
 ## POP, IMAPサーバー(Dovecot)
 
@@ -3293,6 +3295,16 @@ main.cfを編集します。主要な項目を掲載します。
 	
 	# 送信許可するIPアドレス
 	mynetworks = 127.0.0.0/8 192.168.11.0/24
+	
+	smtpd_sasl_type = dovecot
+    smtpd_sasl_path = private/auth
+    smtpd_sasl_auth_enable = yes
+    smtpd_sasl_security_options = noanonymous
+    #smtpd_sasl_local_domain = $myhostname
+    smtpd_sasl_local_domain = $myorigin
+    smtpd_sasl_authenticated_header = yes
+    broken_sasl_auth_clients = yes
+
 	
 	# SMTPのVERFYコマンド禁止(追記)
 	disable_vrfy_command = yes

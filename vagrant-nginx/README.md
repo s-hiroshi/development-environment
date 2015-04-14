@@ -3181,14 +3181,29 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 * saslauthd 2.1.25
   SMTP認証(SMTP-AUTH)サーバーです。
 
+### ソフト
+  
+|機能|ソフト|認証機構|ファイル|
+|---|---|---|
+|SMTP|Postfix| |/etc/postfix/main.cf|
+|IMAP,POP3 基本設定|Dovecot| |/etc/dovecot/dovecot.conf|
+|IMAP,POP3 メールボックス|Dovecot| |/etc/dovecot/conf.d/10-mail.conf|
+|IMAP,POP3認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf|
+|SMTP-AUTH|Postfix|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf|
+|SMTP OP25B|Postfix| |/etc/postfix/master.cf|
+
+
 ## メールクライアント
+
   MUA
 
 ## SMTPサーバー(Postfix)
+
   MTA(Mail transfer agent) Postfix
   MDA Postfix
 
 ## POP, IMAPサーバー(Dovecot)
+
   MRA POPやIMAPのメール受信
 
 ##メール関連認証機構
@@ -3213,9 +3228,7 @@ SASLの認証方式はPAMとsasldbを使う方法がある。
 
     $ testsaslauthd -u <user> -p <pass>
 
-## OP25B(Outbound port25 blocking
-
-Submission)
+## OP25B(Outbound port25 blocking Submission)
 
 
 重要
@@ -3403,9 +3416,13 @@ Dovecotはデフォルトログはシステムログのmail.log/mail.errに出�
 
 	#mail_location = maildir:~/Maildir:INBOX=/var/mail/%u
 	
-	エラー
+	# エラー
 	imap(<user>): Error: Failed to autocreate mailbox INBOX: Permission denied
 
+Postfixでも同様にメールボックスの設定がある。
+/etc/postfix/main.cfのメールボックスの設定
+
+	home_mailbox = Maildir/
 
 ## 参考リンク
 

@@ -3205,32 +3205,30 @@ Dovecotそれ自体がSASLデーモンの機能を持つためsaslauthdは停止
 
 MUA
 
-## SMTPサーバー(Postfix)
+## SMTPサーバー Postfix
 
 * MTA(Mail transfer agent) Postfix
 * MDA Postfix
 
-## POP, IMAPサーバー(Dovecot)
+## POP, IMAPサーバー Dovecot
 
   MRA POPやIMAPのメール受信
 
-##メール関連認証機構
+## メール関連認証機構
 
 * SASL(Simple authentication and. Security Layer)
-    + saslauthd
-    + SMTP AUTH
 
-SASLの認証方式はPAMとsasldbを使う方法がある。
+SASLの認証方式はPAMとSASLDBを使う方法がある。
 
-### Sasldb
-
-#### ユーザー追加
+#### SASLDB ユーザー追加
 
     $ saslpasswd2 -c -u <domain> <user>
 
 #### 保存ファイル
 
-/etc/saslpasswd
+/etc/sasldb2
+
+__/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
 
 #### 確認
 

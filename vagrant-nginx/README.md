@@ -2036,15 +2036,14 @@ killコマンドでmysqlプロセスを終了したら起動できた。
      
 [mysqlの起動に失敗（MySQL Daemon failed to start）](http://www.crossl.net/blog/mysql_failed_start/)
 
-## <a name="aws_postfix">Ubuntu + Postfix + Dovecot</a>
+## <a name="postfix">Postfix + Dovecot</a>
 
 * Ubuntu 14.04
 * Postfix 2.11.0  
   SMTPサーバーです。
 * Dovecot 2.2.9  
   POP3/IMAPサーバーです。
-* saslauthd 2.1.25
-  SMTP認証(SMTP-AUTH)サーバーです。
+  今回はIMAP/POP3の認証だけでなくSMTP認証(SMTP-AUTH)の認証サーバーとして利用する。
 
 ### ソフト
   
@@ -2056,112 +2055,33 @@ killコマンドでmysqlプロセスを終了したら起動できた。
 |IMAP,POP3 認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf, /etc/dovecot/conf.d/10-master.conf|
 |SMTP OP25B|Postfix| |/etc/postfix/master.cf|
 
-EHLO
-Extended SMTP のHELO
-
 ### インストール
 
 	sudo apt-get install dovecot-common dovecot-imapd dovecot-pop3d sasl2-bin
 
 sasl2-binをインストールするとSASLを利用できる。  
-Dovecotそれ自体がSASLデーモンの機能を持つためsaslauthdは停止しても良い。
+今回はDovecotのSASL認証機能を利用するためsaslauthdは停止する。
 
-## メールクライアント
-
-MUA
-
-## SMTPサーバー Postfix
+### SMTPサーバー(Postfix)
 
 * MTA(Mail transfer agent) Postfix
 * MDA Postfix
 
-## POP, IMAPサーバー Dovecot
+### POP, IMAPサーバー(Dovecot)
 
-  MRA POPやIMAPのメール受信
+* MRA  
+  POPやIMAPのメール受信
 
-## メール関連認証機構
+### 認証デーモン
+
+IMAP,POP3だけでなくSMTP認証(SMTP-AUTH)の認証もDovecotに任せる。
+
+### 認証機構
 
 * SASL(Simple authentication and. Security Layer)
 
-SASLの認証方式はSASLDBを使う。
+今回はSMTP-AUTHのSASL認証方式はsasldbを使う。
 
-
-## 認証デーモン
-
-SMTP-AUTH, IMAP, POP3とも認証デーモンはDovecotに任せる。
-
-
-#### SASLDB ユーザー追加
-
-    $ saslpasswd2 -c -u <domain> <user>
-
-#### 保存ファイル
-
-/etc/sasldb2
-
-__/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
-
-#### 登録確認
-
-    $ sasldblistusers2 # 一覧
-
-### telnetで認証を確認
-
-    $ perl -MMIME::Base64 -e 'print encode_base64("\000<user>\000<password>");
-    エンコードしたユーザー名と増すワード
-    
-<user>,<password>は読み替えてください。
-
-    $ telnet localhost 25
-    Connected to localhost.
-    Escape character is '^]'.
-    220 mail.example.com ESMTP
-
-    EHLO localhost
-
-    250-mail.min-ker.com
-    250-PIPELINING
-    250-SIZE 10240000
-    250-VRFY
-    250-ETRN
-    250-STARTTLS
-    250-AUTH PLAIN LOGIN
-    250-AUTH=PLAIN LOGIN
-    250-ENHANCEDSTATUSCODES
-    250-8BITMIME
-    250 DSN
-
-    AUTH PLAIN エンコードしたユーザー名と増すワード
-
-	Authentication successful
-
-
-## 送信環境構築手順
-
-1. AWS > EC2 > Security Groupで送信用ポート設定を開けます。  
-   SMTP 25。
-2. 送信上限解除申請を行います。    
-  [AWS EC2 Eメール上限緩和 / 逆引き(rDNS)設定 申請手順](http://www.slideshare.net/AmazonWebServicesJapan/aws-42885668)
-4. AWS > Route 53でMXレコードします。
-5. Postfixをインストールします。
-6. Postfixの設定をします。
-7. mailコマンドで送信テストをします。
-8. Dovecotインストールをインストールします。
-
-## Security Groupで送信用ポート設定設定
-
-設定後にポート番号が空いているか確認します。
-
-	$ netstat -a | grep smtp 
-
-## Route 53でMX(Mail exchanger)レコード追加例
-
-* Name  
-  mail.example.com
-* Type  
-  Mail Exchange
-* Value  
-  10 mail.example.com
 
 ## Postfix
 
@@ -2178,52 +2098,39 @@ __/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
 
 ### 設定ファイル
 
-	/etc/postfix/main.cf
-	/etc/postfix/master.cf
+* /etc/postfix/main.cf
+* /etc/postfix/master.cf
+* /etc/postfix/sasl/smtpd.conf  
+  SMTP認証にDovecoteを使う場合に作成。
 
-main.cfを編集します。主要な項目を掲載します。
+main.cfの主要な項目を掲載する。
 
-	# バナー情報 できるだけ情報を少なく
-	smtpd_banner = $myhostname ESMTP
-	
-	# SMTP接続を許可するインターフェース
-	inet_interfaces = all
-	
-	# 自ホスト宛と判断するもの
-	mydestination = $myhostname, $mydomain, localhost.$mydomain, localhost
-	
-	# 送信許可するIPアドレス
-	mynetworks = 127.0.0.0/8 192.168.11.0/24
-	
-	smtpd_sasl_type = dovecot
-    smtpd_sasl_path = private/auth
-    smtpd_sasl_auth_enable = yes
-    smtpd_sasl_security_options = noanonymous
-    #smtpd_sasl_local_domain = $myhostname
-    smtpd_sasl_local_domain = $myorigin
-    smtpd_sasl_authenticated_header = yes
-    broken_sasl_auth_clients = yes
-
-	
-	# SMTPのVERFYコマンド禁止(追記)
-	disable_vrfy_command = yes
-	
-	# SMTP開始のHELO/EHLOコマンド必須化(追記)
-	smtpd_helo_required = yes
-	
-	# 中継制限
-	# permit_sasl_authenticated      SMTP認証を通過したもの
-	# permit_mynetworks              mynetworksで指定されたもの
-	# reject_unauth_destination      それ以前に記載した条件以外は拒否
-	
-	# ヘッダTOに対して
-	smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination
-	# ヘッダFROMに対して 
-	smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
-	
+	broken_sasl_auth_clients = yes
 	# メールボックスをMaildir形式へ変更(追記)
 	home_mailbox = Maildir/
-	
+	# SMTP接続を許可するインターフェース
+	inet_interfaces = all
+	# 自ホスト宛と判断するもの
+	mydestination = $myhostname, $mydomain, localhost.$mydomain, localhost
+	mydomain = example.com
+	myhostname = example.com
+	mynetworks = 127.0.0.0/8 192.168.0.0/24
+	myorigin = $mydomain
+	relay_domains = $mydestination
+	# バナー情報 できるだけ情報を少なく
+	smtpd_banner = $myhostname ESMTP
+	# エンベロープのrecipientでの送信制限
+	# permit_sasl_authenticated      SMTP認証を通過したもの
+	# permit_mynetworks              mynetworksで指定されたもの
+	smtpd_recipient_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+	smtpd_sasl_auth_enable = yes
+	smtpd_sasl_local_domain = $myorigin
+	smtpd_sasl_path = private/auth
+	smtpd_sasl_security_options = noanonymous
+	smtpd_sasl_type = dovecot
+	smtpd_tls_security_level = may
+
+AWS EC2は送信元にPrivate DNSの
 	# メール送信時のマッピング(追記)
 	smtp_generic_maps = hash:/etc/postfix/generic
 
@@ -2334,6 +2241,58 @@ Postfixでも同様にメールボックスの設定がある。
 /etc/postfix/main.cfのメールボックスの設定
 
 	home_mailbox = Maildir/
+
+
+#### sasldb ユーザー追加
+
+    $ saslpasswd2 -c -u <domain> <user>
+
+#### sasldbファイル
+
+	/etc/sasldb2
+
+	$ sudo chgrp postfix /etc/sasldb2
+	$ sudo chmod 640 /etc/sasldb2
+	$ sudo ln /etc/sasldb2 /var/spool/postfix/etc
+
+__Postfixが参照できるようにグループ、パーミッションを変更し/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
+
+#### sasldb登録確認
+
+    $ sasldblistusers2 # 一覧表示
+
+### telnetで認証を確認
+
+    $ perl -MMIME::Base64 -e 'print encode_base64("\000<user>\000<password>");
+    エンコードしたユーザー名とパスワード
+    
+\<user\>,\<password\>は登録したユーザーとパスワードを記載する。
+
+    $ telnet localhost 25
+    Connected to localhost.
+    Escape character is '^]'.
+    220 mail.example.com ESMTP
+
+    EHLO localhost
+
+    250-mail.min-ker.com
+    250-PIPELINING
+    250-SIZE 10240000
+    250-VRFY
+    250-ETRN
+    250-STARTTLS
+    250-AUTH PLAIN LOGIN
+    250-AUTH=PLAIN LOGIN
+    250-ENHANCEDSTATUSCODES
+    250-8BITMIME
+    250 DSN
+
+    AUTH PLAIN エンコードしたユーザー名と増すワード
+
+	Authentication successful
+
+
+
 
 ## 参考リンク
 
@@ -3383,7 +3342,7 @@ __T2 instances are VPC-only. Your T2 instance will launch into your VPC. Learn m
 固定IPはインスタンスの起動・再起動で割り当てられる値が変わる。  
 IPアドレスを再起動後も固定にするにはElastic IPが必要?。
 
-### <a name="aws_ec2_debian_app">Debian系Nginx, MySQL,PHP]<a>
+### <a name="aws_ec2_debian_app">Debian系Nginx, MySQL,PHP</a>
 
     // apt-getを利用する前に最新の状態へ
     $ sudo apt-get update
@@ -3450,6 +3409,13 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
 
 ### <a name="aws_mail">外部サーバーでメール送信</a>
+
+1. AWS > EC2 > Security Groupで送信用ポート設定を開けます(SMTP 25)。
+2. 送信上限解除申請を行います。    
+  [AWS EC2 Eメール上限緩和 / 逆引き(rDNS)設定 申請手順](http://www.slideshare.net/AmazonWebServicesJapan/aws-42885668)
+4. AWS > Route 53でMXレコードします。
+
+### MXレコード設定
 
 Route 53でMXレコードを設定します。
 

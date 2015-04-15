@@ -2324,7 +2324,7 @@ __またchrootの対策として/var/spool/postfix/etc/sasldb2へハードリン
     250-8BITMIME
     250 DSN
 
-    AUTH PLAIN エンコードしたユーザー名と増すワード
+    AUTH PLAIN エンコードしたユーザー名とパスワード
 
 	Authentication successful
 

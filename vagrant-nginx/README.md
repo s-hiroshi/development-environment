@@ -2086,16 +2086,16 @@ __SASLの認証方式PLAIN, 照合方式はsasldbを使う。__
 |機能|ソフト|認証機構|ファイル|
 |---|---|---|---|
 |SMTP|Postfix| |/etc/postfix/main.cf|
-|SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf, etc/postfix/sasl/smtpd.conf, /etc/dovecot/conf.d/10-master.conf|
+|SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf,   /etc/postfix/master.cf,   etc/postfix/sasl/smtpd.conf,  /etc/dovecot/conf.d/10-master.conf|
 |SMTP OP25B|Postfix| |/etc/postfix/master.cf|
-|IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf, /etc/dovecot/conf.d/10-auth.conf, /etc/dovecot/conf.d/10-master.conf|
+|IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf,   /etc/dovecot/conf.d/10-auth.conf,   /etc/dovecot/conf.d/10-master.conf|
 
 ### Postfix
 
 [Postfixのぺーじ－ホーム](http://www.postfix-jp.info/)
 
-* MTA(Mail transfer agent) Postfix
-* MDA Postfix
+* MTA(Mail transfer agent)
+* MDA
 
 #### バージョン確認
 

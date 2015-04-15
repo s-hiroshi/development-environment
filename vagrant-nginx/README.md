@@ -740,38 +740,22 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 * [Ubuntu](#ubuntu)
 * [Nginx](#nginx)
 * [PHP](#php)
-    + [PHP実行環境の分類](#php_exe)
-    + [php.ini保存場所の確認](#php_ini)
-    + [文字コード](#php_character)
-    + [実行環境の例](#php_exe_sample)
-    + [実行ユーザーの確認](#php_user)
-    + [PECL](#php_pecl)
-    + [Composer](#php_composer)
-    + [単体テスト - PHPUnit](#php_test)
-    + [デバッグ - Xdebug](#php_debug)
-    + [ドキュメンテーション - phpDocumentor](#php_documentation)
-    + [コードインスペクション - PHP_CodeSniffer](#php_inspection)
-    + [CakePHPのインストール](#php_cakephp)
 * [MySQL](#mysql)
-* [Postfixでメール送信](#postfix)
+* [Postfix + Dovecot(メール)](#postfix)
 * [Git](#git)
 
 ## 構築環境
 
 * Ubuntu 14.04 
-* Nginx  
-  nginx version: nginx/1.4.6 (Ubuntu)
-* MySQL  
-  5.5.40-0ubuntu0.14.04.1
-* PHP5   
-  PHP Version 5.5.9-1ubuntu4.5
-* Postfix
-* Dovecot
+* Nginx 1.4.6 (Ubuntu)
+* MySQL 5.5.40-0ubuntu0.14.04.1
+* PHP5 5.5.9-1ubuntu4.5
+* Postfix 2.11.0  
+* Dovecot 2.2.9  
 
 ## <a name="ubuntu">Ubuntu</a>
 
 以下の内容はユーザーubuntuでログインしているとことを前提とする。
-
 
 ### ホームディレクトリ
 

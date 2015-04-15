@@ -33,7 +33,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
 * [ファイル取得コマンド](#get)
 * [パッケージ管理システム](#package)
 * [HTML/CSS/JavaScript開発環境](#html_css_javascript)
-* [Ubuntu+Nginx+MySQL+PHP開発環境](#ubuntu_nginx_mysql_php)
+* [環境構築](#server)
     + [Ubuntu](#ubuntu)
     + [Nginx](#nginx)
     + [PHP](#php)
@@ -733,18 +733,11 @@ Qunitファイル(js/css)をCDNから読み込むと正常にテストできな�
 
 [目次へ戻る](#index)
 
-# <a name="ubuntu_nginx_mysql_php">Ubuntu+Nginx+MySQL+PHP開発環境</a>
-
-AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目指す。
+# <a name="server">環境構築</a>
 
 ## 目次
 
 * [Ubuntu](#ubuntu)
-    + [シェル](#shell)
-    + [Vi](#vi)
-    + [ユーザーとパーミション](#user)
-    + [ドキュメントルート](#documentroot)
-    + [Nginx, MySQL, PHPインストール](#install_nginx_mysql_php)
 * [Nginx](#nginx)
 * [PHP](#php)
     + [PHP実行環境の分類](#php_exe)
@@ -772,19 +765,225 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
   5.5.40-0ubuntu0.14.04.1
 * PHP5   
   PHP Version 5.5.9-1ubuntu4.5
-
+* Postfix
+* Dovecot
 
 ## <a name="ubuntu">Ubuntu</a>
 
-### Ubuntuログインユーザー
+以下の内容はユーザーubuntuでログインしているとことを前提とする。
 
-ユーザーubuntuでログインしていると仮定して記載する。
 
-### ログ
+### ホームディレクトリ
+
+    /home/ubuntu
+    
+### ログディレクトリ
 
     /var/log
 
-## <a name="shell">シェル</a>
+### root権限取得
+
+(1) コマンド実行時に一時的にroot権限を取得する。
+
+    $ sudo <command>
+
+(2) rootへ変更する。
+
+    $ su root
+    # <command>
+
+rootはプロンプトが$から\#へ変更される。
+
+### OSへのログイン
+
+#### rootのログイン禁止
+
+    $ su root
+    $ echo > /etc/securetty
+
+__EC2はでフォルトでrootログインを禁止している。デフォルトのログインユーザーははubuntu。__
+
+#### SSHでのみ接続
+
+/etc/ssh/sshd_config
+    
+    PasswordAuthentication no // yesをnoに変更 
+
+#### SSH接続でrootのログイン禁止
+
+/etc/ssh/sshd_config
+
+    PermitRootLogin no
+
+#### SSHポート番号変更
+
+/etc/ssh/sshd_config
+
+    Port 22222
+
+#### SSHサーバー再起動
+
+    /etc/init.d/ssh restart
+
+__EC2は上記の変更をしても22番でログインできた。__
+
+#### sudo
+
+sudoユーザーは一時的にroot権限でコマンドを実行できる。  
+ユーザーやグループごとのsudoの制御はvisudoを使い行う。  
+sudoグループはデフォルトで作成されそのメンバーはsudoできる。
+
+    $ sudo visudo
+
+### ユーザー
+
+#### ユーザー情報
+
+    // パスワードやホームディレクトリなど
+    $ cat /etc/passwd | grep <user>
+
+    // ユーザー名･グループ名、ユーザーID、グループID
+    $ id <user>
+
+#### ユーザー一覧
+
+    // ユーザー情報表示
+    $ cat /etc/passwd
+    // ユーザー一覧表示
+    $ cut -d: -f1 /etc/passwd
+
+#### ユーザー作成
+
+useraddはユーザー追加時にホームディレクトリを作成しない。
+
+    $ sudo useradd <user>
+    $ sudo useradd -s /sbin/nologin <user>     # ログインできないユーザー
+
+adduserはユーザー追加時にホームディレクトリを作成する。
+
+    $ sudo adduser <user>
+
+ユーザー作成後にOSへログインを禁止する。
+
+	usermod -s /bin/false
+
+
+### ユーザーパスワード
+
+    $ sudo passwd <user>
+
+#### グループ確認
+
+	groups <user>
+
+#### グループ一覧
+
+	$ cut -d: -f1 /etc/group
+
+#### グループ作成
+
+    $ sudo groupadd <group>
+
+#### ユーザーをグループへ追加/削除
+
+    $ sudo gpasswd -a <user> <group>
+
+__aオプションを指定しないと既存グループが削除される。__
+
+	$ sudo gpasswd -d <user> <group>
+   
+#### rootユーザーにパスワード設定
+
+    $ sudo passwd root
+    Enter new UNIX password: 
+    Retype new UNIX password: 
+    passwd: password updated successfully
+
+#### suの利用制限
+
+デフォルトはすべてのユーザーがsuでrootになれる。  
+suを実行可能なユーザーをwheelグループのユーザーへ制限する。
+
+/etc/pam.d/su
+
+    // コメントアウトを解除
+    # auth       required   pam_wheel.so
+    auth       required   pam_wheel.so
+
+wheelグループのユーザーを除いてsu rootができなくなる。
+
+    ubuntu@xxx:~$ su root
+    Password: 
+    su: Permission denied
+
+wheelグループを作成しubuntuを追加する。
+
+    ubuntu@xxx:~$ sudo addgroup --gid 11 wheel
+    Adding group `wheel' (GID 11) ...
+    Done.
+
+    // wheelグループへubuntu追加
+    ubuntu@xxx:~$ sudo usermod -G wheel ubuntu
+    
+ユーザーubuntuはsu rootできる。
+
+    ubuntu@xxx:~$ su root
+    Password: 
+    root@xxx: #
+
+### サービス
+
+必要のないサービスを停止する。
+
+#### サービス一覧
+
+    // RPM系のchkconfigと同様の機能を持つsysv-rc-confインストール
+    $ sudo apt-get sysv-rc-conf
+    // 起動サービス一覧表示(停止したサービスは表示されない)
+    $ sudo sysv-rc-conf
+    $ sudo sysv-rc-conf --list
+
+#### サービス停止
+
+    $ sudo sysv-rc-conf service Off
+
+### サービス起動・停止
+
+    $ sudo service <daemon> start|stop|status|restart|force-reload
+
+### ネットワークセキュリティ
+
+#### ポートの確認
+
+    $ netstat -atun
+    $ netstat -tlnp
+
+### パッケージの更新
+
+    // 最新のパッケージリスト取得
+    $ sudo apt-get update
+    // インストール済みパッケージをすべて更新
+    $ sudo apt-get upgrade
+
+特定のパッケージのみ更新する場合は下記の記事が参考になった。   
+[apt / aptitude で特定のパッケージのみアップグレードする方法 - Devslog](http://devslog.com/article/20120216085533.html)
+
+### ポートの制御(iptables)
+
+利用するポートのInbound/Outboundを設定する。  
+開けるポートは最小限にする。  
+__yumやapt-getはポート番号80を使う。__
+
+[そうかyumってhttpポート（80番）を使うのか・・・](http://app.m-cocolog.jp/t/typecast/691311/578213/73514519)
+
+### コマンド
+
+	$ find . -name <target>      // targetを検索
+    $ ps aux | grep <keyword>    // keywordプロセスを表示
+
+### <a name="shell">シェル</a>
+
+bashを利用していることを前提する。
 
 ### 使用シェルを確認
 
@@ -795,7 +994,7 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
     $ sudo apt-get install language-pack-ja
     $ sudo update-locale LANG=ja_JP.UTF-8
 
-一時てきに日本語環境へ切り替える。
+一時的に日本語環境へ切り替える。
 
     // 現在の設定を確認
     $ export $LANG
@@ -803,19 +1002,19 @@ AWS上にUbuntu + Nginx + MySQL + PHPの開発環境を構築することを目�
     // 日本語環境に設定
     $ export LANG=ja_JP.UTF-8
 
-## <a name="vi">Vi</a>
+### <a name="vi">Vi</a>
 
-### 文字コード確認
+#### 文字コード確認
 
     // 開いているファイルの文字コード確認
     :set enc?
 
-### 文字コード設定
+#### 文字コード設定
 
     // UTF-8へ変更
     :set encoding=utf8
 
-### GitのエディタをnanoからViへ変更
+#### GitのエディタをnanoからViへ変更
 
     $ git config --global core.editor "vi"
 
@@ -863,7 +1062,15 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
 
     $ sudo usermod -G www-data ubuntu
 
-## <a name="env_nginx">Nginx</a>
+
+### 日本時間へ変更
+
+	% sudo dpkg-reconfigure tzdata
+
+[サーバ無停止でlocaltimeを日本標準時間JSTに変更する - kmn23のコマンド備忘録](http://d.hatena.ne.jp/kmn23/20141012/1413114360)
+
+
+## <a name="nginx">Nginx</a>
 
 ### プログラム
 
@@ -2834,240 +3041,29 @@ shemaシェルはテーブル定義のダンプすることもできる。
 
 
 
-# <a name="aws">AWS(Amazon Web Services)でWEBサービス運用</a>
+# <a name="aws">AWSでWEBサービス運用</a>
 
 ## 目次
 
-* [Linux](#aws_linux)
 * [EC2](#aws_ec2)
 * [RDS](#aws_rds)
 * [Route 53](#aws_route53)
 * [S3](#aws_s3)
-* [Ubuntu + Postfix](#aws_postfix) 
+* [メール](#aws_mail) 
 * [課金](#aws_bills)
 * [AWS 用語](#aws_aws_terms)
 
-## <a name="#aws_linux">Linux</a>
 
-### 目的
+## セキュリティー
 
 EC2でUbuntuを安全に運用する。
 
 1. サーバーOSへ安全にログイン
 	+ EC2はSSHでログインする(パスワード認証は無効)。
-	+ rootのログインを禁止する。
-	+ EC2はでフォルトでrootのログインを禁止している。
+	+ rootのログインを禁止する。  
+	  (EC2はでフォルトでrootのログインを禁止している。)
 2. サービスの不正アクセス対策  
-  	+ サービスへのアクセス制御ははiptableでポート番号の開閉で制限する。
-  	+ EC2はSecurity Groupsでポート番号の開閉を行う。
-
-### 日本時間へ変更
-
-	% sudo dpkg-reconfigure tzdata
-
-[サーバ無停止でlocaltimeを日本標準時間JSTに変更する - kmn23のコマンド備忘録](http://d.hatena.ne.jp/kmn23/20141012/1413114360)
-
-### root権限取得
-
-(1) コマンド実行時に一時的にroot権限を取得する。
-
-    $ sudo <command>
-
-(2) rootへ変更する。
-
-    $ su root
-    # <command>
-
-rootはプロンプトが$から\#へ変更される。
-
-### OSへのログイン
-
-#### rootのログイン禁止
-
-    $ su root
-    $ echo > /etc/securetty
-
-__EC2はでフォルトでrootログインを禁止している。デフォルトのログインユーザーははubuntu。__
-
-#### SSHでのみ接続
-
-/etc/ssh/sshd_config
-    
-    PasswordAuthentication no // yesをnoに変更 
-
-#### SSH接続でrootのログイン禁止
-
-/etc/ssh/sshd_config
-
-    PermitRootLogin no
-
-#### SSHポート番号変更
-
-/etc/ssh/sshd_config
-
-    Port 22222
-
-#### SSHサーバー再起動
-
-    /etc/init.d/ssh restart
-
-__EC2は上記の変更をしても22番でログインできた。__
-
-#### sudo
-
-sudoユーザーは一時的にroot権限でコマンドを実行できる。  
-ユーザーやグループごとのsudoの制御はvisudoを使い行う。  
-sudoグループはデフォルトで作成されそのメンバーはsudoできる。
-
-    $ sudo visudo
-
-### ユーザー
-
-#### ユーザー情報
-
-    // パスワードやホームディレクトリなど
-    $ cat /etc/passwd | grep <user>
-
-    // ユーザー名･グループ名、ユーザーID、グループID
-    $ id <user>
-
-#### ユーザー一覧
-
-    // ユーザー情報表示
-    $ cat /etc/passwd
-    // ユーザー一覧表示
-    $ cut -d: -f1 /etc/passwd
-
-#### ユーザー作成
-
-useraddはユーザー追加時にホームディレクトリを作成しない。
-
-    $ sudo useradd <user>
-    $ sudo useradd -s /sbin/nologin <user>     # ログインできないユーザー
-
-adduserはユーザー追加時にホームディレクトリを作成する。
-
-    $ sudo adduser <user>
-
-ユーザー作成後にOSへログインを禁止する。
-
-	usermod -s /bin/false
-
-
-### ユーザーパスワード
-
-    $ sudo passwd <user>
-
-#### グループ確認
-
-	groups <user>
-
-#### グループ一覧
-
-	$ cut -d: -f1 /etc/group
-
-#### グループ作成
-
-    $ sudo groupadd <group>
-
-#### ユーザーをグループへ追加/削除
-
-    $ sudo gpasswd -a <user> <group>
-
-__aオプションを指定しないと既存グループが削除される。__
-
-	$ sudo gpasswd -d <user> <group>
-   
-#### rootユーザーにパスワード設定
-
-    $ sudo passwd root
-    Enter new UNIX password: 
-    Retype new UNIX password: 
-    passwd: password updated successfully
-
-#### suの利用制限
-
-デフォルトではすべてのユーザーがsuでrootへ変更できる。  
-suを実行可能ユーザーをwheelグループのユーザーに制限する。
-
-/etc/pam.d/su
-
-    // コメントアウトを解除
-    # auth       required   pam_wheel.so
-    auth       required   pam_wheel.so
-
-wheelグループのユーザー以外はsu rootができなくなる。
-
-    ubuntu@xxx:~$ su root
-    Password: 
-    su: Permission denied
-
-Ubuntuのデフォルトはwheelグループはないので作成しubuntuを追加する。
-
-    ubuntu@xxx:~$ sudo addgroup --gid 11 wheel
-    Adding group `wheel' (GID 11) ...
-    Done.
-
-    // wheelグループへubuntu追加
-    ubuntu@xxx:~$ sudo usermod -G wheel ubuntu
-    
-su rootができる。
-
-    ubuntu@xxx:~$ su root
-    Password: 
-    root@xxx: #
-
-### サービス
-
-不要なサービスを停止する。
-
-#### サービス一覧
-
-    // RPM系のchkconfigと同様の機能を持つsysv-rc-confインストール
-    $ sudo apt-get sysv-rc-conf
-    // 起動サービス一覧表示
-    $ sudo sysv-rc-conf --list
-
-#### サービス停止
-
-    $ sudo sysv-rc-conf service Off
-
-### サービス起動・停止
-
-    $ sudo service <daemon> start|stop|status|restart|force-reload
-
-### ネットワークセキュリティ
-
-#### ポートの確認
-
-    $ netstat -atun
-    $ netstat -tlnp
-
-### OSの更新
-
-### パッケージの更新
-
-    // 最新のパッケージリスト取得
-    $ sudo apt-get update
-    // インストール済みパッケージをすべて更新
-    $ sudo apt-get upgrade
-
-特定のパッケージのみ更新する場合は下記の記事が参考になった。   
-[apt / aptitude で特定のパッケージのみアップグレードする方法 - Devslog](http://devslog.com/article/20120216085533.html)
-
-### ポートの制御(iptables)
-
-利用するポートのInbound/Outboundを設定する。  
-開けるポートは最小限にする。  
-__yumやapt-getはポート番号80を使う。__
-
-[そうかyumってhttpポート（80番）を使うのか・・・](http://app.m-cocolog.jp/t/typecast/691311/578213/73514519)
-
-### コマンド
-
-	$ find . -name <target>      // targetを検索
-    $ ps aux | grep <keyword>    // keywordプロセスを表示
-
+  	+ Security Groupsで適切にポート番号の開閉を行う。
 
 ## <a name="aws_ec2">EC2</a>
 
@@ -3170,6 +3166,18 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 
 [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
 
+
+## <a name="aws_mail_thirdparty">
+
+Route 53でMXレコードを設定します。
+
+(例)メールサーバーとしてヘテムルを利用する。
+
+	10 mailXX.heteml.jp
+
+XXは契約しているサーバーにより異なります。
+
+[レコードの設定（編集）をしたい | よくある質問](http://heteml.jp/support/faq/1602.html?ref=faq)
 
 ## <a name="aws_postfix">Ubuntu + Postfix + Dovecot</a>
 

@@ -2052,6 +2052,314 @@ killコマンドでmysqlプロセスを終了したら起動できた。
      
 [mysqlの起動に失敗（MySQL Daemon failed to start）](http://www.crossl.net/blog/mysql_failed_start/)
 
+## <a name="aws_postfix">Ubuntu + Postfix + Dovecot</a>
+
+* Ubuntu 14.04
+* Postfix 2.11.0  
+  SMTPサーバーです。
+* Dovecot 2.2.9  
+  POP3/IMAPサーバーです。
+* saslauthd 2.1.25
+  SMTP認証(SMTP-AUTH)サーバーです。
+
+### ソフト
+  
+|機能|ソフト|認証機構|ファイル|
+|---|---|---|
+|SMTP|Postfix| |/etc/postfix/main.cf|
+|SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf, etc/postfix/sasl/smtpd.conf, /etc/dovecot/conf.d/10-master.conf|
+|IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf|
+|IMAP,POP3 認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf, /etc/dovecot/conf.d/10-master.conf|
+|SMTP OP25B|Postfix| |/etc/postfix/master.cf|
+
+EHLO
+Extended SMTP のHELO
+
+### インストール
+
+	sudo apt-get install dovecot-common dovecot-imapd dovecot-pop3d sasl2-bin
+
+sasl2-binをインストールするとSASLを利用できる。  
+Dovecotそれ自体がSASLデーモンの機能を持つためsaslauthdは停止しても良い。
+
+## メールクライアント
+
+MUA
+
+## SMTPサーバー Postfix
+
+* MTA(Mail transfer agent) Postfix
+* MDA Postfix
+
+## POP, IMAPサーバー Dovecot
+
+  MRA POPやIMAPのメール受信
+
+## メール関連認証機構
+
+* SASL(Simple authentication and. Security Layer)
+
+SASLの認証方式はSASLDBを使う。
+
+
+## 認証デーモン
+
+SMTP-AUTH, IMAP, POP3とも認証デーモンはDovecotに任せる。
+
+
+#### SASLDB ユーザー追加
+
+    $ saslpasswd2 -c -u <domain> <user>
+
+#### 保存ファイル
+
+/etc/sasldb2
+
+__/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
+
+#### 登録確認
+
+    $ sasldblistusers2 # 一覧
+
+### telnetで認証を確認
+
+    $ perl -MMIME::Base64 -e 'print encode_base64("\000<user>\000<password>");
+    エンコードしたユーザー名と増すワード
+    
+<user>,<password>は読み替えてください。
+
+    $ telnet localhost 25
+    Connected to localhost.
+    Escape character is '^]'.
+    220 mail.example.com ESMTP
+
+    EHLO localhost
+
+    250-mail.min-ker.com
+    250-PIPELINING
+    250-SIZE 10240000
+    250-VRFY
+    250-ETRN
+    250-STARTTLS
+    250-AUTH PLAIN LOGIN
+    250-AUTH=PLAIN LOGIN
+    250-ENHANCEDSTATUSCODES
+    250-8BITMIME
+    250 DSN
+
+    AUTH PLAIN エンコードしたユーザー名と増すワード
+
+	Authentication successful
+
+
+## 送信環境構築手順
+
+1. AWS > EC2 > Security Groupで送信用ポート設定を開けます。  
+   SMTP 25。
+2. 送信上限解除申請を行います。    
+  [AWS EC2 Eメール上限緩和 / 逆引き(rDNS)設定 申請手順](http://www.slideshare.net/AmazonWebServicesJapan/aws-42885668)
+4. AWS > Route 53でMXレコードします。
+5. Postfixをインストールします。
+6. Postfixの設定をします。
+7. mailコマンドで送信テストをします。
+8. Dovecotインストールをインストールします。
+
+## Security Groupで送信用ポート設定設定
+
+設定後にポート番号が空いているか確認します。
+
+	$ netstat -a | grep smtp 
+
+## Route 53でMX(Mail exchanger)レコード追加例
+
+* Name  
+  mail.example.com
+* Type  
+  Mail Exchange
+* Value  
+  10 mail.example.com
+
+## Postfix
+
+[Postfixのぺーじ－ホーム](http://www.postfix-jp.info/)
+
+### インストール
+
+    $ sudo apt-get install postfix
+    // バージョン確認
+    $ /usr/sbin/postconf | grep mail_version
+    mail_version = 2.11.0
+
+[Postfixのバージョンを確認する | CoDE4U](http://blog.code4u.org/archives/1135)
+
+### 設定ファイル
+
+	/etc/postfix/main.cf
+	/etc/postfix/master.cf
+
+main.cfを編集します。主要な項目を掲載します。
+
+	# バナー情報 できるだけ情報を少なく
+	smtpd_banner = $myhostname ESMTP
+	
+	# SMTP接続を許可するインターフェース
+	inet_interfaces = all
+	
+	# 自ホスト宛と判断するもの
+	mydestination = $myhostname, $mydomain, localhost.$mydomain, localhost
+	
+	# 送信許可するIPアドレス
+	mynetworks = 127.0.0.0/8 192.168.11.0/24
+	
+	smtpd_sasl_type = dovecot
+    smtpd_sasl_path = private/auth
+    smtpd_sasl_auth_enable = yes
+    smtpd_sasl_security_options = noanonymous
+    #smtpd_sasl_local_domain = $myhostname
+    smtpd_sasl_local_domain = $myorigin
+    smtpd_sasl_authenticated_header = yes
+    broken_sasl_auth_clients = yes
+
+	
+	# SMTPのVERFYコマンド禁止(追記)
+	disable_vrfy_command = yes
+	
+	# SMTP開始のHELO/EHLOコマンド必須化(追記)
+	smtpd_helo_required = yes
+	
+	# 中継制限
+	# permit_sasl_authenticated      SMTP認証を通過したもの
+	# permit_mynetworks              mynetworksで指定されたもの
+	# reject_unauth_destination      それ以前に記載した条件以外は拒否
+	
+	# ヘッダTOに対して
+	smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination
+	# ヘッダFROMに対して 
+	smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
+	
+	# メールボックスをMaildir形式へ変更(追記)
+	home_mailbox = Maildir/
+	
+	# メール送信時のマッピング(追記)
+	smtp_generic_maps = hash:/etc/postfix/generic
+
+メール送信時のマッピングは下記の記事を参考にしました。  
+http://www.postfix-jp.info/trans-2.2/jhtml/STANDARD_CONFIGURATION_README.html#fantasy 
+ 
+ 
+Maildirディレクトリをユーザーホームへ作成します。
+
+    $ mkdir -p Maildir/{new,cur,tmp,.Sent,.Trash}
+    
+ユーザー追加で自動的にMaildir/new,cur,tmpを作成する雛形作成します。
+
+	$ mkdir -p /etc/skel/Maildir/{new,cur,tmp,.Sent,.Trash}
+	$ chmod -R 700 /etc/skel/Maildir/
+
+[ Amazon EC2でpostfix+dovecotでメールサーバ構築(1) - viola&#039;s blog](http://blog.violasoftchannel.com/?p=57)
+
+### 再起動
+
+    $ sudo /etc/init.d/postfix restart
+
+## 送信テスト
+
+### mailコマンドインストール
+
+    $ sudo apt-get install mailutils
+
+### 送信テスト
+
+info@example.comへ送信テスト。
+
+    $ mail <info@example.com>
+    
+Enter + Ctrl + Dで終了(送信)します。
+
+## 受信テスト
+
+新着メールは~/Maildir/newに届くのでcatコマンドなどで確認します。
+
+## メールログ
+
+    /var/log/mail.log
+    /var/log/mail.err
+
+## Dovecotインストール
+
+    $ sudo apt-get install dovecot-common dovecot-imapd dovecot-pop3d sasl2-bin
+
+### SMTP認証(SMTP-AUTH)
+
+[Postfix で Submissionポート（サブミッション・ポート）＆ SMTP-AUTH(認証)を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/postfix-submission-smtp-auth.html)
+
+
+> Simple Authentication and Security Layer（SASL）は、インターネットプロトコルにおける認証とデータセキュリティのためのフレームワークである。
+
+[Simple Authentication and Security Layer - Wikipedia](http://ja.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer)
+
+/etc/postfix/main.cf
+
+	# sasl
+	smtpd_sasl_auth_enable = yes
+	#smtpd_sasl_path = smtpd
+	smtpd_sasl_security_options = noanonymous
+	broken_sasl_auth_clients = yes
+	# smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+
+/etc/postfixにsasl_passwdを作成し下記内容を記載。
+
+    mail.example.com account:password
+
+sasl_passwdのパーミションを変更を変更する。
+
+    $ sudo chmod 600 sasl_passwd
+
+postmapコマンドでdbファイルを作成する。
+
+    $ sudo postmap /etc/postfix/sasl_passwd
+
+sasl_passwd.dbが作成される。Postfixを再起動する。
+
+
+## Dovecot
+
+### ログ
+
+Dovecotはデフォルトログはシステムログのmail.log/mail.errに出力されます。  
+ログの設定は10-logging.confに記述します。ファイルを指定しより詳細なログを出力することができます。
+
+/etc/dovecot/conf.d/10-logging.conf
+
+	log_path = /var/log/dovecot.log
+
+### メールボックス設定
+
+/etc/dovecot/conf.d/10-mail.conf
+
+	mail_location = maildir:~/Maildir
+    
+最初下記のように設定しエラーが発生していました。
+
+	#mail_location = maildir:~/Maildir:INBOX=/var/mail/%u
+	
+	# エラー
+	imap(<user>): Error: Failed to autocreate mailbox INBOX: Permission denied
+
+Postfixでも同様にメールボックスの設定がある。
+/etc/postfix/main.cfのメールボックスの設定
+
+	home_mailbox = Maildir/
+
+## 参考リンク
+
+[Postfixによる、セキュリティに配慮したメールサーバの構築方法 | OXY NOTES](http://oxynotes.com/?p=4646)  
+[Debian(Ubuntu)でDovecotでメールを受信する ( POP3s,IMAPs ( STARTTLS or SSL/TLS ) にも対応 ) | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/dovecot-tls.html)  
+[PostfixのセキュリティーとSpam対策 | UNIXLife](http://unixlife.jp/linux/centos-5/postfix-secure.html)  
+[「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)  
+[Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
+[Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
+
 
 ## <a name="git">Git</a>
 
@@ -2099,7 +2407,6 @@ GitHub > Settings > SSH keys > Add SSH key
 
 
 [目次へ戻る](#index)
-
 
 
 # <a name="ci">継続的インテグレーション</a>
@@ -3036,12 +3343,11 @@ shemaシェルはテーブル定義のダンプすることもできる。
 [cakePHP2.3 Schema - Logicky Blog](http://endoyuta.com/2013/08/17/cakephp2-3-schema/)
 
 
-
 [目次へ戻る](#index)
 
 
 
-# <a name="aws">AWSでWEBサービス運用</a>
+# <a name="aws">AWS</a>
 
 ## 目次
 
@@ -3069,12 +3375,6 @@ EC2でUbuntuを安全に運用する。
 
 Amazon Linux AMI 2014.09.1 (HVM) - ami-4985b048
 
-* [SSH](#aws_ec2_ssh)
-* [Security Groups](#aws_ec2_security_group)
-* [Elastic IPs](#aws_ec2_ip)
-* [RPM系 Apache、MySQL, PHPインストール](#aws_ec2_rpm_app)
-* [Debian系Nginx, MySQL,PHP](#aws_ec2_debian_app)
-
 ### <a name="aws_ec2_ssh">SSH</a>
 
 EC2 > NETWORK & SECURITY > Key Pairs
@@ -3099,6 +3399,15 @@ __T2 instances are VPC-only. Your T2 instance will launch into your VPC. Learn m
 固定IPはインスタンスの起動・再起動で割り当てられる値が変わる。  
 IPアドレスを再起動後も固定にするにはElastic IPが必要?。
 
+### <a name="aws_ec2_debian_app">Debian系Nginx, MySQL,PHP]<a>
+
+    // apt-getを利用する前に最新の状態へ
+    $ sudo apt-get update
+
+    $ apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx git
+
+[PHP: Debian GNU/Linux へのインストール - Manual](http://php.net/manual/ja/install.unix.debian.php)
+
 ### <a name="aws_ec2_rpm_app">RPM系 Apache、MySQL, PHPインストー</a>
 
     // 初回接続時にはyumを更新
@@ -3110,14 +3419,6 @@ IPアドレスを再起動後も固定にするにはElastic IPが必要?。
     // Apache起動
     $ sudo service httpd start
 
-### <a name="aws_ec2_debian_app">Debian系Nginx, MySQL,PHP]<a>
-
-    // apt-getを利用する前に最新の状態へ
-    $ sudo apt-get update
-
-    $ apt-get install php5 php5-cli php5-fpm php5-mysql php-pear php5-curl php5-dev php-apc php5-xsl php5-mcrypt mysql-server-5.5 nginx git
-
-[PHP: Debian GNU/Linux へのインストール - Manual](http://php.net/manual/ja/install.unix.debian.php)
 
 ## <a name="aws_rds">RDS</a>
 
@@ -3132,12 +3433,11 @@ IPアドレスを再起動後も固定にするにはElastic IPが必要?。
 
 AWSではパスワードなしでrootでログインすることはできない。
 
-### 課金
+## 課金
 
 [よくある質問 - Amazon RDS（リレーショナルデータベースサービス Amazon Relational Database Service） | アマゾン ウェブ サービス（AWS 日本語）](http://aws.amazon.com/jp/rds/faqs/)
 
 上記ページの請求に関する記載がある。
-
 
 ## <a name="aws_route53">Route 53</a>
 
@@ -3163,11 +3463,9 @@ DNSサーバーが正しく設定されているかを確認する。
 
 xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が正常に行われている。
 
-
 [AWS Developer Forums: メールの送受信方法について …](https://forums.aws.amazon.com/thread.jspa?messageID=307586)
 
-
-## <a name="aws_mail_thirdparty">
+### <a name="aws_mail">外部サーバーでメール送信</a>
 
 Route 53でMXレコードを設定します。
 
@@ -3179,313 +3477,6 @@ XXは契約しているサーバーにより異なります。
 
 [レコードの設定（編集）をしたい | よくある質問](http://heteml.jp/support/faq/1602.html?ref=faq)
 
-## <a name="aws_postfix">Ubuntu + Postfix + Dovecot</a>
-
-* Ubuntu 14.04
-* Postfix 2.11.0  
-  SMTPサーバーです。
-* Dovecot 2.2.9  
-  POP3/IMAPサーバーです。
-* saslauthd 2.1.25
-  SMTP認証(SMTP-AUTH)サーバーです。
-
-### ソフト
-  
-|機能|ソフト|認証機構|ファイル|
-|---|---|---|
-|SMTP|Postfix| |/etc/postfix/main.cf|
-|SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf, etc/postfix/sasl/smtpd.conf, /etc/dovecot/conf.d/10-master.conf|
-|IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf|
-|IMAP,POP3 認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf, /etc/dovecot/conf.d/10-master.conf|
-|SMTP OP25B|Postfix| |/etc/postfix/master.cf|
-
-EHLO
-Extended SMTP のHELO
-
-### インストール
-
-	sudo apt-get install dovecot-common dovecot-imapd dovecot-pop3d sasl2-bin
-
-sasl2-binをインストールするとSASLを利用できる。  
-Dovecotそれ自体がSASLデーモンの機能を持つためsaslauthdは停止しても良い。
-
-## メールクライアント
-
-MUA
-
-## SMTPサーバー Postfix
-
-* MTA(Mail transfer agent) Postfix
-* MDA Postfix
-
-## POP, IMAPサーバー Dovecot
-
-  MRA POPやIMAPのメール受信
-
-## メール関連認証機構
-
-* SASL(Simple authentication and. Security Layer)
-
-SASLの認証方式はSASLDBを使う。
-
-
-## 認証デーモン
-
-SMTP-AUTH, IMAP, POP3とも認証デーモンはDovecotに任せる。
-
-
-#### SASLDB ユーザー追加
-
-    $ saslpasswd2 -c -u <domain> <user>
-
-#### 保存ファイル
-
-/etc/sasldb2
-
-__/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
-
-#### 登録確認
-
-    $ sasldblistusers2 # 一覧
-
-### telnetで認証を確認
-
-    $ perl -MMIME::Base64 -e 'print encode_base64("\000<user>\000<password>");
-    エンコードしたユーザー名と増すワード
-    
-<user>,<password>は読み替えてください。
-
-    $ telnet localhost 25
-    Connected to localhost.
-    Escape character is '^]'.
-    220 mail.example.com ESMTP
-
-    EHLO localhost
-
-    250-mail.min-ker.com
-    250-PIPELINING
-    250-SIZE 10240000
-    250-VRFY
-    250-ETRN
-    250-STARTTLS
-    250-AUTH PLAIN LOGIN
-    250-AUTH=PLAIN LOGIN
-    250-ENHANCEDSTATUSCODES
-    250-8BITMIME
-    250 DSN
-
-    AUTH PLAIN エンコードしたユーザー名と増すワード
-
-	Authentication successful
-
-
-## 送信環境構築手順
-
-1. AWS > EC2 > Security Groupで送信用ポート設定を開けます。  
-   SMTP 25。
-2. 送信上限解除申請を行います。    
-  [AWS EC2 Eメール上限緩和 / 逆引き(rDNS)設定 申請手順](http://www.slideshare.net/AmazonWebServicesJapan/aws-42885668)
-4. AWS > Route 53でMXレコードします。
-5. Postfixをインストールします。
-6. Postfixの設定をします。
-7. mailコマンドで送信テストをします。
-8. Dovecotインストールをインストールします。
-
-## Security Groupで送信用ポート設定設定
-
-設定後にポート番号が空いているか確認します。
-
-	$ netstat -a | grep smtp 
-
-## Route 53でMX(Mail exchanger)レコード追加例
-
-* Name  
-  mail.example.com
-* Type  
-  Mail Exchange
-* Value  
-  10 mail.example.com
-
-## Postfix
-
-[Postfixのぺーじ－ホーム](http://www.postfix-jp.info/)
-
-### インストール
-
-    $ sudo apt-get install postfix
-    // バージョン確認
-    $ /usr/sbin/postconf | grep mail_version
-    mail_version = 2.11.0
-
-[Postfixのバージョンを確認する | CoDE4U](http://blog.code4u.org/archives/1135)
-
-### 設定ファイル
-
-	/etc/postfix/main.cf
-	/etc/postfix/master.cf
-
-main.cfを編集します。主要な項目を掲載します。
-
-	# バナー情報 できるだけ情報を少なく
-	smtpd_banner = $myhostname ESMTP
-	
-	# SMTP接続を許可するインターフェース
-	inet_interfaces = all
-	
-	# 自ホスト宛と判断するもの
-	mydestination = $myhostname, $mydomain, localhost.$mydomain, localhost
-	
-	# 送信許可するIPアドレス
-	mynetworks = 127.0.0.0/8 192.168.11.0/24
-	
-	smtpd_sasl_type = dovecot
-    smtpd_sasl_path = private/auth
-    smtpd_sasl_auth_enable = yes
-    smtpd_sasl_security_options = noanonymous
-    #smtpd_sasl_local_domain = $myhostname
-    smtpd_sasl_local_domain = $myorigin
-    smtpd_sasl_authenticated_header = yes
-    broken_sasl_auth_clients = yes
-
-	
-	# SMTPのVERFYコマンド禁止(追記)
-	disable_vrfy_command = yes
-	
-	# SMTP開始のHELO/EHLOコマンド必須化(追記)
-	smtpd_helo_required = yes
-	
-	# 中継制限
-	# permit_sasl_authenticated      SMTP認証を通過したもの
-	# permit_mynetworks              mynetworksで指定されたもの
-	# reject_unauth_destination      それ以前に記載した条件以外は拒否
-	
-	# ヘッダTOに対して
-	smtpd_recipient_restrictions = permit_sasl_authenticated, permit_mynetworks, reject_unauth_destination
-	# ヘッダFROMに対して 
-	smtpd_sender_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
-	
-	# メールボックスをMaildir形式へ変更(追記)
-	home_mailbox = Maildir/
-	
-	# メール送信時のマッピング(追記)
-	smtp_generic_maps = hash:/etc/postfix/generic
-
-メール送信時のマッピングは下記の記事を参考にしました。  
-http://www.postfix-jp.info/trans-2.2/jhtml/STANDARD_CONFIGURATION_README.html#fantasy 
- 
- 
-Maildirディレクトリをユーザーホームへ作成します。
-
-    $ mkdir -p Maildir/{new,cur,tmp,.Sent,.Trash}
-    
-ユーザー追加で自動的にMaildir/new,cur,tmpを作成する雛形作成します。
-
-	$ mkdir -p /etc/skel/Maildir/{new,cur,tmp,.Sent,.Trash}
-	$ chmod -R 700 /etc/skel/Maildir/
-
-[ Amazon EC2でpostfix+dovecotでメールサーバ構築(1) - viola&#039;s blog](http://blog.violasoftchannel.com/?p=57)
-
-### 再起動
-
-    $ sudo /etc/init.d/postfix restart
-
-## 送信テスト
-
-### mailコマンドインストール
-
-    $ sudo apt-get install mailutils
-
-### 送信テスト
-
-info@example.comへ送信テスト。
-
-    $ mail <info@example.com>
-    
-Enter + Ctrl + Dで終了(送信)します。
-
-## 受信テスト
-
-新着メールは~/Maildir/newに届くのでcatコマンドなどで確認します。
-
-## メールログ
-
-    /var/log/mail.log
-    /var/log/mail.err
-
-## Dovecotインストール
-
-    $ sudo apt-get install dovecot-common dovecot-imapd dovecot-pop3d sasl2-bin
-
-### SMTP認証(SMTP-AUTH)
-
-[Postfix で Submissionポート（サブミッション・ポート）＆ SMTP-AUTH(認証)を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/postfix-submission-smtp-auth.html)
-
-
-> Simple Authentication and Security Layer（SASL）は、インターネットプロトコルにおける認証とデータセキュリティのためのフレームワークである。
-
-[Simple Authentication and Security Layer - Wikipedia](http://ja.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer)
-
-/etc/postfix/main.cf
-
-	# sasl
-	smtpd_sasl_auth_enable = yes
-	#smtpd_sasl_path = smtpd
-	smtpd_sasl_security_options = noanonymous
-	broken_sasl_auth_clients = yes
-	# smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
-
-/etc/postfixにsasl_passwdを作成し下記内容を記載。
-
-    mail.example.com account:password
-
-sasl_passwdのパーミションを変更を変更する。
-
-    $ sudo chmod 600 sasl_passwd
-
-postmapコマンドでdbファイルを作成する。
-
-    $ sudo postmap /etc/postfix/sasl_passwd
-
-sasl_passwd.dbが作成される。Postfixを再起動する。
-
-
-## Dovecot
-
-### ログ
-
-Dovecotはデフォルトログはシステムログのmail.log/mail.errに出力されます。  
-ログの設定は10-logging.confに記述します。ファイルを指定しより詳細なログを出力することができます。
-
-/etc/dovecot/conf.d/10-logging.conf
-
-	log_path = /var/log/dovecot.log
-
-### メールボックス設定
-
-/etc/dovecot/conf.d/10-mail.conf
-
-	mail_location = maildir:~/Maildir
-    
-最初下記のように設定しエラーが発生していました。
-
-	#mail_location = maildir:~/Maildir:INBOX=/var/mail/%u
-	
-	# エラー
-	imap(<user>): Error: Failed to autocreate mailbox INBOX: Permission denied
-
-Postfixでも同様にメールボックスの設定がある。
-/etc/postfix/main.cfのメールボックスの設定
-
-	home_mailbox = Maildir/
-
-## 参考リンク
-
-[Postfixによる、セキュリティに配慮したメールサーバの構築方法 | OXY NOTES](http://oxynotes.com/?p=4646)  
-[Debian(Ubuntu)でDovecotでメールを受信する ( POP3s,IMAPs ( STARTTLS or SSL/TLS ) にも対応 ) | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/dovecot-tls.html)  
-[PostfixのセキュリティーとSpam対策 | UNIXLife](http://unixlife.jp/linux/centos-5/postfix-secure.html)  
-[「Linuxサーバーセキュリティ徹底入門 ープンソースによるサーバー防衛の基本」中島 能和](http://www.amazon.co.jp/Linux%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%BE%B9%E5%BA%95%E5%85%A5%E9%96%80-%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E9%98%B2%E8%A1%9B%E3%81%AE%E5%9F%BA%E6%9C%AC-%E4%B8%AD%E5%B3%B6-%E8%83%BD%E5%92%8C/dp/4798132381/ref=tmm_jp_oversized_meta_binding_title_0?ie=UTF8&qid=1421728106&sr=1-1)  
-[Debian(Ubuntu)で postfix を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/debian-postfix-setting.html)
-[Postfix+Dovecotによるメールサーバ構築 ｜ Developers.IO](http://dev.classmethod.jp/cloud/aws/mail_server_with_postfix_and_dovecot/)
 
 ## <a name="aws_bills">課金</a>
 

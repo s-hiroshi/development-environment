@@ -38,7 +38,7 @@ WEBサービスをAWSで運用するために勉強していることを書き�
     + [Nginx](#nginx)
     + [PHP](#php)
     + [MySQL](#mysql)
-    + [Postfix](#postfix)
+    + [Postfix + Dovecot](#mail)
     + [Git](#git)
 * [継続的インテグレーション](#ci)
 	+ [環境構築](#ci_dev)
@@ -2036,24 +2036,44 @@ killコマンドでmysqlプロセスを終了したら起動できた。
      
 [mysqlの起動に失敗（MySQL Daemon failed to start）](http://www.crossl.net/blog/mysql_failed_start/)
 
-## <a name="postfix">Postfix + Dovecot</a>
+## <a name="mail">Postfix + Dovecot</a>
+
+### 目標
+
+AWS EC2へPostfixとDovecotでメール環境を構築する。
+
+* 送信サーバー(Postfix)  
+  	+ SMTP認証(SMTP-AUTH)へ対応する。
+		- SMTP認証の認証フレームワーク(SASL)はDovecotを使う。
+			- 認証方式はPLAINを使う。
+			- SASLの照合方法はsasldbを使う。
+  	+ OP25Bへ対応する。
+* 受信サーバー(Dovecot)
+	+ OSのユーザー/パスワードを平文で認証する。
+
+### バージョン
 
 * Ubuntu 14.04
-* Postfix 2.11.0  
-  SMTPサーバーです。
-* Dovecot 2.2.9  
-  POP3/IMAPサーバーです。
+* Postfix(SMTPサーバー) 2.11.0  
+* Dovecot(POP3/IMAPサーバー) 2.2.9  
   今回はIMAP/POP3の認証だけでなくSMTP認証(SMTP-AUTH)の認証サーバーとして利用する。
+
 
 ### ソフト
   
 |機能|ソフト|認証機構|ファイル|
-|---|---|---|
+|---|---|---|---|
 |SMTP|Postfix| |/etc/postfix/main.cf|
 |SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf, etc/postfix/sasl/smtpd.conf, /etc/dovecot/conf.d/10-master.conf|
 |IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf|
 |IMAP,POP3 認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf, /etc/dovecot/conf.d/10-master.conf|
 |SMTP OP25B|Postfix| |/etc/postfix/master.cf|
+
+## メール関連ログ
+
+	/var/log/syslog
+	/var/log/mail.log
+	/var/log/mail.err
 
 ### インストール
 
@@ -2062,21 +2082,21 @@ killコマンドでmysqlプロセスを終了したら起動できた。
 sasl2-binをインストールするとSASLを利用できる。  
 今回はDovecotのSASL認証機能を利用するためsaslauthdは停止する。
 
-### SMTPサーバー(Postfix)
+#### SMTPサーバー(Postfix)
 
 * MTA(Mail transfer agent) Postfix
 * MDA Postfix
 
-### POP, IMAPサーバー(Dovecot)
+#### POP、IMAPサーバー(Dovecot)
 
 * MRA  
   POPやIMAPのメール受信
 
-### 認証デーモン
+#### 認証デーモン
 
-IMAP,POP3だけでなくSMTP認証(SMTP-AUTH)の認証もDovecotに任せる。
+今回はIMAP,POP3だけでなくSMTP認証(SMTP-AUTH)の認証もDovecotに任せる。
 
-### 認証機構
+#### 認証機構
 
 > Simple Authentication and Security Layer（SASL）は、インターネットプロトコルにおける認証とデータセキュリティのためのフレームワークである。
 
@@ -2084,12 +2104,9 @@ IMAP,POP3だけでなくSMTP認証(SMTP-AUTH)の認証もDovecotに任せる。
 
 今回はSMTP-AUTHのSASL認証方式はsasldbを使う。
 
-## メールログ
 
-    /var/log/mail.log
-    /var/log/mail.err
 
-## Postfix
+### Postfix
 
 [Postfixのぺーじ－ホーム](http://www.postfix-jp.info/)
 

@@ -2253,7 +2253,7 @@ Maildirディレクトリをユーザーホームへ作成する。
 
 #### SMTP認証に関するPostfixのmaster.cfの変更
 
-	smtp      inet  n       -       n       -       -       smtpd -v
+	smtp      inet  n       -       -       -       -       smtpd -v
 	  -o smtpd_sasl_auth_enable=yes
 
 
@@ -2291,7 +2291,8 @@ Maildirディレクトリをユーザーホームへ作成する。
 	$ sudo chmod 640 /etc/sasldb2
 	$ sudo ln /etc/sasldb2 /var/spool/postfix/etc
 
-__Postfixが参照できるようにグループ、パーミッションを変更し/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
+__Postfixが参照できるようにグループ、パーミッションを変更する。__  
+__またchrootの対策として/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
 
 #### sasldb確認
 

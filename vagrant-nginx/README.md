@@ -2263,6 +2263,12 @@ Enter + Ctrl + Dで終了(送信)します。
 
 ## SMTP認証(SMTP-AUTH)
 
+### SMTP認証に関するmaster.cf
+
+	smtp      inet  n       -       n       -       -       smtpd -v
+	  -o smtpd_sasl_auth_enable=yes
+
+
 ### SMTP認証に関するDovecotの設定
 
 /etc/dovecot/conf.d/10-master.conf
@@ -2354,7 +2360,12 @@ __Postfixが参照できるようにグループ、パーミッションを変�
 	Authentication successful
 
 
-###
+### OP25B
+
+/etc/postfix/master.conf
+
+	submission inet n       -       n       -       -       smtpd
+
 
 ## 参考リンク
 

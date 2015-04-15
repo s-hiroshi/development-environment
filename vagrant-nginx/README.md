@@ -2042,14 +2042,16 @@ killコマンドでmysqlプロセスを終了したら起動できた。
 
 AWS EC2へPostfixとDovecotでメール環境を構築する。
 
-* 送信サーバー(Postfix)  
+* 送信サーバー(Postfix)
   	+ SMTP認証(SMTP-AUTH)へ対応する。
 		- SMTP認証の認証フレームワーク(SASL)はDovecotを使う。
 			- SASLの認証方式はPLAINを使う。
 			- SASLの照合方法はsasldbを使う。
   	+ OP25Bへ対応する。
+  	+ SSLへの対応はしていない。
 * 受信サーバー(Dovecot)
 	+ OSのユーザー/パスワードを使い平文で認証する。
+	+ SSLへの対応はしていない。
 
 ### バージョン
 
@@ -2164,7 +2166,7 @@ http://www.postfix-jp.info/trans-2.2/jhtml/STANDARD_CONFIGURATION_README.html#fa
 #### ログ
 
 Dovecotはデフォルトログはシステムログのmail.log/mail.errに出力される。  
-10-logging.confで指定したファイルにより詳細なログを出力するよう設定する。
+10-logging.confで指定ファイルにより詳細なログを出力するよう設定できる。
 
 /etc/dovecot/conf.d/10-logging.conf
 

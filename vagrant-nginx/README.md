@@ -2308,7 +2308,7 @@ __またchrootの対策として/var/spool/postfix/etc/sasldb2へハードリン
     $ telnet localhost 25
     Connected to localhost.
     Escape character is '^]'.
-    220 mail.example.com ESMTP
+    220 example.com ESMTP
 
     EHLO localhost
 

@@ -2239,27 +2239,7 @@ Maildirディレクトリをユーザーホームへ作成します。
 
 [ Amazon EC2でpostfix+dovecotでメールサーバ構築(1) - viola&#039;s blog](http://blog.violasoftchannel.com/?p=57)
 
-### 再起動
 
-    $ sudo /etc/init.d/postfix restart
-
-## 送信テスト
-
-### mailコマンドインストール
-
-    $ sudo apt-get install mailutils
-
-### 送信テスト
-
-info@example.comへ送信テスト。
-
-    $ mail <info@example.com>
-    
-Enter + Ctrl + Dで終了(送信)します。
-
-## 受信テスト
-
-新着メールは~/Maildir/newに届くのでcatコマンドなどで確認します。
 
 ## SMTP認証(SMTP-AUTH)
 
@@ -2366,6 +2346,24 @@ __Postfixが参照できるようにグループ、パーミッションを変�
 
 	submission inet n       -       n       -       -       smtpd
 
+
+## 送信テスト
+
+### mailコマンドインストール
+
+    $ sudo apt-get install mailutils
+
+### 送信テスト
+
+info@example.comへ送信テスト。
+
+    $ mail <info@example.com>
+    
+Enter + Ctrl + Dで終了(送信)します。
+
+## 受信テスト
+
+新着メールは~/Maildir/newに届くのでcatコマンドなどで確認します。
 
 ## 参考リンク
 

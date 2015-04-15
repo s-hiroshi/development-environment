@@ -2045,18 +2045,18 @@ AWS EC2へPostfixとDovecotでメール環境を構築する。
 * 送信サーバー(Postfix)  
   	+ SMTP認証(SMTP-AUTH)へ対応する。
 		- SMTP認証の認証フレームワーク(SASL)はDovecotを使う。
-			- 認証方式はPLAINを使う。
+			- SASLの認証方式はPLAINを使う。
 			- SASLの照合方法はsasldbを使う。
   	+ OP25Bへ対応する。
 * 受信サーバー(Dovecot)
-	+ OSのユーザー/パスワードを平文で認証する。
+	+ OSのユーザー/パスワードを使い平文で認証する。
 
 ### バージョン
 
 * Ubuntu 14.04
 * Postfix(SMTPサーバー) 2.11.0  
 * Dovecot(POP3/IMAPサーバー) 2.2.9  
-  今回はIMAP/POP3の認証だけでなくSMTP認証(SMTP-AUTH)の認証サーバーとして利用する。
+  今回はIMAP/POP3の認証だけでなくSMTP認証(SMTP-AUTH)の認証機構として利用する。
 
 
 ### メール関連ログ
@@ -2078,7 +2078,7 @@ sasl2-binをインストールするとSASLを利用できる。
 
 [Simple Authentication and Security Layer - Wikipedia](http://ja.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer)
 
-__今回はSMTP認証(SMTP-AUTH)で利用するSASLを使った認証もDovecotに任せる。__  
+__今回はSMTP認証(SMTP-AUTH)で利用するSASLでの認証処理もDovecotに任せる。__  
 __SASLの認証方式PLAIN, 照合方式はsasldbを使う。__
 
 #### ソフト
@@ -2087,9 +2087,8 @@ __SASLの認証方式PLAIN, 照合方式はsasldbを使う。__
 |---|---|---|---|
 |SMTP|Postfix| |/etc/postfix/main.cf|
 |SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf, etc/postfix/sasl/smtpd.conf, /etc/dovecot/conf.d/10-master.conf|
-|IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf|
-|IMAP,POP3 認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf, /etc/dovecot/conf.d/10-master.conf|
 |SMTP OP25B|Postfix| |/etc/postfix/master.cf|
+|IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf, /etc/dovecot/conf.d/10-auth.conf, /etc/dovecot/conf.d/10-master.conf|
 
 ### Postfix
 

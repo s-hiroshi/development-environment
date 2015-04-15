@@ -2059,17 +2059,7 @@ AWS EC2へPostfixとDovecotでメール環境を構築する。
   今回はIMAP/POP3の認証だけでなくSMTP認証(SMTP-AUTH)の認証サーバーとして利用する。
 
 
-### ソフト
-  
-|機能|ソフト|認証機構|ファイル|
-|---|---|---|---|
-|SMTP|Postfix| |/etc/postfix/main.cf|
-|SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf, etc/postfix/sasl/smtpd.conf, /etc/dovecot/conf.d/10-master.conf|
-|IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf|
-|IMAP,POP3 認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf, /etc/dovecot/conf.d/10-master.conf|
-|SMTP OP25B|Postfix| |/etc/postfix/master.cf|
-
-## メール関連ログ
+### メール関連ログ
 
 	/var/log/syslog
 	/var/log/mail.log
@@ -2082,35 +2072,33 @@ AWS EC2へPostfixとDovecotでメール環境を構築する。
 sasl2-binをインストールするとSASLを利用できる。  
 今回はDovecotのSASL認証機能を利用するためsaslauthdは停止する。
 
-#### SMTPサーバー(Postfix)
-
-* MTA(Mail transfer agent) Postfix
-* MDA Postfix
-
-#### POP、IMAPサーバー(Dovecot)
-
-* MRA  
-  POPやIMAPのメール受信
-
-#### 認証デーモン
-
-今回はIMAP,POP3だけでなくSMTP認証(SMTP-AUTH)の認証もDovecotに任せる。
-
-#### 認証機構
+### 認証
 
 > Simple Authentication and Security Layer（SASL）は、インターネットプロトコルにおける認証とデータセキュリティのためのフレームワークである。
 
 [Simple Authentication and Security Layer - Wikipedia](http://ja.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer)
 
-今回はSMTP-AUTHのSASL認証方式はsasldbを使う。
+__今回はSMTP認証(SMTP-AUTH)で利用するSASLを使った認証もDovecotに任せる。__  
+__SASLの認証方式PLAIN, 照合方式はsasldbを使う。__
 
-
+#### ソフト
+  
+|機能|ソフト|認証機構|ファイル|
+|---|---|---|---|
+|SMTP|Postfix| |/etc/postfix/main.cf|
+|SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf, etc/postfix/sasl/smtpd.conf, /etc/dovecot/conf.d/10-master.conf|
+|IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf|
+|IMAP,POP3 認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf, /etc/dovecot/conf.d/10-master.conf|
+|SMTP OP25B|Postfix| |/etc/postfix/master.cf|
 
 ### Postfix
 
 [Postfixのぺーじ－ホーム](http://www.postfix-jp.info/)
 
-### バージョン確認
+* MTA(Mail transfer agent) Postfix
+* MDA Postfix
+
+#### バージョン確認
 
     // バージョン確認
     $ /usr/sbin/postconf | grep mail_version
@@ -2118,16 +2106,22 @@ sasl2-binをインストールするとSASLを利用できる。
 
 [Postfixのバージョンを確認する | CoDE4U](http://blog.code4u.org/archives/1135)
 
-### 設定ファイル
+#### 設定の確認
+
+    $ postconf -n
+
+#### 設定ファイル
 
 * /etc/postfix/main.cf  
   Postfixの主要な設定を行う。
 * /etc/postfix/master.cf  
   SMTP認証とOP25Bの設定を行う。
 * /etc/postfix/sasl/smtpd.conf  
-  SMTP認証にDovecoteを使う場合に作成。
+  SMTP認証にDovecoteを使う場合に作成する。
 
-### main.cfの主要な項目を掲載する。
+### main.cf
+
+主な項目を記載する。
 
 	broken_sasl_auth_clients = yes
 	# メールボックスをMaildir形式へ変更(追記)
@@ -2154,7 +2148,7 @@ sasl2-binをインストールするとSASLを利用できる。
 	smtpd_sasl_type = dovecot
 	smtpd_tls_security_level = may
 
-AWS EC2は送信元にPrivate DNSが設定されるので下記で変更する。
+AWS EC2は送信元にPrivate DNSが設定されていたので下記の変更を行う。
 
 	# メール送信時のマッピング(追記)
 	smtp_generic_maps = hash:/etc/postfix/generic
@@ -2163,9 +2157,12 @@ AWS EC2は送信元にPrivate DNSが設定されるので下記で変更する�
 http://www.postfix-jp.info/trans-2.2/jhtml/STANDARD_CONFIGURATION_README.html#fantasy 
 
 
-## Dovecot
+### Dovecot
 
-### ログ
+* MRA  
+  POPやIMAPのメール受信
+
+#### ログ
 
 Dovecotはデフォルトログはシステムログのmail.log/mail.errに出力される。  
 10-logging.confで指定したファイルにより詳細なログを出力するよう設定する。
@@ -2174,16 +2171,20 @@ Dovecotはデフォルトログはシステムログのmail.log/mail.errに出�
 
 	log_path = /var/log/dovecot.log
 
-### 設定
+#### 設定
 
-### dovecot.conf
+下記コマンドで設定を確認できる。
+
+    $ doveconf -n
+
+#### dovecot.conf
 
 /etc/dovecot/dovecot.conf
 
 	protocols = imap pop3 // 10-master.confで設定するので必要ない?
 	listen = *, ::
 
-### 10-master.conf
+#### 10-master.conf
 
 /etc/dovecot/conf.d/10-master.conf
 
@@ -2218,20 +2219,20 @@ Dovecotはデフォルトログはシステムログのmail.log/mail.errに出�
 	  }
 	}
 
-### 10-auth.conf
+#### 10-auth.conf
 
 /etc/dovecot/conf.d/10-auth.conf
 
 	disable_plaintext_auth = no
 	auth_mechanisms = plain login
 
-### メールボックス設定
+#### メールボックス設定
 
 /etc/dovecot/conf.d/10-mail.conf
 
 	mail_location = maildir:~/Maildir
     
-最初下記のように設定しエラーが発生していました。
+最初下記のように設定しエラーが発生していた。
 
 	#mail_location = maildir:~/Maildir:INBOX=/var/mail/%u
 
@@ -2245,11 +2246,11 @@ Postfixでも同様にメールボックスの設定がある。
 
 ### メールボックス作成
  
-Maildirディレクトリをユーザーホームへ作成します。
+Maildirディレクトリをユーザーホームへ作成する。
 
     $ mkdir -p Maildir/{new,cur,tmp,.Sent,.Trash}
     
-ユーザーの追加で自動的にMaildir/new,cur,tmpを作成する雛形作成する。
+ユーザーの追加でMaildir/new,cur,tmp,.Sent,.Trashが自動的に作成されるよう雛形を登録する。
 
 	$ mkdir -p /etc/skel/Maildir/{new,cur,tmp,.Sent,.Trash}
 	$ chmod -R 700 /etc/skel/Maildir/
@@ -2257,39 +2258,20 @@ Maildirディレクトリをユーザーホームへ作成します。
 [ Amazon EC2でpostfix+dovecotでメールサーバ構築(1) - viola&#039;s blog](http://blog.violasoftchannel.com/?p=57)
 
 
+### SMTP認証(SMTP-AUTH)
 
-## SMTP認証(SMTP-AUTH)
-
-### SMTP認証に関するmaster.cf
+#### SMTP認証に関するPostfixのmaster.cfの変更
 
 	smtp      inet  n       -       n       -       -       smtpd -v
 	  -o smtpd_sasl_auth_enable=yes
 
 
-### SMTP認証に関するDovecotの設定
+#### SMTP認証に関するDovecotの設定
 
 /etc/dovecot/conf.d/10-master.conf
 
 	service auth { 
-	  # auth_socket_path points to this userdb socket by default. It's typically 
-	  # used by dovecot-lda, doveadm, possibly imap process, etc. Users that have 
-	  # full permissions to this socket are able to get a list of all usernames and 
-	  # get the results of everyone's userdb lookups. 
-	  # 
-	  # The default 0666 mode allows anyone to connect to the socket, but the 
-	  # userdb lookups will succeed only if the userdb returns an "uid" field that 
-	  # matches the caller process's UID. Also if caller's uid or gid matches the 
-	  # socket's uid or gid the lookup succeeds. Anything else causes a failure. 
-	  # 
-	  # To give the caller full permissions to lookup all users, set the mode to 
-	  # something else than 0666 and Dovecot lets the kernel enforce the 
-	  # permissions (e.g. 0777 allows everyone full permissions). 
-	  unix_listener auth-userdb { 
-		#mode = 0666 
-		#user =  
-		#group =  
-	  } 
-	 
+	  ..... 
 	  # Postfix smtp-auth 
 	  unix_listener /var/spool/postfix/private/auth { 
 		mode = 0666 
@@ -2297,22 +2279,20 @@ Maildirディレクトリをユーザーホームへ作成します。
 		group =  postfix 
 	 
 	  } 
-	 
-	  # Auth process is run as this user.
-	  #user = $default_internal_user
+	  ..... 
 	}
 
-### /etc/postfix/sasl/smtpd.conf
+#### /etc/postfix/sasl/smtpd.conf
 
 	pwcheck_method: auxprop
 	auxprop_plugin: sasldb
 	mech_list: cram-md5 digest-md5 plain login
 
-### sasldbへユーザー追加
+#### sasldbへユーザー追加
 
     $ saslpasswd2 -c -u <domain> <user>
 
-### sasldbファイル
+#### sasldbファイル
 
 	/etc/sasldb2
 
@@ -2322,7 +2302,7 @@ Maildirディレクトリをユーザーホームへ作成します。
 
 __Postfixが参照できるようにグループ、パーミッションを変更し/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
 
-### sasldb登録確認
+#### sasldb確認
 
     $ sasldblistusers2 # 一覧表示
 
@@ -2376,11 +2356,11 @@ info@example.comへ送信テスト。
 
     $ mail <info@example.com>
     
-Enter + Ctrl + Dで終了(送信)します。
+Enter + Ctrl + Dで終了(送信)する。
 
 ## 受信テスト
 
-新着メールは~/Maildir/newに届くのでcatコマンドなどで確認します。
+新着メールは~/Maildir/newに届くのでcatコマンドなどで確認する。
 
 ## 参考リンク
 

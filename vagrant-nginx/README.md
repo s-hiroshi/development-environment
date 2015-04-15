@@ -3186,9 +3186,9 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 |機能|ソフト|認証機構|ファイル|
 |---|---|---|
 |SMTP|Postfix| |/etc/postfix/main.cf|
-|SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf, etc/postfix/sasl/smtpd.conf|
+|SMTP認証(SMTP-AUTH)|Postfix, Dovecot|SASL|/etc/postfix/main.cf, /etc/postfix/master.cf, etc/postfix/sasl/smtpd.conf, /etc/dovecot/conf.d/10-master.conf|
 |IMAP,POP3|Dovecot| |/etc/dovecot/dovecot.conf|
-|IMAP,POP3 認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf|
+|IMAP,POP3 認証|Dovecot|SASL|/etc/dovecot/conf.d/10-auth.conf, /etc/dovecot/conf.d/10-master.conf|
 |SMTP OP25B|Postfix| |/etc/postfix/master.cf|
 
 EHLO
@@ -3218,7 +3218,13 @@ MUA
 
 * SASL(Simple authentication and. Security Layer)
 
-SASLの認証方式はPAMとSASLDBを使う方法がある。
+SASLの認証方式はSASLDBを使う。
+
+
+## 認証デーモン
+
+SMTP-AUTH, IMAP, POP3とも認証デーモンはDovecotに任せる。
+
 
 #### SASLDB ユーザー追加
 
@@ -3230,9 +3236,39 @@ SASLの認証方式はPAMとSASLDBを使う方法がある。
 
 __/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
 
-#### 確認
+#### 登録確認
 
-    $ testsaslauthd -u <user> -p <pass>
+    $ sasldblistusers2 # 一覧
+
+### telnetで認証を確認
+
+    $ perl -MMIME::Base64 -e 'print encode_base64("\000<user>\000<password>");
+    エンコードしたユーザー名と増すワード
+    
+<user>,<password>は読み替えてください。
+
+    $ telnet localhost 25
+    Connected to localhost.
+    Escape character is '^]'.
+    220 mail.example.com ESMTP
+
+    EHLO localhost
+
+    250-mail.min-ker.com
+    250-PIPELINING
+    250-SIZE 10240000
+    250-VRFY
+    250-ETRN
+    250-STARTTLS
+    250-AUTH PLAIN LOGIN
+    250-AUTH=PLAIN LOGIN
+    250-ENHANCEDSTATUSCODES
+    250-8BITMIME
+    250 DSN
+
+    AUTH PLAIN エンコードしたユーザー名と増すワード
+
+	Authentication successful
 
 
 ## 送信環境構築手順

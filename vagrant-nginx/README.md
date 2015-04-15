@@ -2078,18 +2078,23 @@ IMAP,POP3だけでなくSMTP認証(SMTP-AUTH)の認証もDovecotに任せる。
 
 ### 認証機構
 
-* SASL(Simple authentication and. Security Layer)
+> Simple Authentication and Security Layer（SASL）は、インターネットプロトコルにおける認証とデータセキュリティのためのフレームワークである。
+
+[Simple Authentication and Security Layer - Wikipedia](http://ja.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer)
 
 今回はSMTP-AUTHのSASL認証方式はsasldbを使う。
 
+## メールログ
+
+    /var/log/mail.log
+    /var/log/mail.err
 
 ## Postfix
 
 [Postfixのぺーじ－ホーム](http://www.postfix-jp.info/)
 
-### インストール
+### バージョン確認
 
-    $ sudo apt-get install postfix
     // バージョン確認
     $ /usr/sbin/postconf | grep mail_version
     mail_version = 2.11.0
@@ -2098,12 +2103,14 @@ IMAP,POP3だけでなくSMTP認証(SMTP-AUTH)の認証もDovecotに任せる。
 
 ### 設定ファイル
 
-* /etc/postfix/main.cf
-* /etc/postfix/master.cf
+* /etc/postfix/main.cf  
+  Postfixの主要な設定を行う。
+* /etc/postfix/master.cf  
+  SMTP認証とOP25Bの設定を行う。
 * /etc/postfix/sasl/smtpd.conf  
   SMTP認証にDovecoteを使う場合に作成。
 
-main.cfの主要な項目を掲載する。
+### main.cfの主要な項目を掲載する。
 
 	broken_sasl_auth_clients = yes
 	# メールボックスをMaildir形式へ変更(追記)
@@ -2130,19 +2137,57 @@ main.cfの主要な項目を掲載する。
 	smtpd_sasl_type = dovecot
 	smtpd_tls_security_level = may
 
-AWS EC2は送信元にPrivate DNSの
+AWS EC2は送信元にPrivate DNSが設定されるので下記で変更する。
+
 	# メール送信時のマッピング(追記)
 	smtp_generic_maps = hash:/etc/postfix/generic
 
-メール送信時のマッピングは下記の記事を参考にしました。  
+メール送信時のマッピングは下記の記事を参考にした。  
 http://www.postfix-jp.info/trans-2.2/jhtml/STANDARD_CONFIGURATION_README.html#fantasy 
- 
+
+
+## Dovecot
+
+### ログ
+
+Dovecotはデフォルトログはシステムログのmail.log/mail.errに出力される。  
+10-logging.confで指定したファイルにより詳細なログを出力するよう設定する。
+
+/etc/dovecot/conf.d/10-logging.conf
+
+	log_path = /var/log/dovecot.log
+
+### 認証
+
+/etc/dovecot/conf.d/10-auth.conf
+
+	disable_plaintext_auth = no
+
+### メールボックス設定
+
+/etc/dovecot/conf.d/10-mail.conf
+
+	mail_location = maildir:~/Maildir
+    
+最初下記のように設定しエラーが発生していました。
+
+	#mail_location = maildir:~/Maildir:INBOX=/var/mail/%u
+
+	# エラー
+	imap(<user>): Error: Failed to autocreate mailbox INBOX: Permission denied
+
+Postfixでも同様にメールボックスの設定がある。  
+/etc/postfix/main.cfのメールボックスの設定する。
+
+	home_mailbox = Maildir/
+
+### メールボックス作成
  
 Maildirディレクトリをユーザーホームへ作成します。
 
     $ mkdir -p Maildir/{new,cur,tmp,.Sent,.Trash}
     
-ユーザー追加で自動的にMaildir/new,cur,tmpを作成する雛形作成します。
+ユーザーの追加で自動的にMaildir/new,cur,tmpを作成する雛形作成する。
 
 	$ mkdir -p /etc/skel/Maildir/{new,cur,tmp,.Sent,.Trash}
 	$ chmod -R 700 /etc/skel/Maildir/
@@ -2171,79 +2216,13 @@ Enter + Ctrl + Dで終了(送信)します。
 
 新着メールは~/Maildir/newに届くのでcatコマンドなどで確認します。
 
-## メールログ
+## SMTP認証(SMTP-AUTH)
 
-    /var/log/mail.log
-    /var/log/mail.err
-
-## Dovecotインストール
-
-    $ sudo apt-get install dovecot-common dovecot-imapd dovecot-pop3d sasl2-bin
-
-### SMTP認証(SMTP-AUTH)
-
-[Postfix で Submissionポート（サブミッション・ポート）＆ SMTP-AUTH(認証)を使ってみる | レンタルサーバー・自宅サーバー設定・構築のヒント](http://server-setting.info/debian/postfix-submission-smtp-auth.html)
+#### SMTP認証に関するDovecotの設定
 
 
-> Simple Authentication and Security Layer（SASL）は、インターネットプロトコルにおける認証とデータセキュリティのためのフレームワークである。
 
-[Simple Authentication and Security Layer - Wikipedia](http://ja.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer)
-
-/etc/postfix/main.cf
-
-	# sasl
-	smtpd_sasl_auth_enable = yes
-	#smtpd_sasl_path = smtpd
-	smtpd_sasl_security_options = noanonymous
-	broken_sasl_auth_clients = yes
-	# smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
-
-/etc/postfixにsasl_passwdを作成し下記内容を記載。
-
-    mail.example.com account:password
-
-sasl_passwdのパーミションを変更を変更する。
-
-    $ sudo chmod 600 sasl_passwd
-
-postmapコマンドでdbファイルを作成する。
-
-    $ sudo postmap /etc/postfix/sasl_passwd
-
-sasl_passwd.dbが作成される。Postfixを再起動する。
-
-
-## Dovecot
-
-### ログ
-
-Dovecotはデフォルトログはシステムログのmail.log/mail.errに出力されます。  
-ログの設定は10-logging.confに記述します。ファイルを指定しより詳細なログを出力することができます。
-
-/etc/dovecot/conf.d/10-logging.conf
-
-	log_path = /var/log/dovecot.log
-
-### メールボックス設定
-
-/etc/dovecot/conf.d/10-mail.conf
-
-	mail_location = maildir:~/Maildir
-    
-最初下記のように設定しエラーが発生していました。
-
-	#mail_location = maildir:~/Maildir:INBOX=/var/mail/%u
-	
-	# エラー
-	imap(<user>): Error: Failed to autocreate mailbox INBOX: Permission denied
-
-Postfixでも同様にメールボックスの設定がある。
-/etc/postfix/main.cfのメールボックスの設定
-
-	home_mailbox = Maildir/
-
-
-#### sasldb ユーザー追加
+#### sasldbへユーザー追加
 
     $ saslpasswd2 -c -u <domain> <user>
 
@@ -2292,7 +2271,7 @@ __Postfixが参照できるようにグループ、パーミッションを変�
 	Authentication successful
 
 
-
+###
 
 ## 参考リンク
 

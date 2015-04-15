@@ -2157,11 +2157,56 @@ Dovecotはデフォルトログはシステムログのmail.log/mail.errに出�
 
 	log_path = /var/log/dovecot.log
 
-### 認証
+### 設定
+
+### dovecot.conf
+
+/etc/dovecot/dovecot.conf
+
+	protocols = imap pop3 // 10-master.confで設定するので必要ない?
+	listen = *, ::
+
+### 10-master.conf
+
+/etc/dovecot/conf.d/10-master.conf
+
+	service imap-login {
+	  inet_listener imap {
+		port = 143
+	  }
+	  inet_listener imaps {
+		#port = 993
+		#ssl = yes
+	  }
+	
+	  # Number of connections to handle before starting a new process. Typically
+	  # the only useful values are 0 (unlimited) or 1. 1 is more secure, but 0
+	  # is faster. <doc/wiki/LoginProcess.txt>
+	  #service_count = 1
+	
+	  # Number of processes to always keep waiting for more connections.
+	  #process_min_avail = 0
+	
+	  # If you set service_count=0, you probably need to grow this.
+	  #vsz_limit = $default_vsz_limit
+	}
+	
+	service pop3-login {
+	  inet_listener pop3 {
+		port = 110
+	  }
+	  inet_listener pop3s {
+		#port = 995
+		#ssl = yes
+	  }
+	}
+
+### 10-auth.conf
 
 /etc/dovecot/conf.d/10-auth.conf
 
 	disable_plaintext_auth = no
+	auth_mechanisms = plain login
 
 ### メールボックス設定
 
@@ -2219,6 +2264,8 @@ Enter + Ctrl + Dで終了(送信)します。
 ## SMTP認証(SMTP-AUTH)
 
 #### SMTP認証に関するDovecotの設定
+
+/etc/dovecot/conf.d/10-auth.conf
 
 
 

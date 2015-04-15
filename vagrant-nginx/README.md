@@ -2263,17 +2263,53 @@ Enter + Ctrl + Dで終了(送信)します。
 
 ## SMTP認証(SMTP-AUTH)
 
-#### SMTP認証に関するDovecotの設定
+### SMTP認証に関するDovecotの設定
 
-/etc/dovecot/conf.d/10-auth.conf
+/etc/dovecot/conf.d/10-master.conf
 
+	service auth { 
+	  # auth_socket_path points to this userdb socket by default. It's typically 
+	  # used by dovecot-lda, doveadm, possibly imap process, etc. Users that have 
+	  # full permissions to this socket are able to get a list of all usernames and 
+	  # get the results of everyone's userdb lookups. 
+	  # 
+	  # The default 0666 mode allows anyone to connect to the socket, but the 
+	  # userdb lookups will succeed only if the userdb returns an "uid" field that 
+	  # matches the caller process's UID. Also if caller's uid or gid matches the 
+	  # socket's uid or gid the lookup succeeds. Anything else causes a failure. 
+	  # 
+	  # To give the caller full permissions to lookup all users, set the mode to 
+	  # something else than 0666 and Dovecot lets the kernel enforce the 
+	  # permissions (e.g. 0777 allows everyone full permissions). 
+	  unix_listener auth-userdb { 
+		#mode = 0666 
+		#user =  
+		#group =  
+	  } 
+	 
+	  # Postfix smtp-auth 
+	  unix_listener /var/spool/postfix/private/auth { 
+		mode = 0666 
+		user = postfix 
+		group =  postfix 
+	 
+	  } 
+	 
+	  # Auth process is run as this user.
+	  #user = $default_internal_user
+	}
 
+### /etc/postfix/sasl/smtpd.conf
 
-#### sasldbへユーザー追加
+	pwcheck_method: auxprop
+	auxprop_plugin: sasldb
+	mech_list: cram-md5 digest-md5 plain login
+
+### sasldbへユーザー追加
 
     $ saslpasswd2 -c -u <domain> <user>
 
-#### sasldbファイル
+### sasldbファイル
 
 	/etc/sasldb2
 
@@ -2283,7 +2319,7 @@ Enter + Ctrl + Dで終了(送信)します。
 
 __Postfixが参照できるようにグループ、パーミッションを変更し/var/spool/postfix/etc/sasldb2へハードリンクを設定する。__
 
-#### sasldb登録確認
+### sasldb登録確認
 
     $ sasldblistusers2 # 一覧表示
 
@@ -2301,7 +2337,7 @@ __Postfixが参照できるようにグループ、パーミッションを変�
 
     EHLO localhost
 
-    250-mail.min-ker.com
+    250-example.com
     250-PIPELINING
     250-SIZE 10240000
     250-VRFY
@@ -2769,7 +2805,7 @@ composer.jsonでパッケージ管理をしパッケージの実態はGitでト�
 		application_dir  = '/var/www/application'
 		if not cuisine.dir_exists(application_dir):
 			with cd(deploy_dir):
-				run("git clone git@github.com:s-hiroshi/minker.git www")
+				run("git clone git@github.com:s-hiroshi/example.git www")
 				sudo("chown -R www-data www")
 				sudo("chgrp  -R www-data www")
 				sudo("chmod -R 775 www")

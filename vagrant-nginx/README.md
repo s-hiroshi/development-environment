@@ -2241,7 +2241,7 @@ Maildirディレクトリをユーザーホームへ作成する。
 
     $ mkdir -p Maildir/{new,cur,tmp,.Sent,.Trash}
     
-ユーザーの追加でMaildir/new,cur,tmp,.Sent,.Trashが自動的に作成されるよう雛形を登録する。
+今後ユーザーの追加でMaildir/new,cur,tmp,.Sent,.Trashが自動的に作成されるよう雛形を登録する。
 
 	$ mkdir -p /etc/skel/Maildir/{new,cur,tmp,.Sent,.Trash}
 	$ chmod -R 700 /etc/skel/Maildir/

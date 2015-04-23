@@ -956,6 +956,10 @@ wheelグループを作成しubuntuを追加する。
 
     $ sudo apt-get remove <package>
 
+### インストールに問題があるパッケージ
+
+    $ sudo dpkg --audit
+
 ### ポートの制御(iptables)
 
 利用するポートのInbound/Outboundを設定する。  

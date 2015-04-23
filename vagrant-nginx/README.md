@@ -952,6 +952,10 @@ wheelグループを作成しubuntuを追加する。
 特定のパッケージのみ更新する場合は下記の記事が参考になった。   
 [apt / aptitude で特定のパッケージのみアップグレードする方法 - Devslog](http://devslog.com/article/20120216085533.html)
 
+### パッケージの削除
+
+    $ sudo apt-get remove <package>
+
 ### ポートの制御(iptables)
 
 利用するポートのInbound/Outboundを設定する。  

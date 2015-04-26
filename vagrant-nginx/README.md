@@ -1055,6 +1055,10 @@ Nginx, MySQL, PHP5の環境を構築するのに必要なパッケージをイ�
     $ sudo usermod -G www-data ubuntu
 
 
+### サーバー時間確認
+
+    $ data
+
 ### 日本時間へ変更
 
 	% sudo dpkg-reconfigure tzdata

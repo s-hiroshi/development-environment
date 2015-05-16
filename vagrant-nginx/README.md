@@ -3402,7 +3402,11 @@ Amazon EC2-CLASSICから移行した。
 2. VPC用のセキュリティーグループを作成する。
 3. VPC用のインスタンスを作成し2で作成したセキュリティーグループを設定する。
 4. Elastic IPsで固定IPを取得して3で作成したインスタンスへ割り当てる。
-5. Rout53で各種設定を行う。
+5. Rout53で4で取得した固定IPでAレコードを設定する(Domain TypeはPublic)。
+6. ドメイン管理サービスのDNSを5で作成したHosted ZoneのDNSへ変更する。
+7. メール送信上限解除申請を行う。  
+  [AWS EC2 Eメール上限緩和 / 逆引き(rDNS)設定 申請手順](http://www.slideshare.net/AmazonWebServicesJapan/aws-42885668)
+
 
 ## <a name="aws_ec2">EC2-CLASSIC</a>
 
@@ -3506,7 +3510,7 @@ xxx.xxx.xxx.xxxがElastic IPsで取得したIPアドレスのならば処理が�
 1. AWS > EC2 > Security Groupで送信用ポート設定を開けます(SMTP 25)。
 2. 送信上限解除申請を行います。    
   [AWS EC2 Eメール上限緩和 / 逆引き(rDNS)設定 申請手順](http://www.slideshare.net/AmazonWebServicesJapan/aws-42885668)
-4. AWS > Route 53でMXレコードします。
+4. AWS > Route 53でMXレコードします(同一インスタンス内にメールサーバーを構築するときは不要)。
 
 ### MXレコード設定
 

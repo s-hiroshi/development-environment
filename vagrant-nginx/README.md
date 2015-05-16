@@ -74,6 +74,8 @@ WEBサービスをAWSで運用するためのメモ書き。
 
 # <a name="get">ファイル取得コマンド</a>
 
+下記コマンドはHTTPを使うのでHTTPが利用できれば良い。
+
 ## wget
 
 > wget とは、UNIXコマンドラインで HTTP や FTP 経由のファイル取得を行えるツールです。
@@ -102,6 +104,8 @@ Wikipedia
 
 
 # <a name="package">パッケージ管理システム</a>
+
+パッケージ管理システムはインストールやアップデートはHTTPを使うのでHTTPが利用できれば良い。
 
 ## npm
 
@@ -3366,6 +3370,8 @@ shemaシェルはテーブル定義のダンプすることもできる。
 
 ## 目次
 
+* [セキュリティー](#aws_security)
+* [VPC](#aws_vpc)
 * [EC2](#aws_ec2)
 * [RDS](#aws_rds)
 * [Route 53](#aws_route53)
@@ -3375,7 +3381,7 @@ shemaシェルはテーブル定義のダンプすることもできる。
 * [AWS 用語](#aws_aws_terms)
 
 
-## セキュリティー
+## <a name="aws_security">セキュリティー</a>
 
 EC2でUbuntuを安全に運用する。
 
@@ -3386,7 +3392,19 @@ EC2でUbuntuを安全に運用する。
 2. サービスの不正アクセス対策  
   	+ Security Groupsで適切にポート番号の開閉を行う。
 
-## <a name="aws_ec2">EC2</a>
+## <a name="aws_vpc">VPC</a>
+
+Amazon EC2-CLASSICから移行した。
+
+### 移行手順
+
+1. サービスVPCからウィザードで作成する。
+2. VPC用のセキュリティーグループを作成する。
+3. VPC用のインスタンスを作成し2で作成したセキュリティーグループを設定する。
+4. Elastic IPsで固定IPを取得して3で作成したインスタンスへ割り当てる。
+5. Rout53で各種設定を行う。
+
+## <a name="aws_ec2">EC2-CLASSIC</a>
 
 Amazon Linux AMI 2014.09.1 (HVM) - ami-4985b048
 
@@ -3461,9 +3479,12 @@ AWSではパスワードなしでrootでログインすることはできない�
 
 ### 利用サービス
 
-* EC2
+* VPC(EC2-CLASSICから移行)
     + EIastic IPs 
-      固定IP取得しEC2インスタンスと結びつける。
+      固定IPを外部に公開するインスタンスと結びつける。
+* EC2-CLASSIC
+    + EIastic IPs 
+      固定IPを取得しEC2インスタンスと結びつける。
 * Route 53
      独自ドメインと固定IPを結びつける
 

@@ -3406,6 +3406,8 @@ Amazon EC2-CLASSICから移行した。
 6. ドメイン管理サービスのDNSを5で作成したHosted ZoneのDNSへ変更する。
 7. メール送信上限解除申請を行う。  
   [AWS EC2 Eメール上限緩和 / 逆引き(rDNS)設定 申請手順](http://www.slideshare.net/AmazonWebServicesJapan/aws-42885668)
+  
+[VPC - Amazon Virtual Private Cloud](http://docs.aws.amazon.com/ja_jp/AmazonVPC/latest/UserGuide/VPC_Scenario1.html)
 
 
 ## <a name="aws_ec2">EC2-CLASSIC</a>

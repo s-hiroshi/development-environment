@@ -876,7 +876,7 @@ adduserはユーザー追加時にホームディレクトリを作成する。
 
     $ sudo gpasswd -a <user> <group>
 
-__aオプションを指定しないと既存グループが削除される。__
+__オプションを指定しないと既存グループが削除される。__
 
 	$ sudo gpasswd -d <user> <group>
    

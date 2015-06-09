@@ -1406,6 +1406,9 @@ php.iniに追記せず/etc/php5/fpm/conf.dディレクトリに各ライブラ�
 
 PHPパッケージ管理ツール。
 
+[Composer](https://getcomposer.org/)  
+[[PHP]ComposerのCLIで利用できるコマンドの説明 | 9ensanのLifeHack](http://9ensan.com/blog/programming/php/php-composer-cli/)
+
 
 #### Composerインストール
 
@@ -1421,6 +1424,10 @@ composer.pharがカレントディレクトリにダウンロードされる。
 パスが通っていないときはcomposer(名前を変更していないときはcomposer.phar)コマンドは下記のように実行する。
 
     $ php /fullpath/composer --version
+    
+#### Composer本体のアップロード
+
+    $ php /fullpath/composer self-update
 
 #### Composer初期化
 
@@ -1438,7 +1445,7 @@ composer.jsonファイルが作成される。
 
 [Composer ドキュメント日本語訳](http://kohkimakimoto.github.io/getcompo:ser.org_doc_jp/doc/01-basic-usage.html)
 
-ディレクトリにvendor[^conposer-cake]ディレクトリを作成しそこへ配置して管理する。
+ディレクトリにvendor[^conposer-cake]ディレクトリを作成し配置して管理する。
 
 [^conposer-cake]: デフォルトはConposerはインストールしたパッケージをvendorディレクトリに配置する。しかしCakePHPではVendorディレクトリを利用するためvendorから
 Vendorへ変更する。変更はcomposer.jsonのconfig.vendor-dirプロパティで設定する。
@@ -1487,6 +1494,10 @@ composer.jsonで変更できる。
         "vendor-dir": "some",
       },
 
+
+#### パッケージのアップデート
+
+	$ composer update
 
 #### Composerの利点
 

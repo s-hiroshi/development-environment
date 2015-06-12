@@ -3659,26 +3659,23 @@ Wikipedia
     }
 
 
-### <a name="appendix_php_ini">Appendix php.iniの設定を反映されないときの対処</a>
+### <a name="appendix_php_ini">Appendix php.iniの編集後のはphp再起動</a>
 
 php.ini(/etc/php5/fpm/php.ini)を変更しNginxを再起動したが変更内容が反映されなかった(phpinfo関数で確認)。  
 
-    $ sudo nginx -s stop
-    $ sudo nginx
-    // 再起動
-    $ sudo nginx -s reload
+	// php5-fpm再起動
+    $ sudo service php5-fpm restart
+    // Nginx再起動 
+    $ sudo service nginx restart
+    
+#### php5-fpmの起動をsudo php5-fpmで行った際のメモ
 
-php5-fpmを起動すると設定が反映された。
-
-    $ cd /etc/init.d/p
-    $ sudo php5-fpm
-
-sudo php5-fpmを実行するさい下記エラーが表示された。
+sudo php5-fpmで下記エラーが表示された。
 
     [11-Feb-2015 07:05:36] ERROR: An another FPM instance seems to already listen on /var/run/php5-fpm.sock
     [11-Feb-2015 07:05:36] ERROR: FPM initialization failed
 
-既存のプロセスを停止しさいどsudo php5-fpmを実行したらphp.iniの内容が反映された。
+既存のプロセスを停止しsudo php5-fpmを実行する。
 
     $ ps aux | grep php-fpm
     root      2889  0.0  1.6 313876  6228 ?        Ss   06:07   0:00 php-fpm: master process (/etc/php5/fpm/php-fpm.conf)

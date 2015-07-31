@@ -14,4 +14,4 @@
 ## Grunt
 
 Gruntはローカルで実行でします。
-CompassがVCCWでは正常にインストールできませんでした。
+CompassがVCCWでは正常にインストールできませんでし

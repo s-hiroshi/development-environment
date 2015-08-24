@@ -11,15 +11,24 @@
 	$ vagrant up
 	$ vagrant ssh
 
+## ホーム
+
+	/home/vagrant
+
 ### 開発パス
 
 	/var/www/wordpress
 
-### Composer パッケージ
+### Composer
+
+#### パス
+
+	/home/vagrant/.composer
 
 * PHP_CodeSniffer  
   VCCWはデフォルトでインストール済です。
-* [phpDocumentor](http://www.phpdoc.org/)
+* [phpDocumentor](http://www.phpdoc.org/)  
+  クラス図の描画に必要なgraphvizを上手くインストールできていません。
   
 ### ComposerへphpDocumentorを追加
   
@@ -38,13 +47,15 @@ phpdocumentorをインストールします。
     
     $ composer update
 
+composer.jsonのあるディレクトリで上記コマンドを実行するとcomposer.jsonの内容をもとにアップデートします。
+
 ### WP-CLI
 
 VCCWはデフォルトでインストール済みです。
 
-#### WP-CLI実行フォルダ
+#### WP-CLI実行ディレクトリ
 
-wp-config.phpが配置されているフォルダで実行します。
+wp-config.phpが配置されているディレクトリで実行します。
 
 #### インストールの確認
 
@@ -62,6 +73,29 @@ wp-config.phpが配置されているフォルダで実行します。
 	// 単体テスト雛形作成
 	wp scaffold plugin-tests <plugin-name>
 
+## MySQL
+
+
+## root
+
+管理者ユーザーです。  
+VCCWにデフォルトで設定されています。
+
+ユーザー名: root
+パスワード: wordpress
+
+## wordpress
+
+テーマ、プラグイン開発用のMySQLユーザーです。  
+VCCWにデフォルトで設定されています。
+操作できるデータベースはwordpressのみです。
+
+ユーザー名: wordpress
+パスワード: wordpress
+データベース: wordpress
+
+
+
 
 ## Appendix
 
@@ -73,25 +107,54 @@ wp-config.phpが配置されているフォルダで実行します。
 
 ## テーマ開発
 
-### フォルダ構成
+### ディレクトリ構成
 
 	my-theme
 	|
 	|-- css
-		|-- my-theme-admin.css <-- 管理画面用CSS
+		|-- vendor
+			|--bootstrap
+			|--..
+		|
+		|-- my-theme-admin.css // (必要であれば)管理画面用CSS
 	|
 	|-- images
+		|-- default.png 	// header imageのデフォルト画像
 	|
-	|-- js
-		|-- my-theme.js
+	|-- js	// Gruntでtheme1.js .. theme2.jsを結合しmy-theme/js/theme.jsを作成
+		|-- theme1.js
+		|-- ..
+		|-- themeN.js
 	|
-	|-- dev
+	|-- dev // 開発ディレクトリ(Grunt実行)
+		|-- css
+			|-- some.scss	// @importでstyle.scssへインポート
+			|-- ..			// @importでstyle.scssへインポート
+			|-- someN.scss	// @importでstyle.scssへインポート
+			|-- ..			// @importでstyle.scssへインポート
+			|-- style.scss  // コンパイルしてmy-theme/style.cssを作成
+		|
+		|-- js
+			|-- vendor
+					|-- some.js
+			|
+			|-- theme.js	// Grunt my-theme/dev/js/theme1.js..themeN.jsを結合し作成
+		|
+		|-- config.rb		// Compass設定ファイル
+		|-- Gruntfile.js	// Grunt設定ファイル
+		|-- package.json	// Grunt依存関係管理ファイル
 	|
 	|-- languages
+		|
+		|-- default.po
+		|-- ja.po
+		|-- ja.mo
 	|
+	|-- functions.php
+	|-- ..
 	|-- index.php
-	|
-	|-- style.css <-- 管理画面を除いた見た目はstyle.cssへ集約
+	|-- ..
+	|-- style.css 			// Gruntでmy-theme/dev/css/style.scssをコンパイルし作成
 	|
 	|-- inc
 		|

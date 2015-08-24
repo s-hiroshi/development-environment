@@ -191,11 +191,6 @@ style.cssの先頭に@charset "UTF-8"があるときは削除します。
   https://wpcom-themes.svn.automattic.com/demo/theme-unit-test-data.xml
   
 
-
-
-
-
-
 ## Appendix
 
 * sudo gem gemコマンドが見つからない 解決  

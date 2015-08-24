@@ -145,25 +145,23 @@ VCCWにデフォルトで設定されています。
 		|-- package.json	// Grunt依存関係管理ファイル
 	|
 	|-- languages
-		|
-		|-- default.po
-		|-- ja.po
-		|-- ja.mo
+		|-- default.po		// 配布
+		|-- default.pot
+		|-- default.mo
+		|-- ja.po			// 配布
+		|-- ja.mo			// 配布
+	|
+	|-- inc
+		|-- my-theme-xxx.php
+		|-- ...
 	|
 	|-- functions.php
 	|-- ..
 	|-- index.php
 	|-- ..
 	|-- style.css 			// Gruntでmy-theme/dev/css/style.scssをコンパイルし作成
-	|
-	|-- inc
-		|
-		|-- my-theme-init.php
-		|
-		|-- my-theme-customize.php
-		|
-		|-- ...
-	|..
+	|-- readme.txt			// http://test.wordpress.org/plugins/about/validator/でチェック
+	|-- screenshot.png
 
 ### ビルド
 
@@ -177,7 +175,7 @@ Poeditを使いja.po, ja.moを作成します。
 
 #### Grunt
 
-	$ cd <my-theme>/dev
+	$ cd /path/to/my-theme/dev
 	$ grunt build
 
 1. /dev/buildディレクトリへコピー

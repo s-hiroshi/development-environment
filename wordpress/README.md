@@ -81,7 +81,7 @@ wp-config.phpが配置されているディレクトリで実行します。
 管理者ユーザーです。  
 VCCWにデフォルトで設定されています。
 
-ユーザー名: root
+ユーザー名: root  
 パスワード: wordpress
 
 ## wordpress
@@ -90,19 +90,9 @@ VCCWにデフォルトで設定されています。
 VCCWにデフォルトで設定されています。
 操作できるデータベースはwordpressのみです。
 
-ユーザー名: wordpress
-パスワード: wordpress
+ユーザー名: wordpress  
+パスワード: wordpress  
 データベース: wordpress
-
-
-
-
-## Appendix
-
-* sudo gem gemコマンドが見つからない 解決  
-[sudo「コマンドが見つかりません」PATHが初期化されているときの対処法](http://blog.thingslabo.com/archives/000395.html)
-* compassをインストールしてもcompass not found 未解決  
-[compassをインストールしたのにcommand not foundになる – blog.hereticsintheworld](http://blog.hereticsintheworld.com/4181.html)
 
 
 ## テーマ開発
@@ -199,3 +189,17 @@ style.cssの先頭に@charset "UTF-8"があるときは削除します。
 
 * テストデータ  
   https://wpcom-themes.svn.automattic.com/demo/theme-unit-test-data.xml
+  
+
+
+
+
+
+
+## Appendix
+
+* sudo gem gemコマンドが見つからない 解決  
+[sudo「コマンドが見つかりません」PATHが初期化されているときの対処法](http://blog.thingslabo.com/archives/000395.html)
+* compassをインストールしてもcompass not found 未解決  
+[compassをインストールしたのにcommand not foundになる – blog.hereticsintheworld](http://blog.hereticsintheworld.com/4181.html)
+

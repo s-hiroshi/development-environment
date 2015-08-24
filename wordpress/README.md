@@ -190,10 +190,10 @@ style.cssの先頭に@charset "UTF-8"があるときは削除します。
  
 どちらもwp_optionsテーブルに格納されます。
 
-|種類|option_name|option_value|値の設定|値の取得|
-|---|---|---|---|---|
-|Customize|theme\_mods\_テーマ名| |Theme Customization API|Theme Customization API<br>get_theme_mod|
-|Theme Options|register_settingsで任意に設定| |add_options関数|get_options関数|
+|種類|option_name|値の設定|値の取得|
+|---|---|---|---|
+|Customize|theme\_mods\_テーマ名|Theme Customization API|Theme Customization API<br>get_theme_mod|
+|Theme Options|register_settingsで任意に設定|add_options関数|get_options関数|
 
 ### ユニットテスト
 

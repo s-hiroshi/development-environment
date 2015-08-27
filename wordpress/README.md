@@ -163,6 +163,12 @@ VCCWにデフォルトで設定されています。
 
 Poeditを使いja.po, ja.moを作成します。
 
+##### 配布
+
+* default.po
+* ja.mo
+* ja.po
+
 #### Grunt
 
 	$ cd /path/to/my-theme/dev
@@ -185,11 +191,61 @@ style.cssの先頭に@charset "UTF-8"があるときは削除します。
 |Customize|theme\_mods\_テーマ名|Theme Customization API|Theme Customization API<br>get_theme_mod|
 |Theme Options|register_settingsで任意に設定|add_options関数|get_options関数|
 
-### ユニットテスト
+### テーマユニットテスト
 
 * テストデータ  
   https://wpcom-themes.svn.automattic.com/demo/theme-unit-test-data.xml
-  
+
+
+## プラグイン開発
+
+
+# プラグイン作成
+
+## フォームのセキュリティ
+
+nonce(number used once)を使いセキュリティーを確保します。
+
+### 送信元
+
+フォーム
+
+	<form>
+	<?php echo wp_nonce_field( 'example_action', '_wpnonce' ); ?>
+	....
+
+リンク
+
+	wp_nonce_url(
+		add_query_arg( array( 'action' => 'example' ), $url ),
+		'example_action'
+	);
+
+送信先プログラム
+
+	// 送信元が管理画面の場合
+	if ( isset( $_POST['_wpnonce'] ) && $_POST['_wpnonce'] ) {
+		if ( check_admin_referer( 'example_action', '_wpnonce' ) {
+			// 処理
+		}
+	}
+
+	// 送信元が管理画面では無い場合
+	$nonce = isset( $_POST['_wpnonce'] ) ? $_POST['_wpnonce'] : null;
+	if ( wp_verify_nonce( $nonce, 'example_action' ) )  {
+		// 処理
+	}
+
+
+## 構成
+
+* オプション Setting API  
+	update_option/get_option/delete_option
+* カスタム投稿タイプ  
+  register_post_type
+	+ カスタムフィールド  
+	  add_meta_box
+
   
 ## Core
 

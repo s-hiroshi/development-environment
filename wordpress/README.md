@@ -246,6 +246,30 @@ nonce(number used once)を使いセキュリティーを確保します。
 	+ カスタムフィールド  
 	  add_meta_box WordPressはカスタムフィールドをwp_postmetaへ保存するのでadd_meta_boxを使います。
 
+
+### Subversion
+
+[https://wordpress.org/plugins/about/svn/](https://wordpress.org/plugins/about/svn/)
+
+#### 最初のコミット
+
+	$ cd wp-content/plugins
+	$ svn co http://plugins.svn.wordpress.org/category-monthly-archives/ my-plugin-dir
+	
+	$ cd my-plugin-dir
+	$ svn add trunk/*
+	$ svn ci -m 'Adding first version of my plugin'
+
+#### バージョンアップ(タグ付け)
+
+WordPressはタグを付けるとバージョンアップになります。下記例はバージョン0.0.2を公開する例です。
+
+	$ cd my-plugin-dir
+	$ svn cp trunk tags/0.0.2
+	$ svn ci -m "tagging version 0.0.2"
+
+
+
   
 ## Core
 

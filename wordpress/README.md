@@ -202,7 +202,7 @@ style.cssの先頭に@charset "UTF-8"があるときは削除します。
 
 # プラグイン作成
 
-## フォームのセキュリティ
+## セキュリティー
 
 nonce(number used once)を使いセキュリティーを確保します。
 
@@ -244,7 +244,7 @@ nonce(number used once)を使いセキュリティーを確保します。
 * カスタム投稿タイプ  
   register_post_type
 	+ カスタムフィールド  
-	  add_meta_box
+	  add_meta_box WordPressはカスタムフィールドをwp_postmetaへ保存するのでadd_meta_boxを使います。
 
   
 ## Core

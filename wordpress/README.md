@@ -26,6 +26,19 @@ VCCWはXDebugがインストール済みです。
 	<?php
 	phoinfo();
 
+XDebug設定ファイル xdebug.ini
+
+	/etc/php.d/xdebug.ini
+
+下記項目をxdebug.iniへ追加
+
+	xdebug.collect_vars=on
+    xdebug.collect_params=4
+    xdebug.dump_globals=on
+    xdebug.dump.GET=*
+    xdebug.dump.POST=*
+    xdebug.show_local_vars=on
+
 ### Composer
 
 #### パス

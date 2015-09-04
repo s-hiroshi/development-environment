@@ -19,6 +19,13 @@
 
 	/var/www/wordpress
 
+### XDebug
+
+VCCWはXDebugがインストール済みです。
+
+	<?php
+	phoinfo();
+
 ### Composer
 
 #### パス

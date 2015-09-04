@@ -289,7 +289,7 @@ Homebrewはパッケージを/usr/local/binへインストールする。
     + QUnit + PhantomJS
 * ドキュメンテーションツール
     + CSS  
-      StyleDocco / SassDoc
+      hologram / SassDoc
     + JavaScript  
       YUI Doc
 * コードインスペクション
@@ -320,7 +320,7 @@ Homebrewはパッケージを/usr/local/binへインストールする。
     |
     |— dev
          |— css
-              |— doc            // CSS スタイルガイドフォルダ StyleDocco/SassDoc
+              |— doc            // CSS スタイルガイドフォルダ hologram/SassDoc
               |— src
                    |— style.css // 圧縮してexample/css/style.mini.cssへ
          |— sass
@@ -633,24 +633,39 @@ grunt本体とプラグインはプロジェクトごとにプロジェクトフ
 
 
 
-## StyleDocco
+## hologram
 
 CSS スタイルガイド。
 
 ### インストール
 
-    $ sudo npm install -fg styledocco
+    $ sudo gem install hologram
 
-オプションfは必須。
+### Gruntへの導入
 
-### インストール先
+	npm install grunt-hologram --save-dev
 
-    /usr/local/lib/node_modules/styledocco/bin/styledocco
+### hologram init
 
-### パスの確認
+Gruntfile.jsがあるフォルダで下記コマンド実行します。
 
-    $ which styledocco
-    /usr/local/bin/styledocco
+	$ hologram init
+
+設定フィルhologram_config.ymlが作成されます。
+
+### Gruntfile.js
+
+Gruntfileへ下記を記載します。
+
+	grunt.loadNpmTasks('grunt-hologram');
+	
+	hologram: {
+		generate: {
+			options: {
+				config: 'hologram_config.yml'
+			},
+		},
+	},
 
 ### スタイルガイド作成
 

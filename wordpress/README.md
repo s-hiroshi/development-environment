@@ -4,7 +4,13 @@
 
 ### 仮想環境
 
-[VCCW - A WordPress development environment.](http://vccw.cc/)
+* [VCCW - A WordPress development environment.](http://vccw.cc/)  
+  自作テーマやプラグイン開発用の仮想環境です。
+	+ テーマ
+	+ プラグイン
+[Varying-Vagrant-Vagrants/VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)  
+  Coreの開発用仮想環境です。
+
 
 ### Vagrant起動・SSHログイン
 
@@ -17,7 +23,11 @@
 
 ### 開発パス
 
-	/var/www/wordpress
+* VCCW   
+  /var/www/wordpress
+* VVV   
+  /srv/www/wordpress-develop
+
 
 ### XDebug
 

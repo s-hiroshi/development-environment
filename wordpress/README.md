@@ -346,8 +346,8 @@ WordPressはタグを付けるとバージョンアップになります。下�
     + grunt-sftp-deploy
 * 自動化ツール Grunt
 
-## フォルダ構成の例
 
+### フォルダ構成の例
 
 	mytheme
 	|
@@ -363,7 +363,7 @@ WordPressはタグを付けるとバージョンアップになります。下�
 			 |..
 			 |- _style.scss
 		
-		|—  js					// grunt-contrib-concatで結合してmytheme/js/mytheme.js作成
+		|— js					// grunt-contrib-concatで結合してmytheme/js/mytheme.js作成
 			 |— script1.js
 			 |- script2.js
 			 |..
@@ -373,7 +373,11 @@ WordPressはタグを付けるとバージョンアップになります。下�
 		|
 		|- node_modules
 		|
+		|- phpcs				// PHP_CodeSniffer
+		|
 		|- styledocs            // hologramフォルダ grunt-hologramでスタイルガイド作成
+		|
+		|- wpcs					// WordPress-Coding-Standardsフォルダ
 		|
 		|- ftppass				// grunt-sftp-deployのFTP情報ファイル
 		|
@@ -394,123 +398,83 @@ WordPressはタグを付けるとバージョンアップになります。下�
 	|- style.css
 
 
-
-## Sass
+### Sass
 
 CSSプリプロセッサー。
 
 [Sass: Syntactically Awesome Style Sheets](http://sass-lang.com/)
 
-### Sassインストール
+#### Sassインストール
 
     $ sudo gem install sass
 
-### コンパイル
+#### コンパイル
 
 style.scssをコンパイルし同フォルダにstyle.cssを作成する例。
 
     $ sass style.scss style.css
 
-### 変更を監視して自動コンパイル
+#### 変更を監視して自動コンパイル
 
     $ sass --watch style.scss:style.css
 
 ctrl + Cで監視を停止する。
 
-### バージョン確認
-
-    $ sass —version
-    3.4.9
-
-### パス確認
-
-    $ which sass
-    /usr/bin/sass
-
-
-## Compass
+### Compass
 
 Sassを使ったCSS作成フレームワーク。
 
 [Compass Home | Compass Documentation](http://compass-style.org/)  
 [Sass/Compass のインストールと基本的な環境設定 | Web Design Leaves](http://www.webdesignleaves.com/wp/htmlcss/652/)
 
-
-### インストール
+#### インストール
 
     $ sudo gem install compass
  
-### バージョン確認
-
-    $ compass —version
-    1.0.1
-
-### パス確認
-
-    $ which compass
-    /usr/bin/compass
-
-### 初期化
+#### 初期化
 
     $ compass create --bare
     
 contrib.rbとsassフォルダが作成される。
 
+#### config.rb(Compass設定ファイル)
 
-### config.rb(Compass設定ファイル)
-
-    $ cd /path/to/dev
+    $ cd /path/to/mytheme/dev
     $ compass create --bare
 
-
-    |—css
-    |   |— a.css
+	mytheme
     |
     |—dev
-    |  |— sass
-    |  |    |— a.scss
+    |  |— css
+    |  |    |— style.scss
     |  |
     |  |— contrib.rb
     |
     |—index.html
+    |
+    |- style.css
 
 contrib.rbの設定例
 
     // 設定
-    css_dir = "../css"
-    sass_dir = “sass”
-    // compass専用コメントの出力を停止するとき(config.rb)
+    css_dir = ".."
+    sass_dir = “css”
+    // compass専用コメントの出力を停止
     line_comments = false
 
-上記例ではcompassコマンドでコンパイルするとdev/sassフォルダのモジュールファイルを除いたscssファイルをコンパイルしcssディレクトリへ出力する。
+上記例ではcompassコマンドでコンパイルするとdev/cssフォルダのモジュールファイルを除いたscssファイルをコンパイルしmythemeディレクトリへ出力する。
 
-### 変更を監視して自動コンパイル
+#### 変更を監視して自動コンパイル
 
-    $ compass watch css/sass/main.scss
+    $ compass watch css/style.scss
 
-
-## SassDoc
-
-[SassDoc](http://sassdoc.com/)
-
-### インストール
-
-    $ sudo npm install sassdoc -g
-    
-__npmのバージョン2.5.1で下記コマンドを実行するとsudo: npm: command not foundというメッセージが表示され  
-それ以降、npmコマンドが使えなくなりnode.jsを再ストールした。__
-
-    $ sudo npm install npm@latest -g
-
-
-
-## Grunt
+### Grunt
 
 [Grunt: The JavaScript Task Runner](http://gruntjs.com/)
 
-gruntは一般的にgrunt-cliのみグローバルへインストールし、grunt本体も含めて各プラグインはプロジェクトごとのフォルダへインストールする。
+Gruntはgrunt-cliのみグローバルへインストールしGrunt本体も含めて各パッケージはプロジェクトごとのフォルダへインストールする。
 
-### 1. node/npmのインストール
+#### 1. node/npmのインストール
 
 [node.js](http://nodejs.org/)
 
@@ -519,182 +483,48 @@ Gruntはnode.js/npmを使う。
 node.jsはサイトからpkgファイルをダウンロードしインストールする。  
 npmはnode.jsと一緒にインストールされる。
 
-### 2. grunt command line interface(grunt-cli)をグローバルへインストール
+#### 2. grunt command line interface(grunt-cli)をグローバルへインストール
 
-    $ sudo npm install -g grunt-cli
+	$ sudo npm install -g grunt-cli
 
-### 3. プロジェクトフォルダにpackage.jsonを作成
+#### 3. プロジェクトフォルダにpackage.jsonを作成
 
-    {
-      "name": "example",
-      "version": "0.0.1"
-    }
+	{
+	  "name": "example",
+	  "version": "0.0.1"
+	}
 
-### 4. プロジェクトフォルダにGrunt本体とプラグインをインストール
+#### 4. プロジェクトフォルダにGrunt本体とプラグインをインストール
 
 grunt本体とプラグインはプロジェクトごとにプロジェクトフォルダへインストールする。
 
-#### 4-1. Grunt本体のインストール
+#### 5. Grunt本体のインストール
 
-    $ cd /path/to/project
-    $ npm install grunt --save-dev
+	$ cd /path/to/project
+	$ npm install grunt --save-dev
 
 /path/to/projectは上記フォルダ構成の例でははdevのパス。  
 –save-devをつければpackage.jsonのdevDependenciesへプラグイン情報が追記される。
 
-    {
-      "name": "example",
-      "version": "0.0.1",
-      "devDependencies": {
-      "grunt": "~0.4.1"
-      }
-    }
+	{
+	  "name": "example",
+	  "version": "0.0.1",
+	  "devDependencies": {
+	  "grunt": "~0.4.1"
+	  }
+	}
 
-#### 4-2. プラグインインストール例
+### hologram
 
-    $ npm install grunt-contrib-compass --save-dev
-    $ npm install grunt-contrib-cssmin --save-dev
-    $ npm install grunt-contrib-qunit --save-dev
-    $ npm install grunt-contrib-uglify --save-dev
-    $ npm install grunt-contrib-watch --save-dev
-    $ npm install grunt-contrib-yuidoc --save-dev
-    $ npm install grunt-styledocco --save-dev
-    $ npm install grunt-sassdoc --save-dev 
-
-    {
-      "name": "example",
-      "version": "0.0.1",
-      "devDependencies": {
-        "grunt": "^0.4.5",
-        "grunt-contrib-compass": "^0.4.1",
-        "grunt-contrib-cssmin": "^0.11.0",
-        "grunt-contrib-qunit": "^0.5.2",
-        "grunt-contrib-uglify": "^0.2.7",
-        "grunt-contrib-watch": "^0.5.3",
-        "grunt-contrib-yuidoc": "^0.5.2",
-        "grunt-styledocco": "^0.2.1",
-        "grunt-sassdoc": "^2.0.0"
-      }
-    }
-
-
-### 5. Gruntfile.jsの例
-
-    module.exports = function(grunt) {
-      grunt.initConfig({
-        watch: {
-          live: {
-            files: [
-              'sass/*.scss',
-              'js/src/*.js'
-            ],
-            tasks: ['compass', 'cssmin', 'uglify' ,'styledocco', 'yuidoc']
-          },
-          qunit: {
-            files: ['js/src/*.js'],
-            tasks: ['qunit', 'yuidoc']
-          }
-        },
-        compass: {
-          dist: {
-            options: {
-              config: 'config.rb'
-            }
-          }
-        },
-        qunit: {
-          all: ["js/test/*.html"]
-        },
-        cssmin: {
-          compress: {
-            files: {
-              '../../css/style.min.css': [ 'css/src/style.css' ]
-            }
-          }
-        },
-        uglify: {
-          my_target: {
-            files: [{
-              expand: true,
-              cwd: 'js/src',
-              src: '*.js',
-              dest: '../../js/',
-              ext: '.min.js'
-
-            }]
-          }
-        },
-        styledocco: {
-          dist: {
-            options: {
-              name: 'CSS CI'
-            },
-            files: {
-              'css/doc': 'css/src'
-            }
-          }
-        },
-        yuidoc: {
-          compile: {
-            name: 'JavaSrcript CI',
-            description: 'JavaScriptのCIテスト',
-            version: '0.0.1',
-            url: 'http://wwww.example.com',
-            options: {
-              paths: 'js/src',
-              outdir: 'js/doc/'
-            }
-          }
-        }
-
-      });
-
-      grunt.loadNpmTasks( 'grunt-contrib-watch' );
-      grunt.loadNpmTasks( 'grunt-contrib-compass' );
-      grunt.loadNpmTasks( 'grunt-contrib-qunit' );
-      grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
-      grunt.loadNpmTasks( 'grunt-contrib-uglify' );
-      grunt.loadNpmTasks( 'grunt-styledocco' );
-      grunt.loadNpmTasks( 'grunt-contrib-yuidoc' );
-      grunt.registerTask( 'default', [ 'watch'] );
-    };
-
-
-### 6. Grunt実行
-
-    // 上記例ではgrunt.registerTask( 'default', [ 'watch'] );なのでwatchを実行
-    // watchにタスクとして他の処理を指定しているのでそれらも順番に実行
-    $ grunt
-    // 特定のタスクのみ実行
-    $ grunt taskname
-
-
-### package.jsonをもとにしたプラグインのインストール
-
-    $ npm install
-
-既存のnode_modulesフォルダがあれば削除してする。
-
-
-### プラグインのバージョンアップ
-
-    $ npm update —save-dev
-
-すべてのプラグインがアップデートされる。
-
-
-
-## hologram
-
-CSS スタイルガイド。
+スタイルガイド。
 
 ### インストール
 
-    $ sudo gem install hologram
+	$ sudo gem install hologram
 
-### Gruntへの導入
+### Gruntへ導入
 
-	npm install grunt-hologram --save-dev
+	$ npm install grunt-hologram --save-dev
 
 ### hologram init
 
@@ -718,91 +548,64 @@ Gruntfileへ下記を記載します。
 		},
 	},
 
-### スタイルガイド作成
-
-    $ cd mytheme
-    $ styledocco -n "My Theme" -o docs/css style.css
-
-### Grunt + StyleDocco
-
-[grunt-styledocco](https://www.npmjs.com/package/grunt-styledocco)
-
-### Gruntfile.js
-
-    styledocco: {
-      dist: {
-        options: {
-          name: 'ci+styleguide'
-        },
-        files: {
-          'docs': 'css'
-        }
-      }
-    }
-
-    grunt.loadNpmTasks( 'grunt-styledocco' );
-
-
-## Code Inspections(検査)
-
- * jsLint  PhpStormはデフォルトでサポート。
- * jsHint  PhpStormはデフォルトでサポート
-    jsLintより緩い
-
-
-## QUnit テストツール
-
-[QUnit](qunitjs.com)
-
-### Grunt + Qunit(+PhantomJS)
-
-[gruntjs/grunt-contrib-qunit](https://github.com/gruntjs/grunt-contrib-qunit)
-
-grunt-contrib-qunitはPhantomJSを含む。
-
-### インストール
-
-    $ npm install grunt-contrib-qunit —save-dev
-
-Qunitファイル(js/css)をCDNから読み込むと正常にテストできなかった。
-ダウンロードして配置した。
-
-
 ## YUI Doc - JavaScript キュメンテーションツール
 
-[YUIDoc – Javascript Documentation Tool](http://yui.github.io/yuidoc/)
+[YUIDoc – Javascript Documentation Tool](http://yui.github.io/yuidoc/)  
 [YUIDoc Syntax Reference](http://yui.github.io/yuidoc/syntax/index.html)
 
 ### インストール
 
-    npm -g install yuidocjs.
+	npm -g install yuidocjs.
 
 ### コマンド
 
-    yuidoc
+	yuidoc
 
 ### Grunt + YUI DOC
 
-    yuidoc: {
-      compile: {
-        name: '<%= pkg.name %>',
-        description: '<%= pkg.description %>',
-        version: '<%= pkg.version %>',
-        url: '<%= pkg.homepage %>',
-        options: {
-          paths: 'path/to/source/code/',
-          themedir: 'path/to/custom/theme/',
-          outdir: 'where/to/save/docs/'
-        }
-      }
-    }
+	yuidoc: {
+		compile: {
+			name: 'mytheme',
+			description: 'mytheme documentation.',
+			version: '0.0.1',
+			url: 'http://www.example.com',
+			options: {
+				paths: "js",
+				outdir: "jsdocs"
+			}
+		}
+	}
 
 ### SFTPを使ったデプロイ
 
 [thrashr888/grunt-sftp-deploy · GitHub](https://github.com/thrashr888/grunt-sftp-deploy)
 
-[目次へ戻る](#index)
 
+### PHP_CodeSnifferとWordPress-Coding-Standards
+
+下記リンクにPHP_CodeSnifferをスタンドアローンでインストールする方法が記載してある。
+
+[WordPress-Coding-Standards/WordPress-Coding-Standards](https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards)
+
+mytheme/dev/phpcs、mytheme/dev/wpcs
+
+	cd /path/to/mytheme/dev
+	git clone https://github.com/squizlabs/PHP_CodeSniffer.git phpcs
+	git clone -b master https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git wpcs
+	cd phpcs
+	./scripts/phpcs --config-set installed_paths ../wpcs
+
+#### Gruntへの設定
+
+	phpcs: {
+		application: {
+			src: ["../*.php"]
+		},
+		options: {
+			bin: './phpcs/scripts/phpcs',
+			standard: "WordPress"
+		}
+	},
 
 ## Appendix
 

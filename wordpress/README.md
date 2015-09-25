@@ -9,6 +9,11 @@
 * [Varying-Vagrant-Vagrants/VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)  
   Coreの開発用仮想環境です。
 
+### Vagrant起動・SSHログイン
+
+	$ vagrant up
+	$ vagrant ssh
+
 ## VVV
 
 ### 開発パス
@@ -16,11 +21,6 @@
 	/srv/www/wordpress-develop
 
 ## VCCW
-
-### Vagrant起動・SSHログイン
-
-	$ vagrant up
-	$ vagrant ssh
 
 ## ホーム
 
@@ -57,10 +57,10 @@ php.iniで設定した値はini_set関数でPHPファイルから上書きでき
 
 ##### エラー表示制御
 
-php.iniで下記設定を行うとエラーは画面に表示されません。
+php.iniで下記設定を行うとエラーは画面に表示されません。  
 (php.iniの設定は公開サイトではこの設定が推奨です。)
 
-	error_reporting 
+	error_reporting = E_ALL
 	display_errors = Off
 
 php.iniの設定はPHPファイルのini_set関数で上書き出来ます。  
@@ -675,6 +675,19 @@ mytheme/dev/phpcs、mytheme/dev/wpcs
 			standard: "WordPress"
 		}
 	},
+	
+
+### 静的HMTLへ書き出し
+
+StaticPressを使い静的ファイルを作成します。
+
+下記エラーが発生しました。
+
+	Fatal error:  Maximum execution time of 30 seconds exceeded in /var/www/wordpress/wp-content/plugins/staticpress/includes/class-static_press.php on line 956
+
+php.iniのmax_execution_timeを30から200へ変更しました。
+
+	max_execution_time = 200
 
 ## Appendix
 

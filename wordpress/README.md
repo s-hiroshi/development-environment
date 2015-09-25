@@ -6,11 +6,16 @@
 
 * [VCCW - A WordPress development environment.](http://vccw.cc/)  
   自作テーマやプラグイン開発用の仮想環境です。
-	+ テーマ
-	+ プラグイン
-[Varying-Vagrant-Vagrants/VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)  
+* [Varying-Vagrant-Vagrants/VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)  
   Coreの開発用仮想環境です。
 
+## VVV
+
+### 開発パス
+
+	/srv/www/wordpress-develop
+
+## VCCW
 
 ### Vagrant起動・SSHログイン
 
@@ -23,11 +28,75 @@
 
 ### 開発パス
 
-* VCCW   
-  /var/www/wordpress
-* VVV   
-  /srv/www/wordpress-develop
+	/var/www/wordpress
 
+### PHP(VCCW)
+
+#### PHP実行ユーザー
+
+vagrant
+
+実行ユーザーは下記スクリプトで確認できます。
+
+	<?php
+        echo `whoami`;
+
+#### PHPプログラムパス
+
+	/usr/bin/php
+
+#### PHP設定ファイルパス(php.ini)
+
+	/etc/php.ini
+
+#### エラー制御
+
+PHPのエラー制御はphp.iniで設定します。  
+php.iniで設定した値はini_set関数でPHPファイルから上書きできます。  
+(よってWordPressのwp-config.phpの設定で上書きされます。)
+
+##### エラー表示制御
+
+php.iniで下記設定を行うとエラーは画面に表示されません。
+(php.iniの設定は公開サイトではこの設定が推奨です。)
+
+	error_reporting 
+	display_errors = Off
+
+php.iniの設定はPHPファイルのini_set関数で上書き出来ます。  
+WordPressはwp_config.phpで下記設定を行うことによりphp.iniを上書きしエラーを表示します。
+
+	define( 'WP_DEBUG', true );
+
+##### エラーログ設定
+
+php.iniで下記設定を行うとエラーをファイルへ出力します。
+
+	log_errors = On
+	error_log = /var/log/php_errors.log
+
+PHPの実行ユーザーはvagrantなのでphp_errors.logファイルの実行権限に注意してください。
+
+
+### Apach2(VCCW)
+
+デーモン
+
+	/usr/sbin/httpd
+
+設定ファイル
+
+	/etc/httpd/conf/httpd.conf
+
+ログ
+
+httpd.confのログ設定
+
+	ErrorLog /var/log/httpd/error.log
+
+ログファイル
+
+	/var/log/httpd/error.log
 
 ### XDebug
 

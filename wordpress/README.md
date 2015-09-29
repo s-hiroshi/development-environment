@@ -105,30 +105,32 @@ VCCWはXDebugがインストール済みです。
 	<?php
 	phoinfo();
 
-### XDebug設定ファイル xdebug.ini
+### Xdebug設定ファイル xdebug.ini
 
 	/etc/php.d/xdebug.ini
 
 	; Enable xdebug extension module
 	zend_extension=/usr/lib/php/modules/xdebug.so
 
-### PhpStormでリモートデバッグ
+### PhpStormリモートデバッグ
 
-ゲストのIPアドレスが192.168.33.1とします。
-IPアドレスは下記コマンドで調べることができます。
+VirtualBoxのIPアドレスはifconfigコマンドで調べることができます。
+(以下192.168.33.1と仮定します。)
 
-	$ ifconfi
+	$ ifconfig
 
 	vboxnet0: ...
 		ether ...
 		inet 192.168.33.1 netmask 0xffffff00 broadcast 192.168.33.255
-	
-#### XDebugの設定(xdebug.ini)
+
+#### Xdebugの設定(xdebug.ini)
+
+vagrantへログインします。
 
 	$ vagrant ssh
 	$ sudo vi /etc/php.d/xdebug.ini
 
-xdebug.iniへ下記を追加します。
+xdebug.iniへ下記設定を追加します。
 
 	xdebug.remote_enable=1
 	xdebug.remote_autostart=1
@@ -140,7 +142,7 @@ xdebug.iniへ下記を追加します。
 	xdebug.idekey = "PHPSTORM"
 
 xdebug.remote_hostはifconfigで調べた値を入力します。  
-xdebug.remote_portはPhpStromの設定 languages & frameworks > PHP > Debug > XDebugに記載のあるポート番号を設定します。  
+xdebug.remote_portはPhpStromのLanguages & Frameworks > PHP > Debug > Xdebugに記載されているポート番号を設定します。  
 xdebug.idekeyはPHPSTORMを設定します。下記アドレスで確認できます。  
 (https://www.jetbrains.com/phpstorm/marklets/)
 
@@ -148,12 +150,12 @@ xdebug.idekeyはPHPSTORMを設定します。下記アドレスで確認でき�
 
 	$ sudo service httpd restart
 
-#### PhpStormのサーバー設定
+#### PhpStormサーバー設定
 
-PhpStormの電話マークをクリックしListenの状態にします。ブラウザでvccw.devを表示すると、  
-Listen後にブラグザでvccw.devへアクセスするとIncoming Connection from XDebugダイアログが表示されます。  
-Acceptを選択すると下記サーバーの設定が行われます。
-Languages & Frameworks > PHP > Serversにvccw.devの設定が行われる。
+PhpStormの電話マークをクリックしListenの状態にします。  
+Listenの状態でブラウザでvccw.devへアクセスするとIncoming Connection from Xdebugダイアログが表示されます。  
+Acceptを選択すると下記サーバー項目が設定されます。
+Languages & Frameworks > PHP > Serversへvccw.devが設定されています。  
 (Languages & Frameworks > PHP > Serversの設定を最初に行うこともできます。)
 
 ### Composer

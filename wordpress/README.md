@@ -105,18 +105,52 @@ VCCWはXDebugがインストール済みです。
 	<?php
 	phoinfo();
 
-XDebug設定ファイル xdebug.ini
+### XDebug設定ファイル xdebug.ini
 
 	/etc/php.d/xdebug.ini
 
-下記項目をxdebug.iniへ追加
+	; Enable xdebug extension module
+	zend_extension=/usr/lib/php/modules/xdebug.so
 
-	xdebug.collect_vars=on
-    xdebug.collect_params=4
-    xdebug.dump_globals=on
-    xdebug.dump.GET=*
-    xdebug.dump.POST=*
-    xdebug.show_local_vars=on
+### PhpStormでリモートデバッグ
+
+ゲストのIPアドレスが192.168.33.1とします。
+IPアドレスは下記コマンドで調べることができます。
+
+	$ ifconfi
+
+	vboxnet0: ...
+		ether ...
+		inet 192.168.33.1 netmask 0xffffff00 broadcast 192.168.33.255
+	
+#### XDebugの設定(xdebug.ini)
+
+	$ vagrant ssh
+	$ sudo vi /etc/php.d/xdebug.ini
+
+xdebug.iniへ下記を追加します。
+
+	xdebug.remote_enable=1
+	xdebug.remote_autostart=1
+	xdebug.remote_host="192.168.33.1"
+	xdebug.remote_port=9000
+	xdebug.profiler_enable=1
+	xdebug.profiler_output_dir="/tmp"
+	xdebug.max_nesting_level=1000
+	xdebug.idekey = "PHPSTORM"
+
+xdebug.remote_hostはifconfigで調べた値を入力します。
+xdebug.remote_portはPhpStromの設定 languages & frameworks > PHP > Debug > XDebugに記載のあるポート番号を設定します。
+xdebug.idekeyはPHPSTORMを設定します。下記アドレスで確認できます。
+(https://www.jetbrains.com/phpstorm/marklets/)
+
+httpdの再起動
+
+	$ sudo service httpd restart
+
+PhpStormの電話マークをクリックしListenの状態でブラウザでvccw.devを表示すると初回はダイアログが表示されます。
+
+Languages & Frameworks > PHP > Serversにvccw.devの設定が行われる。
 
 ### Composer
 

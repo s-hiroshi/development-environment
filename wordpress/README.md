@@ -150,8 +150,11 @@ xdebug.idekeyはPHPSTORMを設定します。下記アドレスで確認でき�
 
 #### PhpStormのサーバー設定
 
-PhpStormの電話マークをクリックしListenの状態でブラウザでvccw.devを表示すると初回はダイアログが表示されます。  
+PhpStormの電話マークをクリックしListenの状態にします。ブラウザでvccw.devを表示すると、  
+Listen後にブラグザでvccw.devへアクセスするとIncoming Connection from XDebugダイアログが表示されます。  
+Acceptを選択すると下記サーバーの設定が行われます。
 Languages & Frameworks > PHP > Serversにvccw.devの設定が行われる。
+(Languages & Frameworks > PHP > Serversの設定を最初に行うこともできます。)
 
 ### Composer
 

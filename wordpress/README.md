@@ -139,17 +139,18 @@ xdebug.iniへ下記を追加します。
 	xdebug.max_nesting_level=1000
 	xdebug.idekey = "PHPSTORM"
 
-xdebug.remote_hostはifconfigで調べた値を入力します。
-xdebug.remote_portはPhpStromの設定 languages & frameworks > PHP > Debug > XDebugに記載のあるポート番号を設定します。
-xdebug.idekeyはPHPSTORMを設定します。下記アドレスで確認できます。
+xdebug.remote_hostはifconfigで調べた値を入力します。  
+xdebug.remote_portはPhpStromの設定 languages & frameworks > PHP > Debug > XDebugに記載のあるポート番号を設定します。  
+xdebug.idekeyはPHPSTORMを設定します。下記アドレスで確認できます。  
 (https://www.jetbrains.com/phpstorm/marklets/)
 
-httpdの再起動
+#### httpdの再起動
 
 	$ sudo service httpd restart
 
-PhpStormの電話マークをクリックしListenの状態でブラウザでvccw.devを表示すると初回はダイアログが表示されます。
+#### PhpStormのサーバー設定
 
+PhpStormの電話マークをクリックしListenの状態でブラウザでvccw.devを表示すると初回はダイアログが表示されます。  
 Languages & Frameworks > PHP > Serversにvccw.devの設定が行われる。
 
 ### Composer

@@ -445,6 +445,8 @@ WordPressはタグを付けるとバージョンアップになります。下�
       hologram
     + JavaScript  
       YUI Doc
+* テスト
+	+ QUnit
 * コードインスペクション
 	+ WordPress  
 	  PHP_CodeSniffer
@@ -476,6 +478,13 @@ WordPressはタグを付けるとバージョンアップになります。下�
 			 |- script2.js
 			 |..
 			 |- scriptN.js
+			 |
+			 |-- test			// grunt-contrib-qunitで自動化 
+			 	|
+			 	|-- qunit-1.19.0.js
+			 	|-- qunit-1.19.0.css
+			 	|-- test.html
+			 	|-- test.js
 		|
 		|- jsdocs				// YUIDocフォルダ grunt-contrib-yuidocでJavaScrptドキュメンテーション作成
 		|
@@ -714,7 +723,17 @@ mytheme/dev/phpcs、mytheme/dev/wpcs
 			standard: "WordPress"
 		}
 	},
-	
+
+#### QUnitの自動化
+
+Qunitの自動化はgrunt-contrib-qunitを使います。grunt-contrib-qunitはPhantomJSで実行されます。  
+grunt-contrib-qunitはgrunt-lib-phantomjsも同時にインストールします。
+
+
+	$ npm install grunt-contrib-qunit --save-dev
+
+
+QUnitはCDNから読み込むのではなくローカルに保存して読み込んでください。
 
 ### 静的HMTLへ書き出し
 

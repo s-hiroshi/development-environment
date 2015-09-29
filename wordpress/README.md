@@ -63,49 +63,48 @@ php.iniで下記設定を行うとエラーは画面に表示されません。
 	error_reporting = E_ALL
 	display_errors = Off
 
-php.iniの設定はPHPファイルのini_set関数で上書き出来ます。  
-WordPressはwp_config.phpで下記設定を行うことによりphp.iniを上書きしエラーを表示します。
+php.iniの設定はPHPファイルのini_set関数で上書きできます。  
+WordPressはwp_config.phpのWP_DEBUG定数でphp.iniを上書きしエラーを表示します。
 
 	define( 'WP_DEBUG', true );
 
 ##### エラーログ設定
 
-php.iniで下記設定を行うとエラーをファイルへ出力します。
+php.iniの設定でエラーログをファイルへ出力します。
 
 	log_errors = On
 	error_log = /var/log/php_errors.log
 
-PHPの実行ユーザーはvagrantなのでphp_errors.logファイルの実行権限に注意してください。
+PHPの実行ユーザーはvagrantです。php_errors.logファイルの実行権限に注意してください。  
+(/var/logディレクトリの所有者はrootです。php_error.logは  
+vagrantユーザーが読み書きできるよう設定してください。)
 
 
 ### Apach2(VCCW)
 
-デーモン
+#### デーモン
 
 	/usr/sbin/httpd
 
-設定ファイル
+#### 設定ファイル
 
 	/etc/httpd/conf/httpd.conf
 
-ログ
+#### ログ
 
-httpd.confのログ設定
+ログはhttpd.confで設定されています
 
 	ErrorLog /var/log/httpd/error.log
 
-ログファイル
+### Xdebug
 
-	/var/log/httpd/error.log
-
-### XDebug
-
-VCCWはXDebugがインストール済みです。
+VCCWはXdebugがインストール済みです。  
+インストールは下記スクリプトで確認できます。
 
 	<?php
 	phoinfo();
 
-### Xdebug設定ファイル xdebug.ini
+#### Xdebug設定ファイル(xdebug.ini)
 
 	/etc/php.d/xdebug.ini
 
@@ -154,7 +153,7 @@ xdebug.idekeyはPHPSTORMを設定します。下記アドレスで確認でき�
 
 PhpStormの電話マークをクリックしListenの状態にします。  
 Listenの状態でブラウザでvccw.devへアクセスするとIncoming Connection from Xdebugダイアログが表示されます。  
-Acceptを選択すると下記サーバー項目が設定されます。
+Acceptを選択すると下記サーバー項目が設定されます。  
 Languages & Frameworks > PHP > Serversへvccw.devが設定されています。  
 (Languages & Frameworks > PHP > Serversの設定を最初に行うこともできます。)
 

@@ -747,6 +747,45 @@ php.iniのmax_execution_timeを30から200へ変更しました。
 
 	max_execution_time = 200
 
+## WP REST API/WP OAUTH
+
+ローカル環境
+
+* WordPress
+	+ vagrant
+	+ vccw.dev
+* EC Cube
+	+ MAMPP
+	+ http://localhost:8888/eccube/html/
+
+
+Credential 証明書
+
+## The WordPress OAuth Authentication API ("OAuth API")
+
+[WP-API/OAuth1](https://github.com/WP-API/OAuth1/blob/master/docs/spec.md)
+
+リモートクライアントのWordPresに対するアクセス(操作)の認証と許可を制御します。
+
+## 用語
+
+* サイト(site) WordPressがインストールされているサイト。
+* クライアント ユーザーへサービスを提供するためにOAuth APIでWordPressへアクセスするプログラム。
+* access token  
+  クライアントごとに発行するトークン。access tokenはクライアントに許可を与えるトークンです。
+* request token  
+  認証過程でのみ使うトークン。認証過程でのみ利用しどのような権限も与えません。
+* ユーザー(user) クライアントのユーザー。
+
+## Step 0
+
+OAUTH APIの認証用WP APIの形で提供します。
+
+## GET
+
+OAUTH APIはGETによる情報の取得には関係しません。それはWP APIの守備範囲です。
+
+
 ## Appendix
 
 * sudo gem gemコマンドが見つからない 解決  

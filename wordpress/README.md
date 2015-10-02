@@ -792,6 +792,25 @@ php.iniのmax_execution_timeを30から200へ変更しました。
 
 Credential 証明書
 
+## MAMP
+
+VCCWのバーチャルホスト設定が上手くできなかったのでMAMPで作業を行います。
+
+### 準備
+
+Macのローカルのphpのバーションを上げました。
+
+	$ curl -s http://php-osx.liip.ch/install.sh | bash -s 5.6
+
+	$ cd ~
+	$ vi .bash_profile
+
+exportを下記のように修正しました。
+
+	export PATH=/usr/local/php5/bin:$PATH
+
+&raquo; [macのphpをアップデート - わすれっぽいきみえ](http://kimikimi714.hatenablog.com/entry/2013/07/06/233518)
+
 ## The WordPress OAuth Authentication API ("OAuth API")
 
 [WP-API/OAuth1](https://github.com/WP-API/OAuth1/blob/master/docs/spec.md)

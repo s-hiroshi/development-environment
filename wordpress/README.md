@@ -96,6 +96,37 @@ vagrantユーザーが読み書きできるよう設定してください。)
 
 	ErrorLog /var/log/httpd/error.log
 
+#### バーチャルホスト(未)
+
+下記設定では上手く表示できませんでした。  
+(other.devを追加しようと思いました。)
+
+#### バーチャルドメイン設定ファイル作成(sites-available/other.conf)
+
+/etc/httpd/sites-availableへバーチャルドメイン用ファイル作成しました。
+(既存のwordpress.confをコピーしother.confを作成・修正)
+
+	$ cd /etc/httpd/sites-available
+	$ sudo cp wordpress.conf other.dev
+
+#### sites-enableへシンボリックリンク作成
+
+	$ cd /etc/httpd/sites-enable
+	$ sudo ln -s /etc/httpd/sites-available/other.conf other.conf
+
+#### hostsファイルへ追加
+
+/etc/hostsへother.devを追加しました。
+
+	$ cd /etc
+
+	127.0.0.1   wordpress.local other.dev wordpress localhost localhost.localdomain localhost4 localhost4.localdomain4
+	::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 other.dev
+
+##### Apache再起動
+
+	$ sudo service httpd restart
+
 ### Xdebug
 
 VCCWはXdebugがインストール済みです。  
@@ -785,6 +816,14 @@ OAUTH APIの認証用WP APIの形で提供します。
 
 OAUTH APIはGETによる情報の取得には関係しません。それはWP APIの守備範囲です。
 
+
+## Key, Secret取得
+
+	$ cd /var/www/wordpress
+	$ wp oauth1 add
+		ID: 1718
+		Key: gOmxpyafVeSr
+		Secret: xc4OFIoz5VsWAS8wHifz6U1498FuF9fXFmfiiisRmVrbxMwG
 
 ## Appendix
 

@@ -789,7 +789,6 @@ php.iniのmax_execution_timeを30から200へ変更しました。
 	+ MAMPP
 	+ http://localhost:8888/eccube/html/
 
-
 Credential 証明書
 
 ## MAMP

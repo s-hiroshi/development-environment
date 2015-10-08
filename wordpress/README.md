@@ -111,7 +111,7 @@ PHPの実行ユーザーはvagrantです。php_errors.logファイルの実行�
 vagrantユーザーが読み書きできるよう設定してください。)
 
 
-### Apach2(VCCW)
+### Apache2(VCCW)
 
 #### デーモン
 

@@ -1,6 +1,37 @@
 # テーマ・プラグイン開発
 
 ## 環境構築
+ 
+* PHPのビルドインサーバー + MySQL
+  HomebrewでローカルへPHP5.6, MySQLをインストール
+* 仮想環境
+  VirtualBox + VCCWやVVVをインストール
+
+
+### Homebrew
+
+#### PHPインストール
+
+	$ brew install php56
+
+.bash_profileへHomebrewでインストールしたPHPを設定
+
+	export PATH=$(brew --prefix homebrew/php/php56)/bin:$PATH
+
+#### MySQL
+
+	$ brew install mysql
+	$ mysql.server start
+	$ mysql -u root
+
+rootユーザーのパスワード設定などセキュリティ設定を行う。
+
+	$ mysql_secure_installation
+
+### PHPビルトインサーバー起動
+
+	$ php -S localhost:8080
+
 
 ### 仮想環境
 

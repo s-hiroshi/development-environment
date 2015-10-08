@@ -2,38 +2,62 @@
 
 ## 環境構築
  
-* PHPのビルドインサーバー + MySQL
+* PHPビルドインサーバー + MySQL
   HomebrewでローカルへPHP5.6, MySQLをインストール
 * 仮想環境
-  VirtualBox + VCCWやVVVをインストール
+  VirtualBox + VCCW、VVV
 
 
-### Homebrew
+## Homebrew
 
-#### PHPインストール
+HomebrewでPHPとMySQLをインストールしWordPressを動かす。
+
+[Homebrew — The missing package manager for OS X](http://brew.sh/)
+
+### PHPインストール
 
 	$ brew install php56
 
-.bash_profileへHomebrewでインストールしたPHPを設定
+
+シェル(Bash)がMacにでフォルトでインストール済みのPHPではなく
+Homebrewで新規にインストールしたPHPを参照するよう.bash_profileのパスを設定する。  
 
 	export PATH=$(brew --prefix homebrew/php/php56)/bin:$PATH
 
-#### MySQL
+### 確認
 
-	$ brew install mysql
-	$ mysql.server start
-	$ mysql -u root
-
-rootユーザーのパスワード設定などセキュリティ設定を行う。
-
-	$ mysql_secure_installation
+	// バージョン
+	$ php --version
+	// インストール先
+	$ which php
+	// php.iniのパス
+	$ php --info | grep Configuration
 
 ### PHPビルトインサーバー起動
 
 	$ php -S localhost:8080
 
+### MySQLインストール
 
-### 仮想環境
+	$ brew install mysql
+
+rootユーザーへのパスワード設定などのセキュリティに関する処理を行う。
+
+	$ mysql_secure_installation
+
+### 確認
+
+	// バージョン
+	$ mysql --version
+	// インストール先
+	$ which mysql
+
+### MySQL起動
+
+	$ mysql.server start
+
+
+## 仮想環境
 
 * [VCCW - A WordPress development environment.](http://vccw.cc/)  
   自作テーマやプラグイン開発用の仮想環境です。

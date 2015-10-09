@@ -4,7 +4,7 @@
 
 * OAuthサーバー
 	+ WordPress  
-	  vccw.dev
+	  wordpress.local
 * OAuthクライアント
 	+ MAMPP  
 	  http://oauth-client.com:8888/index.php

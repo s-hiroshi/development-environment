@@ -2,14 +2,12 @@
 
 ローカル環境
 
-* WordPress
-	+ vagrant
-	+ vccw.dev
-* EC Cube
-	+ MAMPP
-	+ http://localhost:8888/eccube/html/
-
-Credential 証明書
+* OAuthサーバー
+	+ WordPress  
+	  vccw.dev
+* OAuthクライアント
+	+ MAMPP  
+	  http://oauth-client.com:8888/index.php
 
 ## MAMP
 

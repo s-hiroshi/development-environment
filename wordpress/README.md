@@ -17,16 +17,6 @@
 * [WP API/OAUTH API](wp-api.md)
 
 
-
-
-
-
-
-
-
-
-
-
 ## Appendix
 
 * sudo gem gemコマンドが見つからない 解決  

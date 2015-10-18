@@ -814,7 +814,7 @@ SSHのパスワードによる接続を禁止する。
     
     PasswordAuthentication no // yesをnoに変更 
 
-#### SSH接続でrootのログイン禁止
+#### rootユーザーのSSH接続を禁止
 
 /etc/ssh/sshd_config
 
@@ -836,7 +836,7 @@ __EC2は上記の変更をしても22番でログインできた。__
 
 sudoユーザーは一時的にroot権限でコマンドを実行できる。  
 ユーザーやグループごとのsudoの制御はvisudoを使い行う。  
-sudoグループはデフォルトで作成されそのメンバーはsudoできる。
+sudoグループはデフォルトで作成される。sudoグループのメンバーはsudoできる。
 
     $ sudo visudo
 

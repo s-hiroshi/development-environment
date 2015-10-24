@@ -7,7 +7,6 @@
 | XAMPP | /Applications/MAMP/Library/bin/httpd | Apache 2.2.29 | /Applications/MAMP/conf/apache/httpd.conf | 192.168.12.88 | 8888 |
 | PHPビルトインサーバー[^5] | | | | | |
 
-
 # HTTP ResponseヘッダーへWEBサーバーの情報を表示  
   ServerTokens OS
   ServerSignature On  

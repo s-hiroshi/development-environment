@@ -1,6 +1,6 @@
 # テーマ開発
 
-### ディレクトリ構成
+## ディレクトリ構成
 
 	my-theme
 	|
@@ -56,23 +56,30 @@
 	|-- readme.txt			// http://test.wordpress.org/plugins/about/validator/でチェック
 	|-- screenshot.png
 
-### ビルド
 
-#### 翻訳
+## ビルド
+
+### 翻訳
+
+#### POTファイル作成
 
 	$ cd <kanagata-theme-directory>
 	$ find . -iname "*.php" > ./languages/tmp/phplist.txt
 	$ xgettext --language=php --keyword=__ --keyword=_e --keyword=_n:1,2 --keyword=_x -f ./languages/tmp/phplist.txt -o ./languages/default.pot
 
+#### PO, MOファイル作成
+
 Poeditを使いja.po, ja.moを作成します。
 
-##### 配布
+#### 配布翻訳ファイル
 
 * default.po
 * ja.mo
 * ja.po
 
-#### Grunt
+### 登録/更新申請ディレクトリ作成
+
+#### Gruntでビルド処理
 
 	$ cd /path/to/my-theme/dev
 	$ grunt build
@@ -85,7 +92,7 @@ Poeditを使いja.po, ja.moを作成します。
 style.cssの先頭に@charset "UTF-8"があるときは削除します。
 
 
-### Customize と Theme Options
+## Customize と Theme Options
  
 どちらもwp_optionsテーブルに格納されます。
 
@@ -94,7 +101,7 @@ style.cssの先頭に@charset "UTF-8"があるときは削除します。
 |Customize|theme\_mods\_テーマ名|Theme Customization API|Theme Customization API<br>get_theme_mod|
 |Theme Options|register_settingsで任意に設定|add_options関数|get_options関数|
 
-### テーマユニットテスト
+## テーマユニットテスト
 
 * テストデータ  
   https://wpcom-themes.svn.automattic.com/demo/theme-unit-test-data.xml

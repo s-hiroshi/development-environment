@@ -47,7 +47,7 @@
 
 #### POTファイル作成
 
-	$ cd <kanagata-theme-directory>
+	$ cd <my-plugin-directory>
 	$ find . -iname "*.php" > ./languages/tmp/phplist.txt
 	$ xgettext --language=php --keyword=__ --keyword=_e --keyword=_n:1,2 --keyword=_x -f ./languages/tmp/phplist.txt -o ./languages/default.pot
 

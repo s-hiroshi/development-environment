@@ -43,6 +43,23 @@
 	+ カスタムフィールド  
 	  add_meta_box WordPressはカスタムフィールドをwp_postmetaへ保存するのでadd_meta_boxを使います。
 
+### 翻訳
+
+#### POTファイル作成
+
+	$ cd <kanagata-theme-directory>
+	$ find . -iname "*.php" > ./languages/tmp/phplist.txt
+	$ xgettext --language=php --keyword=__ --keyword=_e --keyword=_n:1,2 --keyword=_x -f ./languages/tmp/phplist.txt -o ./languages/default.pot
+
+#### PO, MOファイル作成
+
+Poeditを使いja.po, ja.moを作成します。
+
+#### 配布翻訳ファイル
+
+* default.po
+* ja.mo
+* ja.po
 
 ### Subversion
 

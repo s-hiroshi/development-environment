@@ -1,28 +1,24 @@
-## プラグイン開発
-
-
-# プラグイン作成
+# プラグイン開発
 
 ## セキュリティー
 
-nonce(number used once)を使いセキュリティーを確保します。
+管理画面の入力はnonce(number used once)でセキュリティーを確保します。
 
-### 送信元
 
-フォーム
+### フォーム
 
 	<form>
 	<?php echo wp_nonce_field( 'example_action', '_wpnonce' ); ?>
 	....
 
-リンク
+### リンク
 
 	wp_nonce_url(
 		add_query_arg( array( 'action' => 'example' ), $url ),
 		'example_action'
 	);
 
-送信先プログラム
+### 送信先プログラム
 
 	// 送信元が管理画面の場合
 	if ( isset( $_POST['_wpnonce'] ) && $_POST['_wpnonce'] ) {

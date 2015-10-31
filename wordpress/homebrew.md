@@ -25,6 +25,10 @@ Homebrewで新規にインストールしたPHPを参照するよう.bash_profil
 ### PHPビルトインサーバー起動
 
 	$ php -S localhost:8080
+	
+### Xdebugインストール
+
+	$ brew install php56-xdebug
 
 ## MySQLインストール
 

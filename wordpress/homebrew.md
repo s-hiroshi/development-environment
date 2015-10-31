@@ -30,6 +30,18 @@ Homebrewで新規にインストールしたPHPを参照するよう.bash_profil
 
 	$ brew install php56-xdebug
 
+xdebug.iniでxdebug.soの読み込みを記載していた。
+
+xdebug.ini
+
+	[xdebug]
+	zend_extension="/usr/local/opt/php56-xdebug/xdebug.so"
+
+xdebug.iniは/usr/local/etc/php/5.6/conf.d/ext-xdebug.iniへインストールされたていた。  
+
+phpinfo関数でScan this dir for additionalを確認すると/usr/local/etc/php/5.6/conf.d/が設定されていた。
+そのためXdebugのインストールでphp.iniを変更する必要ななかった。
+
 ## MySQLインストール
 
 	$ brew install mysql

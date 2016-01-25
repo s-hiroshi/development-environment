@@ -10,6 +10,8 @@ Vagrant公式サイトからパッケージをダウンロードしインスト�
 
 ## トラブルシューティング
 
+### 事例1
+
 > A VirtualBox machine with the name 'vccw.dev' already exists.
 > Please use another name or delete the machine with the existing
 > name, and try again.
@@ -19,6 +21,19 @@ Vagrant公式サイトからパッケージをダウンロードしインスト�
 
     // vagrant global-status
     $ vagrant destroy <box名>
+
+### 事例2
+
+> An error occurred in the underlying SSH library that Vagrant uses.
+> The error message is shown below. In many cases, errors from this
+> library are caused by ssh-agent issues. Try disabling your SSH
+> agent or removing some keys and try again.
+>
+> If the problem persists, please report a bug to the net-ssh project.
+>
+> timeout during server version negotiating
+
+上記エラーが発生したときSource TreeやPhpStormを終了したら改善しました。
 
 ## ローカル全体のVagrant環境確認
 

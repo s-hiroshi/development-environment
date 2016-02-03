@@ -4,9 +4,45 @@
 
     $ vagrant --help
 
-## Upgrade
+## Vagrant自体のUpgrade
 
 Vagrant公式サイトからパッケージをダウンロードしインストールしてください。
+
+## ローカル全体のVagrant環境確認
+
+    // ローカルにインストールされているVagrant環境表示
+    $ vagrant global-status
+    // キャッシュをクリアして表示
+    $ vagrant global-status --prune
+
+## boxのリスト
+
+    $ vagrant box list
+
+## boxの更新情報
+
+    // Vagrantfile配置フォルダで下記コマンド実行します。
+    $ vagrant box outdated
+
+## boxのアップデート
+
+    // Vagrantfile配置フォルダで下記コマンド実行します。
+    $ vagrant box update
+
+## boxの削除
+
+    // box削除
+    $ vagrant box remove <box名>
+    // バージョンを指定して削除
+    $ vagrant box remove <box名> --box-version 1.x.x
+
+## VirtualBoxの状態
+
+vagrant up/halt/destroyに対するVirtualBoxの状態です。
+
+* vagrant up 実行中
+* vagrant halt 電源オフ
+* vagrant destroy 中断
 
 ## トラブルシューティング
 
@@ -34,28 +70,3 @@ Vagrant公式サイトからパッケージをダウンロードしインスト�
 > timeout during server version negotiating
 
 上記エラーが発生したときSource TreeやPhpStormを終了したら改善しました。
-
-## ローカル全体のVagrant環境確認
-
-    // ローカルにインストールされているVagrant環境表示
-    $ vagrant global-status
-    // キャッシュをクリアして表示
-    $ vagrant global-status --prune
-
-## boxのリスト
-
-    $ vagrant box list
-
-## boxの更新情報
-
-    // Vagrantfile配置フォルダで下記コマンド実行します。
-    $ vagrant box outdated
-
-## boxのアップデート
-
-    // Vagrantfile配置フォルダで下記コマンド実行します。
-    $ vagrant box update
-
-## boxの削除
-
-    $ vagrant destroy <box名>
